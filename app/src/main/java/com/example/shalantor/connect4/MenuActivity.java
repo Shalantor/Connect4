@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -58,7 +59,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
         /*Load images*/
         redChip = BitmapFactory.decodeResource(getResources(),R.mipmap.redchip);
-        yellowChip = BitmapFactory.decodeResource(getResources(),R.mipmap.yellowChip);
+        yellowChip = BitmapFactory.decodeResource(getResources(),R.mipmap.yellowchip);
 
     }
 
@@ -81,7 +82,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
         /*Remove chips which have fallen through whole screen*/
         for (Iterator<CustomRect> iterator = listOfFallingChips.iterator(); iterator.hasNext();) {
             CustomRect rect = iterator.next();
-            if (rect.getRect().top >= 3) {
+            if (rect.getRect().top >= screenHeight) {
                 iterator.remove();
             }
         }
@@ -97,26 +98,78 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
             /*rect and colors*/
             Rect rect = new Rect(left,top,right,bottom);
-            int chipColor;
+            Bitmap chip;
             if(Math.random() > 0.5){
-                chipColor = Color.YELLOW;
+                chip = yellowChip;
             }
             else{
-                chipColor = Color.RED;
+                chip = redChip;
             }
-            listOfFallingChips.add(new CustomRect(chipColor,rect));
+            listOfFallingChips.add(new CustomRect(chip,rect));
         }
+
+        /*Now move all chips down a bit*/
+        for(CustomRect customRect : listOfFallingChips){
+            customRect.getRect().top += chipDimension / 5;
+            customRect.getRect().bottom += chipDimension / 5;
+        }
+
 
     }
 
     /*Method to render the elements*/
     public void drawElements(){
 
+        if(holder.getSurface().isValid()){
+            canvas = holder.lockCanvas();
+            paint = new Paint();
+
+            /*Make background blue*/
+            canvas.drawColor(Color.BLUE);
+
+            /*Draw the falling chips*/
+            for(CustomRect customRect : listOfFallingChips){
+                canvas.drawBitmap(customRect.getBitmap(),null,customRect.getRect(),paint);
+            }
+
+            holder.unlockCanvasAndPost(canvas);
+        }
+
     }
 
     /*Method to control the refresh rate of screen*/
     public void controlFPS(){
 
+        long timeThisFrame = System.currentTimeMillis() - lastFrameTime;
+        long timeToSleep = 500 - timeThisFrame;
+
+        if(timeToSleep > 0){
+            try{
+                thread.sleep(timeToSleep);
+            }catch (InterruptedException ex){
+                Log.d("THREAD_SLEEP","Interrupted exception occured");
+            }
+        }
+
+        lastFrameTime = System.currentTimeMillis();
+
+    }
+
+    /*To pause animation*/
+    public void pause(){
+        showingMenu = false;
+        try{
+            thread.join();
+        }catch (InterruptedException ex){
+            Log.d("THREAD_JOIN","Interrupted exception occured");
+        }
+    }
+
+    /*To continue animation from a pause*/
+    public void resume(){
+        showingMenu = true;
+        thread = new Thread(this);
+        thread.start();
     }
 
 }

@@ -1,20 +1,21 @@
 package com.example.shalantor.connect4;
 
 
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 
 public class CustomRect {
 
-    private int color;
+    private Bitmap bitmap;
     private Rect rect;
 
-    public CustomRect(int color,Rect rect){
-        this.color = color;
+    public CustomRect(Bitmap bitmap,Rect rect){
+        this.bitmap = bitmap;
         this.rect = rect;
     }
 
-    public int getColor(){
-        return color;
+    public Bitmap getBitmap(){
+        return bitmap;
     }
 
     public Rect getRect(){
