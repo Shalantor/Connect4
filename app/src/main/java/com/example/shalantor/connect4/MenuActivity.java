@@ -48,6 +48,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
         /*Type cast to get screen resolution*/
         Activity parent = (Activity) context;
+        holder = getHolder();
 
         /*get screen dimensions*/
         Display display = parent.getWindowManager().getDefaultDisplay();
@@ -75,9 +76,6 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
     /*Method to update position of elements in menu screen*/
     public void updateElements(){
-        if(listOfFallingChips.size() >= 3){     /*Don't add more than 3 chips at a time*/
-            return;
-        }
 
         /*Remove chips which have fallen through whole screen*/
         for (Iterator<CustomRect> iterator = listOfFallingChips.iterator(); iterator.hasNext();) {
@@ -87,31 +85,33 @@ public class MenuActivity extends SurfaceView implements Runnable{
             }
         }
 
-        /*Now add a chip at random*/
-        if(Math.random() > 0.5){
-            /*Coordinates*/
-            Random generator = new Random();
-            int left = generator.nextInt(screenWidth - chipDimension);
-            int right = left + chipDimension;
-            int bottom = 0;
-            int top = -chipDimension;
+        if(listOfFallingChips.size() < 3) {     /*Don't add more than 3 chips at a time*/
 
-            /*rect and colors*/
-            Rect rect = new Rect(left,top,right,bottom);
-            Bitmap chip;
-            if(Math.random() > 0.5){
-                chip = yellowChip;
+            /*Now add a chip at random*/
+            if (Math.random() > 0.5) {
+                /*Coordinates*/
+                Random generator = new Random();
+                int left = generator.nextInt(screenWidth - chipDimension);
+                int right = left + chipDimension;
+                int bottom = 0;
+                int top = -chipDimension;
+
+                /*rect and colors*/
+                Rect rect = new Rect(left, top, right, bottom);
+                Bitmap chip;
+                if (Math.random() > 0.5) {
+                    chip = yellowChip;
+                } else {
+                    chip = redChip;
+                }
+                listOfFallingChips.add(new CustomRect(chip, rect));
             }
-            else{
-                chip = redChip;
-            }
-            listOfFallingChips.add(new CustomRect(chip,rect));
         }
 
         /*Now move all chips down a bit*/
         for(CustomRect customRect : listOfFallingChips){
-            customRect.getRect().top += chipDimension / 5;
-            customRect.getRect().bottom += chipDimension / 5;
+            customRect.getRect().top += chipDimension / 10;
+            customRect.getRect().bottom += chipDimension / 10;
         }
 
 
@@ -141,7 +141,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
     public void controlFPS(){
 
         long timeThisFrame = System.currentTimeMillis() - lastFrameTime;
-        long timeToSleep = 500 - timeThisFrame;
+        long timeToSleep = 50 - timeThisFrame;
 
         if(timeToSleep > 0){
             try{
