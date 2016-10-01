@@ -12,6 +12,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -40,11 +41,14 @@ public class MenuActivity extends SurfaceView implements Runnable{
     private Thread thread = null;
     private SurfaceHolder holder;
     private Paint paint;
+    private Paint stkPaint;
     private boolean isStartMenuVisible;
 
     /*Variables for start menu buttons*/
     private int startButtonHeight;
     private int startButtonWidth;
+
+    private Activity associatedActiviry;
 
     public MenuActivity(Context context){
         super(context);
@@ -53,11 +57,11 @@ public class MenuActivity extends SurfaceView implements Runnable{
         isStartMenuVisible = true;
 
         /*Type cast to get screen resolution*/
-        Activity parent = (Activity) context;
+        associatedActiviry = (Activity) context;
         holder = getHolder();
 
         /*get screen dimensions*/
-        Display display = parent.getWindowManager().getDefaultDisplay();
+        Display display = associatedActiviry.getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         screenWidth = size.x;
@@ -194,6 +198,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
         return true;
     }
 
+    /*Draws the buttons for the main start menu*/
     public void drawMenuButtons(){
 
         paint = new Paint();
@@ -201,7 +206,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
         paint.setTextSize(startButtonHeight);
         paint.setTextAlign(Paint.Align.CENTER);
 
-        Paint stkPaint = new Paint();
+        stkPaint = new Paint();
         stkPaint.setStyle(Paint.Style.STROKE);
         stkPaint.setStrokeWidth(4);
         stkPaint.setTextSize(startButtonHeight);
@@ -235,6 +240,29 @@ public class MenuActivity extends SurfaceView implements Runnable{
         canvas.drawText("EXIT",(screenWidth / 2) ,
                 4*startButtonHeight + 4*screenHeight / 25,stkPaint);
 
+    }
+
+    /*check what player touched on screen*/
+    /*TODO:complete method*/
+    public boolean validateTouchEvent(MotionEvent event){
+        if(isStartMenuVisible){                         /*Player touched the start menu*/
+            float initialX,initialY;
+            float touchSurfaceWidth = stkPaint.measureText("PLAY GAME");
+            if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
+                initialY = event.getY();
+                /*Now check each button individually*/
+                /*EXIT BUTTON*/
+                if(initialY <= 4*startButtonHeight + 4*screenHeight / 25
+                        && initialY >= 3*startButtonHeight + 4*screenHeight / 25){
+                    pause();
+                    associatedActiviry.finish();
+                }
+            }
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
 }
