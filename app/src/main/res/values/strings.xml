@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Connect4</string>
+    <string name="single">Singleplayer</string>
+    <string name="multi">Multiplayer</string>
+    <string name="about">About</string>
+    <string name="options">Options</string>
+    <string name="exit">Exit</string>
 </resources>
