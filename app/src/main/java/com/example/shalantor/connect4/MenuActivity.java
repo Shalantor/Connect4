@@ -85,27 +85,24 @@ public class MenuActivity extends SurfaceView implements Runnable{
             }
         }
 
-        if(listOfFallingChips.size() < 3) {     /*Don't add more than 3 chips at a time*/
+        if(listOfFallingChips.size() < 4 && areChipsApartEnough()) {     /*Don't add more than 4 chips at a time*/
 
-            /*Now add a chip at random*/
+            /*Now add a chip at random coordinates*/
+            Random generator = new Random();
+            int left = generator.nextInt(screenWidth - chipDimension);
+            int right = left + chipDimension;
+            int bottom = 0;
+            int top = -chipDimension;
+
+            /*rect and colors*/
+            Rect rect = new Rect(left, top, right, bottom);
+            Bitmap chip;
             if (Math.random() > 0.5) {
-                /*Coordinates*/
-                Random generator = new Random();
-                int left = generator.nextInt(screenWidth - chipDimension);
-                int right = left + chipDimension;
-                int bottom = 0;
-                int top = -chipDimension;
-
-                /*rect and colors*/
-                Rect rect = new Rect(left, top, right, bottom);
-                Bitmap chip;
-                if (Math.random() > 0.5) {
-                    chip = yellowChip;
-                } else {
-                    chip = redChip;
-                }
-                listOfFallingChips.add(new CustomRect(chip, rect));
+                chip = yellowChip;
+            } else {
+                chip = redChip;
             }
+            listOfFallingChips.add(new CustomRect(chip, rect));
         }
 
         /*Now move all chips down a bit*/
@@ -170,6 +167,16 @@ public class MenuActivity extends SurfaceView implements Runnable{
         showingMenu = true;
         thread = new Thread(this);
         thread.start();
+    }
+
+    /*Method to check if chips are apart enough from each other*/
+    private boolean areChipsApartEnough(){
+        for(CustomRect customRect : listOfFallingChips){
+            if(customRect.getRect().top <= screenHeight / 4){
+                return false;
+            }
+        }
+        return true;
     }
 
 }
