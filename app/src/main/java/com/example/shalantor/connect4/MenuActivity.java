@@ -40,11 +40,17 @@ public class MenuActivity extends SurfaceView implements Runnable{
     private Thread thread = null;
     private SurfaceHolder holder;
     private Paint paint;
+    private boolean isStartMenuVisible;
+
+    /*Variables for start menu buttons*/
+    private int startButtonHeight;
+    private int startButtonWidth;
 
     public MenuActivity(Context context){
         super(context);
         showingMenu = true;
         listOfFallingChips = new ArrayList<>();
+        isStartMenuVisible = true;
 
         /*Type cast to get screen resolution*/
         Activity parent = (Activity) context;
@@ -57,6 +63,10 @@ public class MenuActivity extends SurfaceView implements Runnable{
         screenWidth = size.x;
         screenHeight = size.y;
         chipDimension = screenWidth / 10;
+
+        /*Get dimension for start menu*/
+        startButtonHeight = screenHeight / 5;
+        startButtonWidth = screenWidth / 3;
 
         /*Load images*/
         redChip = BitmapFactory.decodeResource(getResources(),R.mipmap.redchip);
@@ -129,6 +139,11 @@ public class MenuActivity extends SurfaceView implements Runnable{
                 canvas.drawBitmap(customRect.getBitmap(),null,customRect.getRect(),paint);
             }
 
+            /*Check which buttons to draw*/
+            if(isStartMenuVisible){
+                drawMenuButtons();
+            }
+
             holder.unlockCanvasAndPost(canvas);
         }
 
@@ -177,6 +192,49 @@ public class MenuActivity extends SurfaceView implements Runnable{
             }
         }
         return true;
+    }
+
+    public void drawMenuButtons(){
+
+        paint = new Paint();
+        paint.setColor(Color.argb(255,252,162,7));
+        paint.setTextSize(startButtonHeight);
+        paint.setTextAlign(Paint.Align.CENTER);
+
+        Paint stkPaint = new Paint();
+        stkPaint.setStyle(Paint.Style.STROKE);
+        stkPaint.setStrokeWidth(4);
+        stkPaint.setTextSize(startButtonHeight);
+        stkPaint.setTextAlign(Paint.Align.CENTER);
+        stkPaint.setColor(Color.BLACK);   /*Orange color*/
+
+        /*PLAY button*/
+        canvas.drawText("PLAY GAME",(screenWidth / 2) ,
+                startButtonHeight + screenHeight / 25,paint);
+        canvas.drawText("PLAY GAME",(screenWidth / 2) ,
+                startButtonHeight + screenHeight / 25, stkPaint);
+
+
+        /*OPTIONS button*/
+        canvas.drawText("OPTIONS",(screenWidth / 2) ,
+                2*startButtonHeight + 2*screenHeight / 25,paint);
+        canvas.drawText("OPTIONS",(screenWidth / 2) ,
+                2*startButtonHeight + 2*screenHeight / 25,stkPaint);
+
+
+        /*ABOUT button*/
+        canvas.drawText("ABOUT",(screenWidth / 2) ,
+                3*startButtonHeight + 3*screenHeight / 25,paint);
+        canvas.drawText("ABOUT",(screenWidth / 2) ,
+                3*startButtonHeight + 3*screenHeight / 25,stkPaint);
+
+
+        /*EXIT BUTTON*/
+        canvas.drawText("EXIT",(screenWidth / 2) ,
+                4*startButtonHeight + 4*screenHeight / 25,paint);
+        canvas.drawText("EXIT",(screenWidth / 2) ,
+                4*startButtonHeight + 4*screenHeight / 25,stkPaint);
+
     }
 
 }

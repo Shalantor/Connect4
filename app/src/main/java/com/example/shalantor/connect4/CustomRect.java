@@ -1,5 +1,6 @@
 package com.example.shalantor.connect4;
 
+/*A class that represents the chips falling fro mthe top of the screen to the bottom*/
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
