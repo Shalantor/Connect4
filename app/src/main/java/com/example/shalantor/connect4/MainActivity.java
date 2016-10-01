@@ -5,9 +5,16 @@ import android.os.Bundle;
 
 public class MainActivity extends Activity {
 
+    private MenuActivity menuActivity;
+    private int screenWidth;
+    private int screenHeight;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        menuActivity = new MenuActivity(this);
+        setContentView(menuActivity);
     }
 }
