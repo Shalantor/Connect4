@@ -42,7 +42,10 @@ public class MenuActivity extends SurfaceView implements Runnable{
     private SurfaceHolder holder;
     private Paint paint;
     private Paint stkPaint;
+
+    /*Boolean values to know which page is showing right now*/
     private boolean isStartMenuVisible;
+    private boolean isAboutPageVisible;
 
     /*Variables for start menu buttons*/
     private int startButtonHeight;
@@ -147,6 +150,9 @@ public class MenuActivity extends SurfaceView implements Runnable{
             if(isStartMenuVisible){
                 drawMenuButtons();
             }
+            else if(isAboutPageVisible){
+                drawAboutPageDescription();
+            }
 
             holder.unlockCanvasAndPost(canvas);
         }
@@ -213,7 +219,14 @@ public class MenuActivity extends SurfaceView implements Runnable{
         stkPaint.setTextAlign(Paint.Align.CENTER);
         stkPaint.setColor(Color.BLACK);   /*Orange color*/
 
+
+        Paint rectPaint = new Paint();                          /*Paint for the rectangle that will be around the text*/
+        float textRectWidth = stkPaint.measureText("PLAY GAME");    /*width of button to highlight*/
+        rectPaint.setColor(Color.argb(128,12,246,238));
+
         /*PLAY button*/
+        canvas.drawRect(screenWidth/2 - textRectWidth/2,2* screenHeight / 25,
+                screenWidth/2 + textRectWidth/2,startButtonHeight + 2*screenHeight / 25,rectPaint);
         canvas.drawText("PLAY GAME",(screenWidth / 2) ,
                 startButtonHeight + screenHeight / 25,paint);
         canvas.drawText("PLAY GAME",(screenWidth / 2) ,
@@ -221,6 +234,8 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
 
         /*OPTIONS button*/
+        canvas.drawRect(screenWidth/2 - textRectWidth/2,3* screenHeight / 25 + startButtonHeight,
+                screenWidth/2 + textRectWidth/2,2*startButtonHeight + 3*screenHeight / 25,rectPaint);
         canvas.drawText("OPTIONS",(screenWidth / 2) ,
                 2*startButtonHeight + 2*screenHeight / 25,paint);
         canvas.drawText("OPTIONS",(screenWidth / 2) ,
@@ -228,6 +243,8 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
 
         /*ABOUT button*/
+        canvas.drawRect(screenWidth/2 - textRectWidth/2,4* screenHeight / 25 + 2*startButtonHeight,
+                screenWidth/2 + textRectWidth/2,3*startButtonHeight + 4*screenHeight / 25,rectPaint);
         canvas.drawText("ABOUT",(screenWidth / 2) ,
                 3*startButtonHeight + 3*screenHeight / 25,paint);
         canvas.drawText("ABOUT",(screenWidth / 2) ,
@@ -235,6 +252,8 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
 
         /*EXIT BUTTON*/
+        canvas.drawRect(screenWidth/2 - textRectWidth/2,5* screenHeight / 25 + 3*startButtonHeight,
+                screenWidth/2 + textRectWidth/2,4*startButtonHeight + (4.5f)*screenHeight / 25,rectPaint);
         canvas.drawText("EXIT",(screenWidth / 2) ,
                 4*startButtonHeight + 4*screenHeight / 25,paint);
         canvas.drawText("EXIT",(screenWidth / 2) ,
@@ -246,23 +265,36 @@ public class MenuActivity extends SurfaceView implements Runnable{
     /*TODO:complete method*/
     public boolean validateTouchEvent(MotionEvent event){
         if(isStartMenuVisible){                         /*Player touched the start menu*/
-            float initialX,initialY;
-            float touchSurfaceWidth = stkPaint.measureText("PLAY GAME");
+            float initialY;
             if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
                 initialY = event.getY();
                 /*Now check each button individually*/
+
                 /*EXIT BUTTON*/
                 if(initialY <= 4*startButtonHeight + 4*screenHeight / 25
                         && initialY >= 3*startButtonHeight + 4*screenHeight / 25){
                     pause();
                     associatedActiviry.finish();
                 }
+                /*ABOUT BUTTON*/
+                else if(initialY <= 3*startButtonHeight + 3*screenHeight / 25
+                        && initialY >= 2*startButtonHeight + 3*screenHeight / 25){
+                    isStartMenuVisible = false;
+                    isAboutPageVisible = true;
+                }
+
             }
             return true;
         }
         else{
             return false;
         }
+    }
+
+
+    /*Method to draw the about page*/
+    public void drawAboutPageDescription(){
+
     }
 
 }
