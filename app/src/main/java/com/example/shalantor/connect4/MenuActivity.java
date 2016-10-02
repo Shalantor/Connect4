@@ -366,8 +366,13 @@ public class MenuActivity extends SurfaceView implements Runnable{
     /*Method to draw options page*/
     public void drawOptionsPage(){
 
-        drawBackButton();
+        Paint aboutPaint = new Paint();
+        aboutPaint.setColor(Color.argb(200,0,0,0));
 
+        /*black screen with alpha value, so that text is more visible*/
+        canvas.drawRect(screenWidth /5,0,4*screenWidth/5,screenHeight,aboutPaint);
+
+        drawBackButton();
 
 
     }
