@@ -47,6 +47,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
     /*Boolean values to know which page is showing right now*/
     private boolean isStartMenuVisible;
     private boolean isAboutPageVisible;
+    private boolean isOptionsPageVisible;
 
     /*Variables for start menu buttons*/
     private int startButtonHeight;
@@ -158,6 +159,9 @@ public class MenuActivity extends SurfaceView implements Runnable{
             }
             else if(isAboutPageVisible){
                 drawAboutPageDescription();
+            }
+            else if(isOptionsPageVisible){
+                drawOptionsPage();
             }
 
             holder.unlockCanvasAndPost(canvas);
@@ -293,12 +297,22 @@ public class MenuActivity extends SurfaceView implements Runnable{
                         && initialX <= screenWidth/2 + textRectWidth/2){
                     isStartMenuVisible = false;
                     isAboutPageVisible = true;
+                    isOptionsPageVisible = false;
+                }
+                /*OPTIONS BUTTON*/
+                else if(initialY <= 2*startButtonHeight + 3*screenHeight / 25
+                        && initialY >= 3* screenHeight / 25 + startButtonHeight
+                        && initialX >= screenWidth/2 - textRectWidth/2
+                        && initialX <= screenWidth/2 + textRectWidth/2){
+                    isOptionsPageVisible = true;
+                    isStartMenuVisible = false;
+                    isAboutPageVisible = false;
                 }
 
             }
             return true;
         }
-        else if(isAboutPageVisible){
+        else if(isAboutPageVisible || isOptionsPageVisible){
             if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
                 /*Check if back button was pressed*/
                 if(initialY >= 5*screenHeight/6 -screenHeight/20
@@ -307,6 +321,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
                         && initialX <= screenWidth/20 + screenWidth/6){
                     isStartMenuVisible = true;
                     isAboutPageVisible = false;
+                    isOptionsPageVisible = false;
                 }
             }
             return true;
@@ -332,12 +347,27 @@ public class MenuActivity extends SurfaceView implements Runnable{
         canvas.drawText("University of Thessaly ",screenWidth/2,screenHeight / 15 + screenHeight / 30,aboutPaint);
         canvas.drawText("Winter Semester 2016-2017",screenWidth/2,2*screenHeight /15 + screenHeight /30,aboutPaint);
 
+        drawBackButton();
+
+    }
+
+    /*Method to draw options page*/
+    public void drawOptionsPage(){
+
+        drawBackButton();
+
+        
+
+    }
+
+    /*To draw the back button*/
+    public void drawBackButton(){
+
         Rect destRect = new Rect(screenWidth/20,5*screenHeight/6 -screenHeight/20,
-                                screenWidth/20 + screenWidth/6,screenHeight - screenHeight/20);
-        aboutPaint = new Paint();
+                screenWidth/20 + screenWidth/6,screenHeight - screenHeight/20);
+        Paint aboutPaint = new Paint();
 
         canvas.drawBitmap(backButton,null,destRect,aboutPaint);
-
     }
 
 }
