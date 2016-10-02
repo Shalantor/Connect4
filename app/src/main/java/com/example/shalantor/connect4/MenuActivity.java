@@ -276,16 +276,16 @@ public class MenuActivity extends SurfaceView implements Runnable{
                 /*Now check each button individually*/
 
                 /*EXIT BUTTON*/
-                if(initialY <= 4*startButtonHeight + 4*screenHeight / 25
-                        && initialY >= 3*startButtonHeight + 4*screenHeight / 25
+                if(initialY <= 4*startButtonHeight + (4.5f)*screenHeight / 25
+                        && initialY >= 5* screenHeight / 25 + 3*startButtonHeight
                         && initialX >= screenWidth/2 - textRectWidth/2
                         && initialX <= screenWidth/2 + textRectWidth/2){
                     pause();
                     associatedActiviry.finish();
                 }
                 /*ABOUT BUTTON*/
-                else if(initialY <= 3*startButtonHeight + 3*screenHeight / 25
-                        && initialY >= 2*startButtonHeight + 3*screenHeight / 25
+                else if(initialY <= 3*startButtonHeight + 4*screenHeight / 25
+                        && initialY >= 4* screenHeight / 25 + 2*startButtonHeight
                         && initialX >= screenWidth/2 - textRectWidth/2
                         && initialX <= screenWidth/2 + textRectWidth/2){
                     isStartMenuVisible = false;
