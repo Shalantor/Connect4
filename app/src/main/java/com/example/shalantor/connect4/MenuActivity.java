@@ -37,6 +37,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
     /*Bitmaps with the images*/
     private Bitmap redChip;
     private Bitmap yellowChip;
+    private Bitmap backButton;
 
     private Thread thread = null;
     private SurfaceHolder holder;
@@ -55,6 +56,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
     /*Current width for button*/
     float textRectWidth;
+
 
     public MenuActivity(Context context){
         super(context);
@@ -81,6 +83,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
         /*Load images*/
         redChip = BitmapFactory.decodeResource(getResources(),R.mipmap.redchip);
         yellowChip = BitmapFactory.decodeResource(getResources(),R.mipmap.yellowchip);
+        backButton = BitmapFactory.decodeResource(getResources(),R.mipmap.back_button);
 
     }
 
@@ -315,6 +318,12 @@ public class MenuActivity extends SurfaceView implements Runnable{
         aboutPaint.setTextSize(screenHeight / 15);
         canvas.drawText("University of Thessaly ",screenWidth/2,screenHeight / 15 + screenHeight / 30,aboutPaint);
         canvas.drawText("Winter Semester 2016-2017",screenWidth/2,2*screenHeight /15 + screenHeight /30,aboutPaint);
+
+        Rect destRect = new Rect(screenWidth/20,5*screenHeight/6 -screenHeight/20,
+                                screenWidth/20 + screenWidth/6,screenHeight - screenHeight/20);
+        aboutPaint = new Paint();
+
+        canvas.drawBitmap(backButton,null,destRect,aboutPaint);
 
     }
 
