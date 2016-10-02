@@ -411,6 +411,36 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
         drawBackButton();
 
+        /*Set up paint objects*/
+        paint = new Paint();
+        paint.setColor(Color.argb(255,252,162,7));
+        paint.setTextSize(startButtonHeight);
+        paint.setTextAlign(Paint.Align.CENTER);
+
+        stkPaint = new Paint();
+        stkPaint.setStyle(Paint.Style.STROKE);
+        stkPaint.setStrokeWidth(4);
+        stkPaint.setTextSize(startButtonHeight);
+        stkPaint.setTextAlign(Paint.Align.CENTER);
+        stkPaint.setColor(Color.BLACK);   /*Orange color*/
+
+
+        Paint rectPaint = new Paint();                          /*Paint for the rectangle that will be around the text*/
+        textRectWidth = stkPaint.measureText("SINGLEPLAYER");    /*width of button to highlight*/
+        rectPaint.setColor(Color.argb(128,12,246,238));
+
+        /*SINGLE PLAYER BUTTON*/
+        canvas.drawRect(screenWidth/2 - textRectWidth/2,screenHeight/3 + 2*screenHeight/25 - startButtonHeight,
+                            screenWidth/2 + textRectWidth/2,screenHeight/3 + 2*screenHeight/25,rectPaint);
+        canvas.drawText("SINLGEPLAYER",screenWidth/2,screenHeight/3 + screenHeight/25,paint);
+        canvas.drawText("SINLGEPLAYER",screenWidth/2,screenHeight/3 + screenHeight/25,stkPaint);
+
+        /*MULTI PLAYER BUTTON*/
+        canvas.drawRect(screenWidth/2 - textRectWidth/2,2*screenHeight/3  - startButtonHeight,
+                screenWidth/2 + textRectWidth/2,2*screenHeight/3  ,rectPaint);
+        canvas.drawText("MULTIPLAYER",screenWidth/2,2*screenHeight/3 - screenHeight/25,paint);
+        canvas.drawText("MULTIPLAYER",screenWidth/2,2*screenHeight/3 - screenHeight/25,stkPaint);
+
     }
 
     /*To draw the back button*/
