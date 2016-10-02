@@ -48,6 +48,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
     private boolean isStartMenuVisible;
     private boolean isAboutPageVisible;
     private boolean isOptionsPageVisible;
+    private boolean isSelectPlayModeVisible;
 
     /*Variables for start menu buttons*/
     private int startButtonHeight;
@@ -162,6 +163,9 @@ public class MenuActivity extends SurfaceView implements Runnable{
             }
             else if(isOptionsPageVisible){
                 drawOptionsPage();
+            }
+            else if(isSelectPlayModeVisible){
+                drawSelectPlayMenu();
             }
 
             holder.unlockCanvasAndPost(canvas);
@@ -298,6 +302,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
                     isStartMenuVisible = false;
                     isAboutPageVisible = true;
                     isOptionsPageVisible = false;
+                    isSelectPlayModeVisible = false;
                 }
                 /*OPTIONS BUTTON*/
                 else if(initialY <= 2*startButtonHeight + 3*screenHeight / 25
@@ -305,6 +310,16 @@ public class MenuActivity extends SurfaceView implements Runnable{
                         && initialX >= screenWidth/2 - textRectWidth/2
                         && initialX <= screenWidth/2 + textRectWidth/2){
                     isOptionsPageVisible = true;
+                    isStartMenuVisible = false;
+                    isAboutPageVisible = false;
+                    isSelectPlayModeVisible = false;
+                }
+                else if(initialY <= startButtonHeight + 2*screenHeight / 25
+                        && initialY >= 2* screenHeight / 25
+                        && initialX >= screenWidth/2 - textRectWidth/2
+                        && initialX <= screenWidth/2 + textRectWidth/2){
+                    isSelectPlayModeVisible = true;
+                    isOptionsPageVisible = false;
                     isStartMenuVisible = false;
                     isAboutPageVisible = false;
                 }
@@ -322,6 +337,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
                     isStartMenuVisible = true;
                     isAboutPageVisible = false;
                     isOptionsPageVisible = false;
+                    isSelectPlayModeVisible = false;
                 }
             }
             return true;
@@ -335,6 +351,20 @@ public class MenuActivity extends SurfaceView implements Runnable{
                 isStartMenuVisible = true;
                 isAboutPageVisible = false;
                 isOptionsPageVisible = false;
+                isSelectPlayModeVisible = false;
+            }
+            return true;
+        }
+        else if(isSelectPlayModeVisible){
+                        /*Check if back button was pressed*/
+            if(initialY >= 5*screenHeight/6 -screenHeight/20
+                    && initialY <= screenHeight - screenHeight/20
+                    && initialX >= screenWidth/20
+                    && initialX <= screenWidth/20 + screenWidth/6){
+                isStartMenuVisible = true;
+                isAboutPageVisible = false;
+                isOptionsPageVisible = false;
+                isSelectPlayModeVisible = false;
             }
             return true;
         }
@@ -374,6 +404,12 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
         drawBackButton();
 
+    }
+
+    /*To draw the menu where player is selecting game mode*/
+    public void drawSelectPlayMenu(){
+
+        drawBackButton();
 
     }
 
