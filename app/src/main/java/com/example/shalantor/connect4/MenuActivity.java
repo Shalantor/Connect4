@@ -270,12 +270,12 @@ public class MenuActivity extends SurfaceView implements Runnable{
     /*check what player touched on screen*/
     /*TODO:complete method*/
     public boolean validateTouchEvent(MotionEvent event){
+        float initialY;
+        float initialX;
+        initialY = event.getY();
+        initialX = event.getX();
         if(isStartMenuVisible){                         /*Player touched the start menu*/
-            float initialY;
-            float initialX;
             if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
-                initialY = event.getY();
-                initialX = event.getX();
                 /*Now check each button individually*/
 
                 /*EXIT BUTTON*/
@@ -295,6 +295,19 @@ public class MenuActivity extends SurfaceView implements Runnable{
                     isAboutPageVisible = true;
                 }
 
+            }
+            return true;
+        }
+        else if(isAboutPageVisible){
+            if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
+                /*Check if back button was pressed*/
+                if(initialY >= 5*screenHeight/6 -screenHeight/20
+                        && initialY <= screenHeight - screenHeight/20
+                        && initialX >= screenWidth/20
+                        && initialX <= screenWidth/20 + screenWidth/6){
+                    isStartMenuVisible = true;
+                    isAboutPageVisible = false;
+                }
             }
             return true;
         }
