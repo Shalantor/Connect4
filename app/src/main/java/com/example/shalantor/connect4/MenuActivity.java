@@ -53,6 +53,9 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
     private Activity associatedActiviry;
 
+    /*Current width for button*/
+    float textRectWidth;
+
     public MenuActivity(Context context){
         super(context);
         showingMenu = true;
@@ -221,7 +224,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
 
         Paint rectPaint = new Paint();                          /*Paint for the rectangle that will be around the text*/
-        float textRectWidth = stkPaint.measureText("PLAY GAME");    /*width of button to highlight*/
+        textRectWidth = stkPaint.measureText("PLAY GAME");    /*width of button to highlight*/
         rectPaint.setColor(Color.argb(128,12,246,238));
 
         /*PLAY button*/
@@ -266,19 +269,25 @@ public class MenuActivity extends SurfaceView implements Runnable{
     public boolean validateTouchEvent(MotionEvent event){
         if(isStartMenuVisible){                         /*Player touched the start menu*/
             float initialY;
+            float initialX;
             if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
                 initialY = event.getY();
+                initialX = event.getX();
                 /*Now check each button individually*/
 
                 /*EXIT BUTTON*/
                 if(initialY <= 4*startButtonHeight + 4*screenHeight / 25
-                        && initialY >= 3*startButtonHeight + 4*screenHeight / 25){
+                        && initialY >= 3*startButtonHeight + 4*screenHeight / 25
+                        && initialX >= screenWidth/2 - textRectWidth/2
+                        && initialX <= screenWidth/2 + textRectWidth/2){
                     pause();
                     associatedActiviry.finish();
                 }
                 /*ABOUT BUTTON*/
                 else if(initialY <= 3*startButtonHeight + 3*screenHeight / 25
-                        && initialY >= 2*startButtonHeight + 3*screenHeight / 25){
+                        && initialY >= 2*startButtonHeight + 3*screenHeight / 25
+                        && initialX >= screenWidth/2 - textRectWidth/2
+                        && initialX <= screenWidth/2 + textRectWidth/2){
                     isStartMenuVisible = false;
                     isAboutPageVisible = true;
                 }
