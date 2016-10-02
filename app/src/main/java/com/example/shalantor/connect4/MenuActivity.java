@@ -304,6 +304,18 @@ public class MenuActivity extends SurfaceView implements Runnable{
     /*Method to draw the about page*/
     public void drawAboutPageDescription(){
 
+        Paint aboutPaint = new Paint();
+        aboutPaint.setColor(Color.argb(200,0,0,0));
+
+        /*black screen with alpha value, so that text is more visible*/
+        canvas.drawRect(screenWidth /4,0,3*screenWidth/4,screenHeight,aboutPaint);
+
+        aboutPaint.setColor(Color.WHITE);
+        aboutPaint.setTextAlign(Paint.Align.CENTER);
+        aboutPaint.setTextSize(screenHeight / 15);
+        canvas.drawText("University of Thessaly ",screenWidth/2,screenHeight / 15 + screenHeight / 30,aboutPaint);
+        canvas.drawText("Winter Semester 2016-2017",screenWidth/2,2*screenHeight /15 + screenHeight /30,aboutPaint);
+
     }
 
 }
