@@ -312,7 +312,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
             }
             return true;
         }
-        else if(isAboutPageVisible || isOptionsPageVisible){
+        else if(isAboutPageVisible){
             if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
                 /*Check if back button was pressed*/
                 if(initialY >= 5*screenHeight/6 -screenHeight/20
@@ -323,6 +323,18 @@ public class MenuActivity extends SurfaceView implements Runnable{
                     isAboutPageVisible = false;
                     isOptionsPageVisible = false;
                 }
+            }
+            return true;
+        }
+        else if(isOptionsPageVisible){
+            /*Check if back button was pressed*/
+            if(initialY >= 5*screenHeight/6 -screenHeight/20
+                    && initialY <= screenHeight - screenHeight/20
+                    && initialX >= screenWidth/20
+                    && initialX <= screenWidth/20 + screenWidth/6){
+                isStartMenuVisible = true;
+                isAboutPageVisible = false;
+                isOptionsPageVisible = false;
             }
             return true;
         }
@@ -356,7 +368,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
         drawBackButton();
 
-        
+
 
     }
 
