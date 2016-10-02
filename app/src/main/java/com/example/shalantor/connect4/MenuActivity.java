@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -57,8 +58,10 @@ public class MenuActivity extends SurfaceView implements Runnable{
     private Activity associatedActiviry;
 
     /*Current width for button*/
-    float textRectWidth;
+    private float textRectWidth;
 
+    /*Is player playing*/
+    private MediaPlayer player;
 
     public MenuActivity(Context context){
         super(context);
@@ -92,11 +95,22 @@ public class MenuActivity extends SurfaceView implements Runnable{
     /*Simple run method*/
     @Override
     public void run(){
+
+        /*Load sound*/
+        player = MediaPlayer.create(associatedActiviry,R.raw.menusong);
+        player.setLooping(true);
+        player.start();
+
         while(showingMenu){
             updateElements();
             drawElements();
             controlFPS();
         }
+
+        /*Stop and release player*/
+        player.pause();
+        player.release();
+        player = null;
     }
 
     /*Method to update position of elements in menu screen*/
