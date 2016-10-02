@@ -378,10 +378,10 @@ public class MenuActivity extends SurfaceView implements Runnable{
     public void drawAboutPageDescription(){
 
         Paint aboutPaint = new Paint();
-        aboutPaint.setColor(Color.argb(200,0,0,0));
+        aboutPaint.setColor(Color.argb(128,0,0,0));
 
         /*black screen with alpha value, so that text is more visible*/
-        canvas.drawRect(screenWidth /4,0,3*screenWidth/4,screenHeight,aboutPaint);
+        canvas.drawRect(screenWidth /10,0,9*screenWidth/10,screenHeight,aboutPaint);
 
         aboutPaint.setColor(Color.WHITE);
         aboutPaint.setTextAlign(Paint.Align.CENTER);
@@ -397,10 +397,10 @@ public class MenuActivity extends SurfaceView implements Runnable{
     public void drawOptionsPage(){
 
         Paint aboutPaint = new Paint();
-        aboutPaint.setColor(Color.argb(200,0,0,0));
+        aboutPaint.setColor(Color.argb(128,0,0,0));
 
         /*black screen with alpha value, so that text is more visible*/
-        canvas.drawRect(screenWidth /5,0,4*screenWidth/5,screenHeight,aboutPaint);
+        canvas.drawRect(screenWidth/10,0,9*screenWidth/10,screenHeight,aboutPaint);
 
         drawBackButton();
 
