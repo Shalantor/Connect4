@@ -170,9 +170,6 @@ public class MenuActivity extends SurfaceView implements Runnable{
                 canvas.drawBitmap(customRect.getBitmap(),null,customRect.getRect(),paint);
             }
 
-            /*Draw sound button*/
-            drawSoundButton();
-
             /*Check which buttons to draw*/
             if(isStartMenuVisible){
                 drawMenuButtons();
@@ -186,6 +183,10 @@ public class MenuActivity extends SurfaceView implements Runnable{
             else if(isSelectPlayModeVisible){
                 drawSelectPlayMenu();
             }
+
+            /*Draw sound button*/
+            drawSoundButton();
+
 
             holder.unlockCanvasAndPost(canvas);
         }
@@ -484,7 +485,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
             imageToDraw = BitmapFactory.decodeResource(getResources(),R.mipmap.sound_on);
         }
 
-        Rect destRect = new Rect(screenWidth - (screenWidth / 6 + screenWidth/20),
+        Rect destRect = new Rect(screenWidth - (screenWidth / 6 ),
                 5*screenHeight/6 -screenHeight/20,19*screenWidth/20,screenHeight -screenHeight/20 );
 
         Paint soundPaint = new Paint();
