@@ -30,6 +30,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
     private static final String ONLINE_WIN = "ONLINE_WINS";
     private static final String OFFLINE_LOS = "OFFLINE_LOSSES";
     private static final String ONLINE_LOS = "ONLINE_LOSSES";
+    private static final String DIFFICULTY = "DIFFICULTY";
 
     private volatile boolean showingMenu;                //to stop animations on menu if not necessary
     private Canvas canvas;
@@ -78,6 +79,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
     private int onlineLosses;
     private int offlineWins;
     private int offlineLosses;
+    private int difficulty;
 
     public MenuActivity(Context context){
         super(context);
@@ -110,8 +112,12 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
         /*Get preferences if there exist any and set variables accordingly*/
         SharedPreferences preferences = associatedActiviry.getPreferences(Context.MODE_PRIVATE);
-
-
+        playerRank = preferences.getInt(RANK,0);
+        onlineLosses = preferences.getInt(ONLINE_LOS,0);
+        onlineWins = preferences.getInt(ONLINE_WIN,0);
+        offlineLosses = preferences.getInt(OFFLINE_LOS,0);
+        offlineWins = preferences.getInt(OFFLINE_WIN,0);
+        difficulty = preferences.getInt(DIFFICULTY,0);
 
     }
 
@@ -460,6 +466,12 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
         /*black screen with alpha value, so that text is more visible*/
         canvas.drawRect(screenWidth/10,0,9*screenWidth/10,screenHeight,aboutPaint);
+
+        aboutPaint.setColor(Color.WHITE);
+        aboutPaint.setTextAlign(Paint.Align.CENTER);
+        aboutPaint.setTextSize(screenHeight / 15);
+
+        canvas.drawText("Difficulty:",screenWidth/2,screenHeight / 15 + screenHeight / 30,aboutPaint);
 
         drawBackButton();
 
