@@ -60,14 +60,16 @@ public class MenuActivity extends SurfaceView implements Runnable{
     /*Current width for button*/
     private float textRectWidth;
 
-    /*Is player playing*/
+    /*variables for sound playing*/
     private MediaPlayer player;
+    private boolean isPlayerMuted;
 
     public MenuActivity(Context context){
         super(context);
         showingMenu = true;
         listOfFallingChips = new ArrayList<>();
         isStartMenuVisible = true;
+        isPlayerMuted = false;
 
         /*Type cast to get screen resolution*/
         associatedActiviry = (Activity) context;
@@ -167,6 +169,9 @@ public class MenuActivity extends SurfaceView implements Runnable{
             for(CustomRect customRect : listOfFallingChips){
                 canvas.drawBitmap(customRect.getBitmap(),null,customRect.getRect(),paint);
             }
+
+            /*Draw sound button*/
+            drawSoundButton();
 
             /*Check which buttons to draw*/
             if(isStartMenuVisible){
@@ -465,6 +470,27 @@ public class MenuActivity extends SurfaceView implements Runnable{
         Paint aboutPaint = new Paint();
 
         canvas.drawBitmap(backButton,null,destRect,aboutPaint);
+    }
+
+    /*To draw sound button*/
+    public void drawSoundButton(){
+
+        /*Get correct bitmap*/
+        Bitmap imageToDraw;
+        if(isPlayerMuted){
+            imageToDraw = BitmapFactory.decodeResource(getResources(),R.mipmap.sound_off);
+        }
+        else{
+            imageToDraw = BitmapFactory.decodeResource(getResources(),R.mipmap.sound_on);
+        }
+
+        Rect destRect = new Rect(screenWidth - (screenWidth / 6 + screenWidth/20),
+                5*screenHeight/6 -screenHeight/20,19*screenWidth/20,screenHeight -screenHeight/20 );
+
+        Paint soundPaint = new Paint();
+
+        canvas.drawBitmap(imageToDraw,null,destRect,soundPaint);
+
     }
 
 }
