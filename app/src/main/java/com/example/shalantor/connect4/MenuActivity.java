@@ -63,6 +63,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
     /*variables for sound playing*/
     private MediaPlayer player;
     private boolean isPlayerMuted;
+    private boolean needVolumeChange;
 
     public MenuActivity(Context context){
         super(context);
@@ -70,6 +71,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
         listOfFallingChips = new ArrayList<>();
         isStartMenuVisible = true;
         isPlayerMuted = false;
+        needVolumeChange = false;
 
         /*Type cast to get screen resolution*/
         associatedActiviry = (Activity) context;
@@ -101,9 +103,13 @@ public class MenuActivity extends SurfaceView implements Runnable{
         /*Load sound*/
         player = MediaPlayer.create(associatedActiviry,R.raw.menusong);
         player.setLooping(true);
+        player.setVolume(1,1);
         player.start();
 
         while(showingMenu){
+            if(needVolumeChange){
+                changeVolume();
+            }
             updateElements();
             drawElements();
             controlFPS();
@@ -114,6 +120,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
         player.release();
         player = null;
     }
+
 
     /*Method to update position of elements in menu screen*/
     public void updateElements(){
@@ -302,6 +309,19 @@ public class MenuActivity extends SurfaceView implements Runnable{
         float initialX;
         initialY = event.getY();
         initialX = event.getX();
+
+        /*First of all check if sound button was pressed*/
+        if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
+            if(initialX <= 19*screenWidth/20
+                    && initialX >= screenWidth - (screenWidth / 6 )
+                    && initialY >= 5*screenHeight/6 -screenHeight/20
+                    && initialY <= screenHeight -screenHeight/20){
+                isPlayerMuted = !isPlayerMuted;
+                needVolumeChange = true;
+                return true;
+            }
+        }
+
         if(isStartMenuVisible){                         /*Player touched the start menu*/
             if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
                 /*Now check each button individually*/
@@ -492,6 +512,18 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
         canvas.drawBitmap(imageToDraw,null,destRect,soundPaint);
 
+    }
+
+
+    /*Mute and unmute player*/
+    public void changeVolume(){
+        if(isPlayerMuted){
+            player.setVolume(0,0);
+        }
+        else{
+            player.setVolume(1,1);
+        }
+        needVolumeChange = false;
     }
 
 }
