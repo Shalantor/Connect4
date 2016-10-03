@@ -461,6 +461,21 @@ public class MenuActivity extends SurfaceView implements Runnable{
     /*Method to draw options page*/
     public void drawOptionsPage(){
 
+        String tickCharacter = "✔";
+        String easy = "EASY";
+        String medium = "MEDIUM";
+        String hard = "HARD";
+
+        if(difficulty == 0){
+            easy += tickCharacter;
+        }
+        else if(difficulty == 1){
+            medium += tickCharacter;
+        }
+        else{
+            hard += tickCharacter;
+        }
+
         Paint aboutPaint = new Paint();
         aboutPaint.setColor(Color.argb(128,0,0,0));
 
@@ -471,7 +486,10 @@ public class MenuActivity extends SurfaceView implements Runnable{
         aboutPaint.setTextAlign(Paint.Align.CENTER);
         aboutPaint.setTextSize(screenHeight / 15);
 
-        canvas.drawText("Difficulty:",screenWidth/2,screenHeight / 15 + screenHeight / 30,aboutPaint);
+        canvas.drawText("DIFFICULTY",screenWidth/2,screenHeight / 15 + screenHeight / 30,aboutPaint);
+        canvas.drawText(easy,screenWidth/4,3*screenHeight/15,aboutPaint);
+        canvas.drawText(medium,screenWidth/2,3*screenHeight/15,aboutPaint);
+        canvas.drawText(hard,3*screenWidth/4,3*screenHeight/15,aboutPaint);
 
         drawBackButton();
 
