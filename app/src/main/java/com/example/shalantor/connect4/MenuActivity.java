@@ -3,6 +3,7 @@ package com.example.shalantor.connect4;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -23,6 +24,12 @@ import java.util.List;
 import java.util.Random;
 
 public class MenuActivity extends SurfaceView implements Runnable{
+
+    private static final String RANK = "PLAYER_RANK";
+    private static final String OFFLINE_WIN = "OFFLINE_WINS";
+    private static final String ONLINE_WIN = "ONLINE_WINS";
+    private static final String OFFLINE_LOS = "OFFLINE_LOSSES";
+    private static final String ONLINE_LOS = "ONLINE_LOSSES";
 
     private volatile boolean showingMenu;                //to stop animations on menu if not necessary
     private Canvas canvas;
@@ -65,6 +72,13 @@ public class MenuActivity extends SurfaceView implements Runnable{
     private boolean isPlayerMuted;
     private boolean needVolumeChange;
 
+    /*Variables for player statistics*/
+    private int playerRank;
+    private int onlineWins;
+    private int onlineLosses;
+    private int offlineWins;
+    private int offlineLosses;
+
     public MenuActivity(Context context){
         super(context);
         showingMenu = true;
@@ -93,6 +107,11 @@ public class MenuActivity extends SurfaceView implements Runnable{
         redChip = BitmapFactory.decodeResource(getResources(),R.mipmap.redchip);
         yellowChip = BitmapFactory.decodeResource(getResources(),R.mipmap.yellowchip);
         backButton = BitmapFactory.decodeResource(getResources(),R.mipmap.back_button);
+
+        /*Get preferences if there exist any and set variables accordingly*/
+        SharedPreferences preferences = associatedActiviry.getPreferences(Context.MODE_PRIVATE);
+
+
 
     }
 
