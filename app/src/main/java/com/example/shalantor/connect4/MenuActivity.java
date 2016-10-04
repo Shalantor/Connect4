@@ -426,14 +426,24 @@ public class MenuActivity extends SurfaceView implements Runnable{
             /*one of the difficulty options was pressed*/
             else if(initialY >= 2*screenHeight/15 && initialY <= 3*screenHeight/15){
                 /*Check which one*/
+                boolean commitChange = false;
                 if(initialX >= screenWidth/4 - easyTextWidth/2 && initialX <= screenWidth/4 + easyTextWidth/2){
                     difficulty = 0;
+                    commitChange = true;
                 }
                 else if(initialX >= screenWidth/2 - mediumTextWidth/2 && initialX <= screenWidth/2 + mediumTextWidth/2){
                     difficulty = 1;
+                    commitChange = true;
                 }
                 else if(initialX >= 3*screenWidth/4 - hardTextWidth/2 && initialX <= 3*screenWidth/4 + hardTextWidth/2){
                     difficulty = 2;
+                    commitChange = true;
+                }
+                if(commitChange) {
+                    SharedPreferences preferences = associatedActiviry.getPreferences(Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putInt(DIFFICULTY,difficulty);
+                    editor.apply();
                 }
 
             }
