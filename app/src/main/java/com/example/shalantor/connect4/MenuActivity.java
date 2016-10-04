@@ -525,6 +525,18 @@ public class MenuActivity extends SurfaceView implements Runnable{
         mediumTextWidth = aboutPaint.measureText(medium);
         hardTextWidth = aboutPaint.measureText(hard);
 
+        /*Now draw everything about rank of player*/
+        aboutPaint.setTextSize(2*screenHeight/15);
+        canvas.drawText("RANK " + playerRank,screenWidth/2,screenHeight/3 + screenHeight/15,aboutPaint);
+        aboutPaint.setTextSize(screenHeight/15);
+        canvas.drawText("ONLINE STATS",screenWidth/2,screenHeight/2,aboutPaint);
+        canvas.drawText("WINS:" + onlineWins,screenWidth/3,screenHeight/2 + 2*screenHeight/15,aboutPaint);
+        canvas.drawText("LOSSES:" + onlineLosses,2*screenWidth/3,screenHeight/2 + 2*screenHeight/15,aboutPaint);
+        canvas.drawText("OFFLINE STATS",screenWidth/2,3*screenHeight/4,aboutPaint);
+        canvas.drawText("WINS:" + offlineWins,screenWidth/3,3*screenHeight/4 + 2*screenHeight/15,aboutPaint);
+        canvas.drawText("LOSSES:" + offlineLosses,2*screenWidth/3,3*screenHeight/4 + 2*screenHeight/15,aboutPaint);
+
+
         drawBackButton();
 
     }
