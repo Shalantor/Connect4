@@ -81,6 +81,11 @@ public class MenuActivity extends SurfaceView implements Runnable{
     private int offlineLosses;
     private int difficulty;
 
+    /*Width of difficulties for measuring which one was pressed*/
+    private float easyTextWidth;
+    private float mediumTextWidth;
+    private float hardTextWidth;
+
     public MenuActivity(Context context){
         super(context);
         showingMenu = true;
@@ -418,6 +423,20 @@ public class MenuActivity extends SurfaceView implements Runnable{
                 isOptionsPageVisible = false;
                 isSelectPlayModeVisible = false;
             }
+            /*one of the difficulty options was pressed*/
+            else if(initialY >= 2*screenHeight/15 && initialY <= 3*screenHeight/15){
+                /*Check which one*/
+                if(initialX >= screenWidth/4 - easyTextWidth/2 && initialX <= screenWidth/4 + easyTextWidth/2){
+                    difficulty = 0;
+                }
+                else if(initialX >= screenWidth/2 - mediumTextWidth/2 && initialX <= screenWidth/2 + mediumTextWidth/2){
+                    difficulty = 1;
+                }
+                else if(initialX >= 3*screenWidth/4 - hardTextWidth/2 && initialX <= 3*screenWidth/4 + hardTextWidth/2){
+                    difficulty = 2;
+                }
+
+            }
             return true;
         }
         else if(isSelectPlayModeVisible){
@@ -490,6 +509,11 @@ public class MenuActivity extends SurfaceView implements Runnable{
         canvas.drawText(easy,screenWidth/4,3*screenHeight/15,aboutPaint);
         canvas.drawText(medium,screenWidth/2,3*screenHeight/15,aboutPaint);
         canvas.drawText(hard,3*screenWidth/4,3*screenHeight/15,aboutPaint);
+
+        /*Save button widths*/
+        easyTextWidth = aboutPaint.measureText(easy);
+        mediumTextWidth = aboutPaint.measureText(medium);
+        hardTextWidth = aboutPaint.measureText(hard);
 
         drawBackButton();
 
