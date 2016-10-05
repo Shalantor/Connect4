@@ -567,8 +567,8 @@ public class MenuActivity extends SurfaceView implements Runnable{
         /*SINGLE PLAYER BUTTON*/
         canvas.drawRect(screenWidth/2 - textRectWidth/2,screenHeight/3 + 2*screenHeight/25 - startButtonHeight,
                             screenWidth/2 + textRectWidth/2,screenHeight/3 + 2*screenHeight/25,rectPaint);
-        canvas.drawText("SINLGEPLAYER",screenWidth/2,screenHeight/3 + screenHeight/25,paint);
-        canvas.drawText("SINLGEPLAYER",screenWidth/2,screenHeight/3 + screenHeight/25,stkPaint);
+        canvas.drawText("SINGLEPLAYER",screenWidth/2,screenHeight/3 + screenHeight/25,paint);
+        canvas.drawText("SINGLEPLAYER",screenWidth/2,screenHeight/3 + screenHeight/25,stkPaint);
 
         /*MULTI PLAYER BUTTON*/
         canvas.drawRect(screenWidth/2 - textRectWidth/2,2*screenHeight/3  - startButtonHeight,
