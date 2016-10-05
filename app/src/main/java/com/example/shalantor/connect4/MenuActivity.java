@@ -3,6 +3,7 @@ package com.example.shalantor.connect4;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -459,6 +460,23 @@ public class MenuActivity extends SurfaceView implements Runnable{
                 isAboutPageVisible = false;
                 isOptionsPageVisible = false;
                 isSelectPlayModeVisible = false;
+            }
+            /*Single player button*/
+            else if(initialX >= screenWidth/2 - textRectWidth/2 && initialX <= screenWidth/2 +textRectWidth/2
+                    && initialY >= screenHeight/3 + 2*screenHeight/25 - startButtonHeight
+                    && initialY <= screenHeight/3 + 2*screenHeight/25){
+                Intent intent = new Intent(associatedActiviry,GameActivity.class);
+                pause();
+                intent.putExtra("Play mode","single");
+                associatedActiviry.startActivity(intent);
+            }
+            else if(initialX >= screenWidth/2 - textRectWidth/2 && initialX <= screenWidth/2 +textRectWidth/2
+                    && initialY >= 2*screenHeight/3  - startButtonHeight
+                    && initialY <= 2*screenHeight/3){
+                Intent intent = new Intent(associatedActiviry,GameActivity.class);
+                pause();
+                intent.putExtra("Play mode","multi");
+                associatedActiviry.startActivity(intent);
             }
             return true;
         }
