@@ -3,10 +3,13 @@ package com.example.shalantor.connect4;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceHolder;
@@ -26,6 +29,16 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*Screen dimensions info*/
     private int screenHeight;
     private int screenWidth;
+    private int cellWidth;
+    private int cellheight;
+    private int[][] gameGrid;
+
+    /*image variables*/
+    private Bitmap redChip;
+    private Bitmap yellowChip;
+    private Bitmap emptyCell;
+    private Bitmap yellowCell;
+    private Bitmap redCell;
 
     /*Associated activity*/
     private Activity associatedActivity;
@@ -42,6 +55,20 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         display.getSize(size);
         screenHeight = size.y;
         screenWidth = size.x;
+
+        /*Set dimensions of field*/
+        cellWidth = screenWidth/10;
+        cellheight = screenHeight/6;
+
+        /*Load images*/
+        redChip = BitmapFactory.decodeResource(getResources(),R.mipmap.redchip);
+        yellowChip = BitmapFactory.decodeResource(getResources(),R.mipmap.yellowchip);
+        emptyCell = BitmapFactory.decodeResource(getResources(),R.mipmap.emptycell);
+        redCell = BitmapFactory.decodeResource(getResources(),R.mipmap.redcell);
+        yellowCell = BitmapFactory.decodeResource(getResources(),R.mipmap.yellowcell);
+
+        /*Create array for field, 0 means empty , 1 means red chip, 2 means yellow chip*/
+        gameGrid = new int[6][7];
 
     }
 
@@ -65,8 +92,31 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     public void drawScreen(){
         if(holder.getSurface().isValid()){
             canvas = holder.lockCanvas();
-            paint.setColor(Color.argb(255,255,255,255));
-            canvas.drawColor(Color.WHITE);
+            canvas.drawColor(Color.BLACK);                  /*Background*/
+            paint = new Paint();
+
+            /*Game grid*/
+            Rect destRect;
+            Bitmap imageToDraw;
+
+            /*Draw each cell*/
+            for( int i = 0; i < 6;i++){
+                for(int j =0; j < 7;j++){
+                    destRect = new Rect(j*cellWidth,i*cellheight,(j+1)*cellWidth,(i+1)*cellheight);
+                    if(gameGrid[i][j] == 0){
+                        imageToDraw = emptyCell;
+                    }
+                    else if(gameGrid[i][j] == 1){
+                        imageToDraw = redCell;
+                    }
+                    else{
+                        imageToDraw = yellowCell;
+                    }
+                    canvas.drawBitmap(imageToDraw,null,destRect,paint);
+                }
+            }
+
+
             holder.unlockCanvasAndPost(canvas);
         }
     }
