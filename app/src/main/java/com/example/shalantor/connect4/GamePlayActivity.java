@@ -20,6 +20,10 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     private Thread thread = null;
     private SurfaceHolder holder;
     volatile boolean playingConnect4;
+    /*TODO: remove hard coded values from boolean variables*/
+    volatile boolean isSinglePlayer = true;
+    volatile boolean isMultiplayer = false;
+    volatile boolean isMuted = false;
     private Paint paint;
     private Canvas canvas;
 
@@ -39,6 +43,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     private Bitmap emptyCell;
     private Bitmap yellowCell;
     private Bitmap redCell;
+    private Bitmap soundOn;
+    private Bitmap soundOff;
+    private Bitmap backButton;
 
     /*Associated activity*/
     private Activity associatedActivity;
@@ -66,6 +73,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         emptyCell = BitmapFactory.decodeResource(getResources(),R.mipmap.emptycell);
         redCell = BitmapFactory.decodeResource(getResources(),R.mipmap.redcell);
         yellowCell = BitmapFactory.decodeResource(getResources(),R.mipmap.yellowcell);
+        soundOff = BitmapFactory.decodeResource(getResources(),R.mipmap.sound_off);
+        soundOn = BitmapFactory.decodeResource(getResources(),R.mipmap.sound_on);
+        backButton = BitmapFactory.decodeResource(getResources(),R.mipmap.back_button);
 
         /*Create array for field, 0 means empty , 1 means red chip, 2 means yellow chip*/
         gameGrid = new int[6][7];
@@ -119,6 +129,44 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             /*Now draw rect for menu*/
             paint.setColor(Color.argb(255,153,255,255));
             canvas.drawRect(7*screenWidth/10,0,screenWidth,screenHeight,paint);
+
+            /*Write some info*/
+            paint.setTextSize(screenHeight/15);
+            paint.setTextAlign(Paint.Align.CENTER);
+            paint.setColor(Color.BLACK);
+            canvas.drawText("OPPONENT:",8*screenWidth/10 + screenWidth/20,screenHeight/15,paint);
+
+            if(isSinglePlayer){
+                paint.setTextSize(screenHeight/10);
+                canvas.drawText("AI",8*screenWidth/10 + screenWidth/20,screenHeight/4,paint);
+                paint.setTextSize(screenHeight/15);
+            }
+
+            canvas.drawText("TIME:",8*screenWidth/10 + screenWidth/20,screenHeight/2,paint);
+
+            if(isSinglePlayer){
+                canvas.drawText("-",8*screenWidth/10 + screenWidth/20,screenHeight/2 + 2*screenHeight/15,paint);
+            }
+
+            /*Draw back button and and sound button*/
+            int buttonDimension = screenWidth/10;
+
+            /*Destination rect for sound button*/
+            destRect = new Rect(7*screenWidth/10,screenHeight - buttonDimension,
+                                7*screenWidth/10+ buttonDimension,screenHeight );
+
+            /*Draw sound button based on volume*/
+            if(isMuted){
+                imageToDraw = soundOff;
+            }
+            else{
+                imageToDraw = soundOn;
+            }
+            canvas.drawBitmap(imageToDraw,null,destRect,paint);
+
+            /*Destination for back button*/
+            destRect = new Rect(9*screenWidth/10,screenHeight - buttonDimension, screenWidth,screenHeight);
+            canvas.drawBitmap(backButton,null,destRect,paint);
 
             holder.unlockCanvasAndPost(canvas);
         }
