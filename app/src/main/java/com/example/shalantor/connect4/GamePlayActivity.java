@@ -24,6 +24,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     volatile boolean isSinglePlayer = true;
     volatile boolean isMultiplayer = false;
     volatile boolean isMuted = false;
+    volatile boolean isExitMenuVisible = false;
+
     private Paint paint;
     private Canvas canvas;
 
@@ -167,6 +169,17 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             /*Destination for back button*/
             destRect = new Rect(9*screenWidth/10,screenHeight - buttonDimension, screenWidth,screenHeight);
             canvas.drawBitmap(backButton,null,destRect,paint);
+
+            if(isExitMenuVisible){
+                canvas.drawColor(Color.argb(200,0,0,0));
+                paint.setTextSize(screenHeight/4);
+                paint.setTextAlign(Paint.Align.CENTER);
+                paint.setColor(Color.WHITE);
+                canvas.drawText("EXIT?",screenWidth/2,screenHeight/3,paint);
+                paint.setTextSize(screenHeight/5);
+                canvas.drawText("YES",screenWidth/3,2*screenHeight/3,paint);
+                canvas.drawText("NO",2*screenWidth/3,2*screenHeight/3,paint);
+            }
 
             holder.unlockCanvasAndPost(canvas);
         }
