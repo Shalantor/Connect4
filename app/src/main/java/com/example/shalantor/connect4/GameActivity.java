@@ -3,6 +3,7 @@ package com.example.shalantor.connect4;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 
 public class GameActivity extends Activity {
 
@@ -45,5 +46,11 @@ public class GameActivity extends Activity {
             return true;
         }
         return false;
+    }
+
+    /*In case of touchevent foward it to the MenuActivity or the PlayActivity*/
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        return gamePlayView.validateTouchEvent(event);
     }
 }

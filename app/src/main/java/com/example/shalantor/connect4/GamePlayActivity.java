@@ -12,6 +12,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -24,7 +25,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     volatile boolean isSinglePlayer = true;
     volatile boolean isMultiplayer = false;
     volatile boolean isMuted = false;
-    volatile boolean isExitMenuVisible = false;
+    volatile boolean isExitMenuVisible = true;
 
     private Paint paint;
     private Canvas canvas;
@@ -48,6 +49,10 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     private Bitmap soundOn;
     private Bitmap soundOff;
     private Bitmap backButton;
+
+    /*Width of texts*/
+    private float noTextWidth;
+    private float yesTextWidth;
 
     /*Associated activity*/
     private Activity associatedActivity;
@@ -81,6 +86,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
         /*Create array for field, 0 means empty , 1 means red chip, 2 means yellow chip*/
         gameGrid = new int[6][7];
+
 
     }
 
@@ -179,6 +185,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 paint.setTextSize(screenHeight/5);
                 canvas.drawText("YES",screenWidth/3,2*screenHeight/3,paint);
                 canvas.drawText("NO",2*screenWidth/3,2*screenHeight/3,paint);
+                yesTextWidth = paint.measureText("YES");
+                noTextWidth = paint.measureText("NO");
             }
 
             holder.unlockCanvasAndPost(canvas);
@@ -219,6 +227,32 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         playingConnect4 = true;
         thread = new Thread(this);
         thread.start();
+    }
+
+    /*Validate touchevent*/
+    public boolean validateTouchEvent(MotionEvent event){
+
+        float initialY = event.getY();
+        float initialX = event.getX();
+
+        if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
+            if(isExitMenuVisible){
+                /*YES BUTTON*/
+                if(initialX >= screenWidth/3 - yesTextWidth && initialX <= screenWidth/3 + yesTextWidth
+                        && initialY >= 2*screenHeight/3 - screenHeight/5
+                        && initialY <= 2*screenHeight/3){
+                    pause();
+                    associatedActivity.finish();
+                }
+                /*NO BUTTON*/
+                if(initialX >= 2*screenWidth/3 - noTextWidth && initialX <= 2*screenWidth/3 + noTextWidth
+                        && initialY >= 2*screenHeight/3 - screenHeight/5
+                        && initialY <= 2*screenHeight/3){
+                    isExitMenuVisible = false;
+                }
+            }
+        }
+        return false;
     }
 
 }
