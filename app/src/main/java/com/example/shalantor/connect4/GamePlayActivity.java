@@ -25,7 +25,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     volatile boolean isSinglePlayer = true;
     volatile boolean isMultiplayer = false;
     volatile boolean isMuted = false;
-    volatile boolean isExitMenuVisible = true;
+    volatile boolean isExitMenuVisible ;
 
     private Paint paint;
     private Canvas canvas;
@@ -62,6 +62,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         holder = getHolder();
         paint = new Paint();
         associatedActivity = (Activity) context;
+
+        /*Boolean variables*/
+        isExitMenuVisible = false;
 
         /*Get screen dimensions*/
         Display display = associatedActivity.getWindowManager().getDefaultDisplay();
@@ -250,9 +253,22 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                         && initialY <= 2*screenHeight/3){
                     isExitMenuVisible = false;
                 }
+                return true;
+            }
+            else{
+                /*BACK BUTTON*/
+                if(initialX >= 9*screenWidth/10 && initialX <= screenWidth
+                        && initialY >= screenHeight - screenWidth/10 && initialY <= screenHeight){
+                    isExitMenuVisible = true;
+                }
+                /*SOUND BUTTON*/
+                if(initialX >= 7*screenWidth/10 && initialX <= 8*screenWidth/10
+                        && initialY >= screenHeight - screenWidth/10 && initialY <= screenHeight){
+                    /*TODO:add code to mute sound when we have a soundtrack*/
+                    isMuted = !isMuted;
+                }
             }
         }
         return false;
     }
-
 }
