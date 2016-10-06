@@ -116,6 +116,10 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 }
             }
 
+            /*Now draw rect for menu*/
+            paint.setColor(Color.argb(255,153,255,255));
+            canvas.drawRect(7*screenWidth/10,0,screenWidth,screenHeight,paint);
+
             holder.unlockCanvasAndPost(canvas);
         }
     }
