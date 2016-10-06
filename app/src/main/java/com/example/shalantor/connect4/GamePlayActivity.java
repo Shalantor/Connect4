@@ -116,7 +116,6 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 }
             }
 
-
             holder.unlockCanvasAndPost(canvas);
         }
     }
