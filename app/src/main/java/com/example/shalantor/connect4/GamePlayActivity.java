@@ -24,8 +24,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*TODO: remove hard coded values from boolean variables*/
     volatile boolean isSinglePlayer = true;
     volatile boolean isMultiplayer = false;
-    volatile boolean isMuted = false;
+    volatile boolean isMuted;
     volatile boolean isExitMenuVisible ;
+    volatile boolean isPlayersTurn = true;
 
     private Paint paint;
     private Canvas canvas;
@@ -57,6 +58,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*Associated activity*/
     private Activity associatedActivity;
 
+    /*Variable to store which column was chose by the player, where -1 means that no column is chosen right now*/
+    private int activeColumnNumber;
+
     public GamePlayActivity(Context context){
         super(context);
         holder = getHolder();
@@ -65,6 +69,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
         /*Boolean variables*/
         isExitMenuVisible = false;
+        isMuted = false;
+        activeColumnNumber = -1;
 
         /*Get screen dimensions*/
         Display display = associatedActivity.getWindowManager().getDefaultDisplay();
@@ -179,6 +185,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             destRect = new Rect(9*screenWidth/10,screenHeight - buttonDimension, screenWidth,screenHeight);
             canvas.drawBitmap(backButton,null,destRect,paint);
 
+            /*Draw the exit menu if it is visible*/
             if(isExitMenuVisible){
                 canvas.drawColor(Color.argb(200,0,0,0));
                 paint.setTextSize(screenHeight/4);
@@ -190,6 +197,13 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 canvas.drawText("NO",2*screenWidth/3,2*screenHeight/3,paint);
                 yesTextWidth = paint.measureText("YES");
                 noTextWidth = paint.measureText("NO");
+            }
+
+            /*Highlight the ative column if there is one*/
+            if(activeColumnNumber >= 0) {
+                paint.setColor(Color.argb(128, 0, 255, 0));
+                canvas.drawRect(screenWidth/10 * activeColumnNumber,0,
+                        (activeColumnNumber + 1) * screenWidth/10,screenHeight,paint);
             }
 
             holder.unlockCanvasAndPost(canvas);
@@ -262,10 +276,34 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     isExitMenuVisible = true;
                 }
                 /*SOUND BUTTON*/
-                if(initialX >= 7*screenWidth/10 && initialX <= 8*screenWidth/10
+                else if(initialX >= 7*screenWidth/10 && initialX <= 8*screenWidth/10
                         && initialY >= screenHeight - screenWidth/10 && initialY <= screenHeight){
                     /*TODO:add code to mute sound when we have a soundtrack*/
                     isMuted = !isMuted;
+                }
+                else if(isPlayersTurn){     /*Is it the players turn?*/
+                    if(initialX <= screenWidth/10){
+                        activeColumnNumber = 0;
+                    }
+                    else if(initialX <= 2*screenWidth/10){
+                        activeColumnNumber = 1;
+                    }
+                    else if(initialX <= 3*screenWidth/10){
+                        activeColumnNumber = 2;
+                    }
+                    else if(initialX <= 4*screenWidth/10){
+                        activeColumnNumber = 3;
+                    }
+                    else if(initialX <= 5*screenWidth/10){
+                        activeColumnNumber = 4;
+                    }
+                    else if(initialX <= 6*screenWidth/10){
+                        activeColumnNumber = 5;
+                    }
+                    else if(initialX <= 7*screenWidth/10){
+                        activeColumnNumber = 6;
+                    }
+                    return true;
                 }
             }
         }
