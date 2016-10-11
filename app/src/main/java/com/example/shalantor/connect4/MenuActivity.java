@@ -469,6 +469,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
                 pause();
                 intent.putExtra("Play mode","single");
                 associatedActiviry.startActivity(intent);
+                associatedActiviry.finish();
             }
             else if(initialX >= screenWidth/2 - textRectWidth/2 && initialX <= screenWidth/2 +textRectWidth/2
                     && initialY >= 2*screenHeight/3  - startButtonHeight

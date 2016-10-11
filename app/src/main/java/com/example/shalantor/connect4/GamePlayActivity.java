@@ -3,6 +3,7 @@ package com.example.shalantor.connect4;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -258,7 +259,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 if(initialX >= screenWidth/3 - yesTextWidth && initialX <= screenWidth/3 + yesTextWidth
                         && initialY >= 2*screenHeight/3 - screenHeight/5
                         && initialY <= 2*screenHeight/3){
+                    Intent intent = new Intent(associatedActivity,MainActivity.class);
                     pause();
+                    associatedActivity.startActivity(intent);
                     associatedActivity.finish();
                 }
                 /*NO BUTTON*/
@@ -282,6 +285,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     isMuted = !isMuted;
                 }
                 else if(isPlayersTurn){     /*Is it the players turn?*/
+                    /*Check which column is active*/
                     if(initialX <= screenWidth/10){
                         activeColumnNumber = 0;
                     }
@@ -309,4 +313,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         }
         return false;
     }
+
+    /*Insert chip in specified position*/
+
 }
