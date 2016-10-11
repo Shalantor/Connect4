@@ -467,7 +467,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
                     && initialY <= screenHeight/3 + 2*screenHeight/25){
                 Intent intent = new Intent(associatedActiviry,GameActivity.class);
                 pause();
-                intent.putExtra("Play mode","single");
+                intent.putExtra("MODE",0);
                 associatedActiviry.startActivity(intent);
                 associatedActiviry.finish();
             }
@@ -476,7 +476,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
                     && initialY <= 2*screenHeight/3){
                 Intent intent = new Intent(associatedActiviry,GameActivity.class);
                 pause();
-                intent.putExtra("Play mode","multi");
+                intent.putExtra("MODE",1);
                 associatedActiviry.startActivity(intent);
             }
             return true;

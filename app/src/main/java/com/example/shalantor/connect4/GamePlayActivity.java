@@ -23,7 +23,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     private SurfaceHolder holder;
     volatile boolean playingConnect4;
     /*TODO: remove hard coded values from boolean variables*/
-    volatile boolean isSinglePlayer = true;
+    volatile boolean isSinglePlayer;
     volatile boolean isMultiplayer = false;
     volatile boolean isMuted;
     volatile boolean isExitMenuVisible ;
@@ -67,6 +67,15 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         holder = getHolder();
         paint = new Paint();
         associatedActivity = (Activity) context;
+        Intent intent = associatedActivity.getIntent();
+        if(intent.getIntExtra("MODE",-1) == 0){
+            isSinglePlayer = true;
+            isMultiplayer = false;
+        }
+        else{
+            isMultiplayer = true;
+            isSinglePlayer = false;
+        }
 
         /*Boolean variables*/
         isExitMenuVisible = false;
