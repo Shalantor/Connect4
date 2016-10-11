@@ -24,7 +24,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     volatile boolean playingConnect4;
     /*TODO: remove hard coded values from boolean variables*/
     volatile boolean isSinglePlayer;
-    volatile boolean isMultiplayer = false;
+    volatile boolean isMultiplayer ;
     volatile boolean isMuted;
     volatile boolean isExitMenuVisible ;
     volatile boolean isPlayersTurn = true;
@@ -51,6 +51,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     private Bitmap soundOn;
     private Bitmap soundOff;
     private Bitmap backButton;
+    private Bitmap playerChipColor;
 
     /*Width of texts*/
     private float noTextWidth;
@@ -106,6 +107,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         /*Create array for field, 0 means empty , 1 means red chip, 2 means yellow chip*/
         gameGrid = new int[6][7];
 
+        /*TODO:the color of the players chip is hardcoded, when falling mechanism works change it*/
+        playerChipColor = redChip;
 
     }
 
@@ -296,25 +299,67 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 else if(isPlayersTurn){     /*Is it the players turn?*/
                     /*Check which column is active*/
                     if(initialX <= screenWidth/10){
-                        activeColumnNumber = 0;
+                        if(activeColumnNumber == 0 && hasSpace(0)) {
+                            makeMove(0);
+                            activeColumnNumber = -1;
+                        }
+                        else {
+                            activeColumnNumber = 0;
+                        }
                     }
                     else if(initialX <= 2*screenWidth/10){
-                        activeColumnNumber = 1;
+                        if(activeColumnNumber ==1 && hasSpace(1)) {
+                            makeMove(1);
+                            activeColumnNumber = -1;
+                        }
+                        else {
+                            activeColumnNumber = 1;
+                        }
                     }
                     else if(initialX <= 3*screenWidth/10){
-                        activeColumnNumber = 2;
+                        if(activeColumnNumber ==2 && hasSpace(2)) {
+                            makeMove(2);
+                            activeColumnNumber = -1;
+                        }
+                        else {
+                            activeColumnNumber = 2;
+                        }
                     }
                     else if(initialX <= 4*screenWidth/10){
-                        activeColumnNumber = 3;
+                        if(activeColumnNumber ==3 && hasSpace(3)) {
+                            makeMove(3);
+                            activeColumnNumber = -1;
+                        }
+                        else {
+                            activeColumnNumber = 3;
+                        }
                     }
                     else if(initialX <= 5*screenWidth/10){
-                        activeColumnNumber = 4;
+                        if(activeColumnNumber ==4 && hasSpace(4)) {
+                            makeMove(4);
+                            activeColumnNumber = -1;
+                        }
+                        else {
+                            activeColumnNumber = 4;
+                        }
                     }
                     else if(initialX <= 6*screenWidth/10){
-                        activeColumnNumber = 5;
+                        if(activeColumnNumber ==5 && hasSpace(5)) {
+                            makeMove(5);
+                            activeColumnNumber = -1;
+                        }
+                        else {
+                            activeColumnNumber = 5;
+                        }
                     }
                     else if(initialX <= 7*screenWidth/10){
-                        activeColumnNumber = 6;
+                        if(activeColumnNumber ==6 && hasSpace(6)) {
+                            makeMove(5);
+                            activeColumnNumber = -1;
+                        }
+                        else {
+                            activeColumnNumber = 6;
+                        }
                     }
                     return true;
                 }
@@ -323,6 +368,14 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         return false;
     }
 
+    /*Check if chip can be inserted in specified field*/
+    private boolean hasSpace(int columnNumber){
+        return gameGrid[0][columnNumber] == 0;
+    }
+
     /*Insert chip in specified position*/
+    public void makeMove(int columnNumber){
+
+    }
 
 }
