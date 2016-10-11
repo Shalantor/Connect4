@@ -1,6 +1,7 @@
 package com.example.shalantor.connect4;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -43,6 +44,8 @@ public class GameActivity extends Activity {
         if(keycode == KeyEvent.KEYCODE_BACK){
             gamePlayView.pause();
             finish();
+            Intent intent = new Intent(this,MainActivity.class);
+            this.startActivity(intent);
             return true;
         }
         return false;
