@@ -31,6 +31,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     volatile boolean isExitMenuVisible ;
     volatile boolean isPlayersTurn = true;
     volatile boolean isColorChoiceVisible;
+    volatile boolean isChipFalling;
 
     private Paint paint;
     private Canvas canvas;
@@ -46,7 +47,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
     /*arrays to store game info*/
     private int[][] gameGrid;
-    private int[] availableSpace;
+    private int[] howManyChips;
 
     /*image variables*/
     private Bitmap redChip;
@@ -69,6 +70,12 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*Variable to store which column was chose by the player, where -1 means that no column is chosen right now*/
     private int activeColumnNumber;
 
+    /*where will next chip be inserted*/
+    private int finalChipHeight;
+    private Rect fallingChip;
+    private int fallingChipPosition;
+    private int playerChipColorInt;
+
     public GamePlayActivity(Context context){
         super(context);
         holder = getHolder();
@@ -84,11 +91,14 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             isSinglePlayer = false;
         }
 
+        fallingChip = null;
+
         /*Boolean variables*/
         isExitMenuVisible = false;
         isMuted = false;
         activeColumnNumber = -1;
         isColorChoiceVisible = true;
+        isChipFalling = false;
 
         /*Get screen dimensions*/
         Display display = associatedActivity.getWindowManager().getDefaultDisplay();
@@ -113,7 +123,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
         /*Create array for field, 0 means empty , 1 means red chip, 2 means yellow chip*/
         gameGrid = new int[6][7];
-        availableSpace = new int[7];
+        howManyChips = new int[7];
 
     }
 
@@ -129,6 +139,18 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
     /*Method to update GUI components that will animate the menu*/
     public void updateGUIObjects(){
+        /*We have a chip*/
+        if(fallingChip != null){
+            /*Move down chip a bit*/
+            fallingChip.top += cellheight/8;
+            fallingChip.bottom += cellheight/8;
+            if(fallingChip.bottom >= finalChipHeight){
+                fallingChip = null;                         //remove
+                gameGrid[5 - howManyChips[fallingChipPosition]][fallingChipPosition] = playerChipColorInt;
+                isChipFalling = false;
+                howManyChips[fallingChipPosition] += 1;
+            }
+        }
 
     }
 
@@ -139,6 +161,11 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             canvas = holder.lockCanvas();
             canvas.drawColor(Color.BLACK);                  /*Background*/
             paint = new Paint();
+
+            /*Check if chip is falling and draw it if it is*/
+            if(isChipFalling){
+                canvas.drawBitmap(playerChipColor,null,fallingChip,paint);
+            }
 
             /*Game grid*/
             Rect destRect;
@@ -255,7 +282,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     public void controlFPS(){
 
         long timeThisFrame = System.currentTimeMillis() - lastFrameTime;
-        long timeToSleep = 50 - timeThisFrame;
+        long timeToSleep = 10 - timeThisFrame;
 
         if(timeToSleep > 0){
             try{
@@ -326,12 +353,14 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 /*RED CHIP ICON*/
                 else if(initialX >= screenWidth/10 && initialX <= 3*screenWidth/10
                         && initialY >= screenHeight/3 && initialY <= 2*screenHeight/3){
+                    playerChipColorInt = 1;
                     playerChipColor = redChip;
                     isColorChoiceVisible = false;
                 }
                 /*YELLOW CHIP ICON*/
                 else if(initialX >= 4*screenWidth/10 && initialX <= 6*screenWidth/10
                         && initialY >= screenHeight/3 && initialY <= 2*screenHeight/3){
+                    playerChipColorInt = 2;
                     playerChipColor = yellowChip;
                     isColorChoiceVisible = false;
                 }
@@ -348,7 +377,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     /*TODO:add code to mute sound when we have a soundtrack*/
                     isMuted = !isMuted;
                 }
-                else if(isPlayersTurn){     /*Is it the players turn?*/
+                else if(isPlayersTurn && !isChipFalling){     /*Is it the players turn?*/
                     /*Check which column is active*/
                     if(initialX <= screenWidth/10){
                         if(activeColumnNumber == 0 && hasSpace(0)) {
@@ -424,7 +453,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     }
                     else if(initialX <= 7*screenWidth/10){
                         if(activeColumnNumber ==6 && hasSpace(6)) {
-                            makeMove(5);
+                            makeMove(6);
                             activeColumnNumber = -1;
                         }
                         else if(!hasSpace(6)){
@@ -443,12 +472,17 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
     /*Check if chip can be inserted in specified field*/
     private boolean hasSpace(int columnNumber){
-        return availableSpace[columnNumber] <= 6;
+        return howManyChips[columnNumber] < 6;
     }
 
     /*Insert chip in specified position*/
     public void makeMove(int columnNumber){
-        availableSpace[columnNumber] += 1;
+        isChipFalling = true;
+        finalChipHeight = screenHeight - howManyChips[columnNumber]*cellheight;
+        fallingChipPosition = columnNumber;
+
+        /*Create new chip and add it to list*/
+        fallingChip = new Rect(columnNumber*cellWidth,-cellheight,(columnNumber+1)*cellWidth,0);
 
     }
 
