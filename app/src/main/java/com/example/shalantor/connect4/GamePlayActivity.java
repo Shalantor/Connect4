@@ -43,7 +43,10 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     private int screenWidth;
     private int cellWidth;
     private int cellheight;
+
+    /*arrays to store game info*/
     private int[][] gameGrid;
+    private int[] availableSpace;
 
     /*image variables*/
     private Bitmap redChip;
@@ -110,6 +113,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
         /*Create array for field, 0 means empty , 1 means red chip, 2 means yellow chip*/
         gameGrid = new int[6][7];
+        availableSpace = new int[7];
 
     }
 
@@ -351,6 +355,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                             makeMove(0);
                             activeColumnNumber = -1;
                         }
+                        else if(!hasSpace(0)){
+                            activeColumnNumber = -1;
+                        }
                         else {
                             activeColumnNumber = 0;
                         }
@@ -358,6 +365,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     else if(initialX <= 2*screenWidth/10){
                         if(activeColumnNumber ==1 && hasSpace(1)) {
                             makeMove(1);
+                            activeColumnNumber = -1;
+                        }
+                        else if(!hasSpace(1)){
                             activeColumnNumber = -1;
                         }
                         else {
@@ -369,6 +379,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                             makeMove(2);
                             activeColumnNumber = -1;
                         }
+                        else if(!hasSpace(2)){
+                            activeColumnNumber = -1;
+                        }
                         else {
                             activeColumnNumber = 2;
                         }
@@ -376,6 +389,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     else if(initialX <= 4*screenWidth/10){
                         if(activeColumnNumber ==3 && hasSpace(3)) {
                             makeMove(3);
+                            activeColumnNumber = -1;
+                        }
+                        else if(!hasSpace(3)){
                             activeColumnNumber = -1;
                         }
                         else {
@@ -387,6 +403,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                             makeMove(4);
                             activeColumnNumber = -1;
                         }
+                        else if(!hasSpace(4)){
+                            activeColumnNumber = -1;
+                        }
                         else {
                             activeColumnNumber = 4;
                         }
@@ -396,6 +415,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                             makeMove(5);
                             activeColumnNumber = -1;
                         }
+                        else if(!hasSpace(5)){
+                            activeColumnNumber = -1;
+                        }
                         else {
                             activeColumnNumber = 5;
                         }
@@ -403,6 +425,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     else if(initialX <= 7*screenWidth/10){
                         if(activeColumnNumber ==6 && hasSpace(6)) {
                             makeMove(5);
+                            activeColumnNumber = -1;
+                        }
+                        else if(!hasSpace(6)){
                             activeColumnNumber = -1;
                         }
                         else {
@@ -418,11 +443,12 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
     /*Check if chip can be inserted in specified field*/
     private boolean hasSpace(int columnNumber){
-        return gameGrid[0][columnNumber] == 0;
+        return availableSpace[columnNumber] <= 6;
     }
 
     /*Insert chip in specified position*/
     public void makeMove(int columnNumber){
+        availableSpace[columnNumber] += 1;
 
     }
 
