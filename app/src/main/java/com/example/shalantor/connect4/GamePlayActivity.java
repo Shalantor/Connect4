@@ -17,6 +17,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+    /*TODO:SOMETIMES ACTIVITY DOESN'T FINISH PROPERLY */
+
 public class GamePlayActivity extends SurfaceView implements Runnable{
 
     private Thread thread = null;
@@ -28,6 +30,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     volatile boolean isMuted;
     volatile boolean isExitMenuVisible ;
     volatile boolean isPlayersTurn = true;
+    volatile boolean isColorChoiceVisible;
 
     private Paint paint;
     private Canvas canvas;
@@ -82,6 +85,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         isExitMenuVisible = false;
         isMuted = false;
         activeColumnNumber = -1;
+        isColorChoiceVisible = true;
 
         /*Get screen dimensions*/
         Display display = associatedActivity.getWindowManager().getDefaultDisplay();
@@ -198,6 +202,34 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             destRect = new Rect(9*screenWidth/10,screenHeight - buttonDimension, screenWidth,screenHeight);
             canvas.drawBitmap(backButton,null,destRect,paint);
 
+            /*Highlight the ative column if there is one*/
+            if(activeColumnNumber >= 0) {
+                paint.setColor(Color.argb(128, 0, 255, 0));
+                canvas.drawRect(screenWidth/10 * activeColumnNumber,0,
+                        (activeColumnNumber + 1) * screenWidth/10,screenHeight,paint);
+            }
+
+            /*Draw the chip color choice panel if visible*/
+            if(isColorChoiceVisible){
+                /*Draw background*/
+                paint.setColor(Color.argb(224,0,0,0));
+                canvas.drawRect(0,0,7*screenWidth/10,screenHeight,paint);
+
+                /*Draw text*/
+                paint.setTextAlign(Paint.Align.CENTER);
+                paint.setTextSize(screenHeight/8);
+                paint.setColor(Color.WHITE);
+                canvas.drawText("Choose a color:",screenWidth/3,screenHeight/4,paint);
+
+                /*Draw chips*/
+
+                Rect redChipDestRect = new Rect(screenWidth/10,screenHeight/3,3*screenWidth/10,2*screenHeight/3);
+                Rect yellowChipDestRect = new Rect(4*screenWidth/10,screenHeight/3,6*screenWidth/10,2*screenHeight/3);
+
+                canvas.drawBitmap(redChip,null,redChipDestRect,paint);
+                canvas.drawBitmap(yellowChip,null,yellowChipDestRect,paint);
+            }
+
             /*Draw the exit menu if it is visible*/
             if(isExitMenuVisible){
                 canvas.drawColor(Color.argb(200,0,0,0));
@@ -212,12 +244,6 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 noTextWidth = paint.measureText("NO");
             }
 
-            /*Highlight the ative column if there is one*/
-            if(activeColumnNumber >= 0) {
-                paint.setColor(Color.argb(128, 0, 255, 0));
-                canvas.drawRect(screenWidth/10 * activeColumnNumber,0,
-                        (activeColumnNumber + 1) * screenWidth/10,screenHeight,paint);
-            }
 
             holder.unlockCanvasAndPost(canvas);
         }
