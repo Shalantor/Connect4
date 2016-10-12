@@ -111,9 +111,6 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         /*Create array for field, 0 means empty , 1 means red chip, 2 means yellow chip*/
         gameGrid = new int[6][7];
 
-        /*TODO:the color of the players chip is hardcoded, when falling mechanism works change it*/
-        playerChipColor = redChip;
-
     }
 
     @Override
@@ -309,6 +306,31 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     isExitMenuVisible = false;
                 }
                 return true;
+            }
+            else if(isColorChoiceVisible){
+                /*BACK BUTTON*/
+                if(initialX >= 9*screenWidth/10 && initialX <= screenWidth
+                        && initialY >= screenHeight - screenWidth/10 && initialY <= screenHeight){
+                    isExitMenuVisible = true;
+                }
+                /*SOUND BUTTON*/
+                else if(initialX >= 7*screenWidth/10 && initialX <= 8*screenWidth/10
+                        && initialY >= screenHeight - screenWidth/10 && initialY <= screenHeight) {
+                    /*TODO:add code to mute sound when we have a soundtrack*/
+                    isMuted = !isMuted;
+                }
+                /*RED CHIP ICON*/
+                else if(initialX >= screenWidth/10 && initialX <= 3*screenWidth/10
+                        && initialY >= screenHeight/3 && initialY <= 2*screenHeight/3){
+                    playerChipColor = redChip;
+                    isColorChoiceVisible = false;
+                }
+                /*YELLOW CHIP ICON*/
+                else if(initialX >= 4*screenWidth/10 && initialX <= 6*screenWidth/10
+                        && initialY >= screenHeight/3 && initialY <= 2*screenHeight/3){
+                    playerChipColor = yellowChip;
+                    isColorChoiceVisible = false;
+                }
             }
             else{
                 /*BACK BUTTON*/
