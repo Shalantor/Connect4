@@ -32,6 +32,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     volatile boolean isPlayersTurn = true;
     volatile boolean isColorChoiceVisible;
     volatile boolean isChipFalling;
+    volatile boolean isGameOver;
 
     private Paint paint;
     private Canvas canvas;
@@ -76,6 +77,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     private int fallingChipPosition;
     private int playerChipColorInt;
 
+    /*End screen Message for player after match*/
+    private String endScreenMessage;
+
     public GamePlayActivity(Context context){
         super(context);
         holder = getHolder();
@@ -99,6 +103,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         activeColumnNumber = -1;
         isColorChoiceVisible = true;
         isChipFalling = false;
+        isGameOver = false;
 
         /*Get screen dimensions*/
         Display display = associatedActivity.getWindowManager().getDefaultDisplay();
@@ -125,6 +130,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         gameGrid = new int[6][7];
         howManyChips = new int[7];
 
+
     }
 
     @Override
@@ -147,8 +153,18 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             if(fallingChip.bottom >= finalChipHeight){
                 fallingChip = null;                         //remove
                 gameGrid[5 - howManyChips[fallingChipPosition]][fallingChipPosition] = playerChipColorInt;
-                isChipFalling = false;
                 howManyChips[fallingChipPosition] += 1;
+                isChipFalling = false;
+                /*TODO:change player turn*/
+                if(hasWon(fallingChipPosition)){
+                    if(isPlayersTurn){
+                        endScreenMessage = "YOU WIN";
+                    }
+                    else{
+                        endScreenMessage = "YOU LOSE";
+                    }
+                    isGameOver = true;
+                }
             }
         }
 
@@ -258,6 +274,16 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 canvas.drawBitmap(yellowChip,null,yellowChipDestRect,paint);
             }
 
+            /*Draw winning message*/
+            if(isGameOver){
+                paint.setColor(Color.argb(200,0,0,0));
+                canvas.drawRect(0,0,7*screenWidth/10,screenHeight,paint);
+                paint.setTextAlign(Paint.Align.CENTER);
+                paint.setTextSize(screenHeight/8);
+                paint.setColor(Color.WHITE);
+                canvas.drawText(endScreenMessage,screenWidth/3,screenHeight/4,paint);
+            }
+
             /*Draw the exit menu if it is visible*/
             if(isExitMenuVisible){
                 canvas.drawColor(Color.argb(200,0,0,0));
@@ -271,6 +297,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 yesTextWidth = paint.measureText("YES");
                 noTextWidth = paint.measureText("NO");
             }
+
 
 
             holder.unlockCanvasAndPost(canvas);
@@ -377,7 +404,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     /*TODO:add code to mute sound when we have a soundtrack*/
                     isMuted = !isMuted;
                 }
-                else if(isPlayersTurn && !isChipFalling){     /*Is it the players turn?*/
+                else if(isPlayersTurn && !isChipFalling && !isGameOver){     /*Is it the players turn?*/
                     /*Check which column is active*/
                     if(initialX <= screenWidth/10){
                         if(activeColumnNumber == 0 && hasSpace(0)) {
@@ -484,6 +511,40 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         /*Create new chip and add it to list*/
         fallingChip = new Rect(columnNumber*cellWidth,-cellheight,(columnNumber+1)*cellWidth,0);
 
+    }
+
+    /*Check if player has won*/
+    private boolean hasWon(int position){
+        int row = 6 - howManyChips[position];
+        int column = fallingChipPosition;
+        int color = playerChipColorInt;
+
+        /*Check same line*/
+        int sameColor = 0;
+        for(int i =0; i < 7 ; i++){
+            if(gameGrid[row][i] == color){
+                sameColor += 1;
+                if (sameColor == 4)
+                        return true;
+            }
+            else
+                sameColor = 0;
+        }
+
+        /*check same column*/
+        sameColor = 0;
+        for(int i =0;i < 6; i++){
+            if(gameGrid[i][column] == color){
+                sameColor += 1;
+                if(sameColor == 4)
+                    return true;
+            }
+            else
+                sameColor = 0;
+        }
+
+
+        return false;
     }
 
 }
