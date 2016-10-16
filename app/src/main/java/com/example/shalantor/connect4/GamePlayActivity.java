@@ -520,7 +520,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         int color = playerChipColorInt;
 
         /*Check same line*/
-        int sameColor = 0;
+        /*int sameColor = 0;
         for(int i =0; i < 7 ; i++){
             if(gameGrid[row][i] == color){
                 sameColor += 1;
@@ -531,7 +531,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 sameColor = 0;
         }
 
-        /*check same column*/
+        /*check same column
         sameColor = 0;
         for(int i =0;i < 6; i++){
             if(gameGrid[i][column] == color){
@@ -541,8 +541,62 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             }
             else
                 sameColor = 0;
+        }*/
+
+        /*check same diagonal*/
+        int sameColor = 0;
+        int rowStart = row;
+        int columnStart = column;
+
+        /*find the start of diagonal which goes from left up to right down*/
+        while(rowStart >= 0 && columnStart >= 0){
+            rowStart -= 1;
+            columnStart -= 1;
         }
 
+        /*Fix negative values*/
+        rowStart += 1;
+        columnStart += 1;
+
+        /*Now check the color*/
+        while(rowStart <= 5 && columnStart <= 6){
+            if(gameGrid[rowStart][columnStart] == color){
+                sameColor += 1;
+                if(sameColor == 4)
+                    return true;
+            }
+            else
+                sameColor = 0;
+            rowStart += 1;
+            columnStart += 1;
+        }
+
+
+        /*Now check the diagonal going from left down to right up*/
+        sameColor = 0;
+        rowStart = row;
+        columnStart = column;
+
+        /*Again find the start*/
+        while(rowStart <= 5 && columnStart >= 0){
+            rowStart += 1;
+            columnStart -= 1;
+        }
+        /*Fix values*/
+        columnStart += 1;
+        rowStart -= 1;
+        /*Now check the color*/
+        while(rowStart >= 0 && columnStart <= 6){
+            if(gameGrid[rowStart][columnStart] == color){
+                sameColor += 1;
+                if(sameColor == 4)
+                    return true;
+            }
+            else
+                sameColor = 0;
+            rowStart -= 1;
+            columnStart += 1;
+        }
 
         return false;
     }
