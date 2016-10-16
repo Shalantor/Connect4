@@ -520,7 +520,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         int color = playerChipColorInt;
 
         /*Check same line*/
-        /*int sameColor = 0;
+        int sameColor = 0;
         for(int i =0; i < 7 ; i++){
             if(gameGrid[row][i] == color){
                 sameColor += 1;
@@ -541,10 +541,10 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             }
             else
                 sameColor = 0;
-        }*/
+        }
 
         /*check same diagonal*/
-        int sameColor = 0;
+        sameColor = 0;
         int rowStart = row;
         int columnStart = column;
 
