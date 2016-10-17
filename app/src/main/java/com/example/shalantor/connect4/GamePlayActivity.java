@@ -165,6 +165,10 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     }
                     isGameOver = true;
                 }
+                else if(isGridFull()){
+                    endScreenMessage = "TIE";
+                    isGameOver = true;
+                }
             }
         }
 
@@ -604,6 +608,17 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         }
 
         return false;
+    }
+
+    /*Check if grid is full without a player having won*/
+    private boolean isGridFull(){
+        for(int i =0; i < 6;i++){
+            for(int j =0;j<7;j++){
+                if(gameGrid[i][j] == 0)
+                    return false;
+            }
+        }
+        return true;
     }
 
 }
