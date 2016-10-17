@@ -326,10 +326,14 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*To pause animation*/
     public void pause(){
         playingConnect4 = false;
-        try{
-            thread.join();
-        }catch (InterruptedException ex){
-            Log.d("THREAD_JOIN","Interrupted exception occured");
+        boolean run = true;
+        while(run) {
+            try {
+                thread.join();
+                run = false;
+            } catch (InterruptedException ex) {
+                Log.d("THREAD_JOIN", "Interrupted exception occured");
+            }
         }
     }
 
@@ -352,10 +356,10 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 if(initialX >= screenWidth/3 - yesTextWidth && initialX <= screenWidth/3 + yesTextWidth
                         && initialY >= 2*screenHeight/3 - screenHeight/5
                         && initialY <= 2*screenHeight/3){
-                    Intent intent = new Intent(associatedActivity,MainActivity.class);
                     pause();
-                    associatedActivity.startActivity(intent);
+                    Intent intent = new Intent(associatedActivity,MainActivity.class);
                     associatedActivity.finish();
+                    associatedActivity.startActivity(intent);
                 }
                 /*NO BUTTON*/
                 if(initialX >= 2*screenWidth/3 - noTextWidth && initialX <= 2*screenWidth/3 + noTextWidth
@@ -531,7 +535,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 sameColor = 0;
         }
 
-        /*check same column
+        /*check same column*/
         sameColor = 0;
         for(int i =0;i < 6; i++){
             if(gameGrid[i][column] == color){
