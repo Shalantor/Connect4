@@ -468,6 +468,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
                 Intent intent = new Intent(associatedActiviry,GameActivity.class);
                 pause();
                 intent.putExtra("MODE",0);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 associatedActiviry.startActivity(intent);
                 associatedActiviry.finish();
             }

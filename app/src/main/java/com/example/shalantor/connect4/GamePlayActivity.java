@@ -358,8 +358,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                         && initialY <= 2*screenHeight/3){
                     pause();
                     Intent intent = new Intent(associatedActivity,MainActivity.class);
-                    associatedActivity.finish();
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     associatedActivity.startActivity(intent);
+                    associatedActivity.finish();
                 }
                 /*NO BUTTON*/
                 if(initialX >= 2*screenWidth/3 - noTextWidth && initialX <= 2*screenWidth/3 + noTextWidth
