@@ -27,7 +27,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     volatile boolean isMultiPlayer ;
     volatile boolean isMuted;
     volatile boolean isExitMenuVisible ;
-    volatile boolean isPlayersTurn = true;
+    volatile boolean isPlayersTurn ;
     volatile boolean isColorChoiceVisible;
     volatile boolean isChipFalling;
     volatile boolean isGameOver;
@@ -104,6 +104,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         isColorChoiceVisible = true;
         isChipFalling = false;
         isGameOver = false;
+        /*Will change after choosing menu, is just set true to stop AI from making a move*/
+        isPlayersTurn = true;
 
         /*Get screen dimensions*/
         Display display = associatedActivity.getWindowManager().getDefaultDisplay();
@@ -414,6 +416,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     enemyChipColorInt = 1;
                     isColorChoiceVisible = false;
                 }
+                if(!isColorChoiceVisible)
+                    isPlayersTurn = Math.random() > 0.5;
             }
             else{
                 /*BACK BUTTON*/
