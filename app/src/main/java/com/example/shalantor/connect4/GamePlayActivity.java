@@ -546,7 +546,15 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     private boolean hasWon(int position){
         int row = 6 - howManyChips[position];
         int column = fallingChipPosition;
-        int color = playerChipColorInt;
+        int color;
+
+        /*check which one has turn*/
+        if(!isPlayersTurn){
+            color = playerChipColorInt;
+        }
+        else{
+            color = enemyChipColorInt;
+        }
 
         /*Check same line*/
         int sameColor = 0;
