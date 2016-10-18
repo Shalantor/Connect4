@@ -17,8 +17,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-    /*TODO:SOMETIMES ACTIVITY DOESN'T FINISH PROPERLY */
-
 public class GamePlayActivity extends SurfaceView implements Runnable{
 
     private Thread thread = null;
@@ -26,7 +24,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     volatile boolean playingConnect4;
     /*TODO: remove hard coded values from boolean variables*/
     volatile boolean isSinglePlayer;
-    volatile boolean isMultiplayer ;
+    volatile boolean isMultiPlayer ;
     volatile boolean isMuted;
     volatile boolean isExitMenuVisible ;
     volatile boolean isPlayersTurn = true;
@@ -60,6 +58,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     private Bitmap soundOff;
     private Bitmap backButton;
     private Bitmap playerChipColor;
+    private Bitmap enemyChipColor;
 
     /*Width of texts*/
     private float noTextWidth;
@@ -76,6 +75,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     private Rect fallingChip;
     private int fallingChipPosition;
     private int playerChipColorInt;
+    private int enemyChipColorInt;
 
     /*End screen Message for player after match*/
     private String endScreenMessage;
@@ -88,10 +88,10 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         Intent intent = associatedActivity.getIntent();
         if(intent.getIntExtra("MODE",-1) == 0){
             isSinglePlayer = true;
-            isMultiplayer = false;
+            isMultiPlayer = false;
         }
         else{
-            isMultiplayer = true;
+            isMultiPlayer = true;
             isSinglePlayer = false;
         }
 
@@ -136,6 +136,10 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     @Override
     public void run(){
         while(playingConnect4){
+            if(!isPlayersTurn && !isChipFalling && !isGameOver){   /*wait for chip to fall and then get move of AI*/
+                int move = getMove();
+                makeMove(move);
+            }
             updateGUIObjects();
             drawScreen();
             controlFPS();
@@ -152,12 +156,15 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             fallingChip.bottom += cellheight/8;
             if(fallingChip.bottom >= finalChipHeight){
                 fallingChip = null;                         //remove
-                gameGrid[5 - howManyChips[fallingChipPosition]][fallingChipPosition] = playerChipColorInt;
+                if(!isPlayersTurn)
+                    gameGrid[5 - howManyChips[fallingChipPosition]][fallingChipPosition] = playerChipColorInt;
+                else
+                    gameGrid[5 - howManyChips[fallingChipPosition]][fallingChipPosition] = enemyChipColorInt;
                 howManyChips[fallingChipPosition] += 1;
                 isChipFalling = false;
                 /*TODO:change player turn*/
                 if(hasWon(fallingChipPosition)){
-                    if(isPlayersTurn){
+                    if(!isPlayersTurn){                     /*the chip which is falling, falls after the turn change*/
                         endScreenMessage = "YOU WIN";
                     }
                     else{
@@ -184,7 +191,10 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
             /*Check if chip is falling and draw it if it is*/
             if(isChipFalling){
-                canvas.drawBitmap(playerChipColor,null,fallingChip,paint);
+                if(!isPlayersTurn)
+                    canvas.drawBitmap(playerChipColor,null,fallingChip,paint);
+                else
+                    canvas.drawBitmap(enemyChipColor,null,fallingChip,paint);
             }
 
             /*Game grid*/
@@ -250,7 +260,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             destRect = new Rect(9*screenWidth/10,screenHeight - buttonDimension, screenWidth,screenHeight);
             canvas.drawBitmap(backButton,null,destRect,paint);
 
-            /*Highlight the ative column if there is one*/
+            /*Highlight the active column if there is one*/
             if(activeColumnNumber >= 0) {
                 paint.setColor(Color.argb(128, 0, 255, 0));
                 canvas.drawRect(screenWidth/10 * activeColumnNumber,0,
@@ -391,6 +401,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                         && initialY >= screenHeight/3 && initialY <= 2*screenHeight/3){
                     playerChipColorInt = 1;
                     playerChipColor = redChip;
+                    enemyChipColorInt = 2;
+                    enemyChipColor = yellowChip;
                     isColorChoiceVisible = false;
                 }
                 /*YELLOW CHIP ICON*/
@@ -398,6 +410,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                         && initialY >= screenHeight/3 && initialY <= 2*screenHeight/3){
                     playerChipColorInt = 2;
                     playerChipColor = yellowChip;
+                    enemyChipColor = redChip;
+                    enemyChipColorInt = 1;
                     isColorChoiceVisible = false;
                 }
             }
@@ -520,6 +534,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         /*Create new chip and add it to list*/
         fallingChip = new Rect(columnNumber*cellWidth,-cellheight,(columnNumber+1)*cellWidth,0);
 
+        isPlayersTurn = !isPlayersTurn;
+
     }
 
     /*Check if player has won*/
@@ -619,6 +635,12 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             }
         }
         return true;
+    }
+
+    /*TODO:complete method*/
+    /*Gets the next move from AI or other player*/
+    private int getMove(){
+        return 0;
     }
 
 }
