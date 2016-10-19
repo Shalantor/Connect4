@@ -165,7 +165,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     gameGrid[5 - howManyChips[fallingChipPosition]][fallingChipPosition] = enemyChipColorInt;
                 howManyChips[fallingChipPosition] += 1;
                 isChipFalling = false;
-                if(hasWon(fallingChipPosition,fallingChipColor)){
+                if(hasWon(fallingChipPosition,fallingChipColor,howManyChips,gameGrid)){
                     if(!isPlayersTurn){                     /*the chip which is falling, falls after the turn change*/
                         endScreenMessage = "YOU WIN";
                     }
@@ -550,7 +550,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     }
 
     /*Check if player has won*/
-    private boolean hasWon(int position,int color){
+    private boolean hasWon(int position,int color,int[] howManyChips, int[][]gameGrid){
         int row = 6 - howManyChips[position];
         int column = fallingChipPosition;
 
@@ -652,6 +652,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     private int getMove(){
 
         int[][] checkgrid = new int[6][7];
+        int[] checkGridChipCounter = new int[7];
         /*if it is computers first move choose column 3
          *If column 3 is already taken take column 2
          */
@@ -670,6 +671,42 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         }
 
         /*copyGrid*/
+        for(int i = 0; i < 6; i++){
+            for(int j =0; j < 7; j++){
+                checkgrid[i][j] = gameGrid[i][j];
+            }
+        }
+
+        /*Copy counter array*/
+        for(int j =0; j < 7; j++){
+            checkGridChipCounter[j] = howManyChips[j];
+        }
+
+        /*Now check if computer can win with a move*/
+        for(int i = 0; i < 7; i++){
+            if(checkGridChipCounter[i] < 6) {
+                checkgrid[5 - checkGridChipCounter[i]][i] = enemyChipColorInt;
+                checkGridChipCounter[i] += 1;
+                if(hasWon(i,enemyChipColorInt,checkGridChipCounter,checkgrid)){
+                    return i;
+                }
+                checkgrid[5 - checkGridChipCounter[i]][i] = 0;
+                checkGridChipCounter[i] -= 1;
+            }
+        }
+
+        /*Now check if player can win , so that computer will stop him*/
+        for(int i = 0; i < 7; i++){
+            if(checkGridChipCounter[i] < 6) {
+                checkgrid[5 - checkGridChipCounter[i]][i] = playerChipColorInt;
+                checkGridChipCounter[i] += 1;
+                if(hasWon(i,playerChipColorInt,checkGridChipCounter,checkgrid)){
+                    return i;
+                }
+                checkgrid[5 - checkGridChipCounter[i]][i] = 0;
+                checkGridChipCounter[i] -= 1;
+            }
+        }
 
 
         return 0;
