@@ -164,7 +164,6 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     gameGrid[5 - howManyChips[fallingChipPosition]][fallingChipPosition] = enemyChipColorInt;
                 howManyChips[fallingChipPosition] += 1;
                 isChipFalling = false;
-                /*TODO:change player turn*/
                 if(hasWon(fallingChipPosition)){
                     if(!isPlayersTurn){                     /*the chip which is falling, falls after the turn change*/
                         endScreenMessage = "YOU WIN";
@@ -652,7 +651,25 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*TODO:complete method*/
     /*Gets the next move from AI or other player*/
     private int getMove(){
+        /*if it is computers first move choose column 3
+         *If column 3 is already taken take column 2
+         */
+        int spaceCounter = 0;
+        for(int i =0; i < 7; i++){
+            if(howManyChips[i] > 0){
+                spaceCounter += 1;
+            }
+        }
+
+        if(spaceCounter <= 1){
+            if(gameGrid[5][2] == 0)
+                return 2;
+            else
+                return 1;
+        }
+
         return 0;
+
     }
 
 }
