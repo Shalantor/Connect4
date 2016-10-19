@@ -76,6 +76,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     private int fallingChipPosition;
     private int playerChipColorInt;
     private int enemyChipColorInt;
+    private int fallingChipColor;
 
     /*End screen Message for player after match*/
     private String endScreenMessage;
@@ -164,7 +165,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     gameGrid[5 - howManyChips[fallingChipPosition]][fallingChipPosition] = enemyChipColorInt;
                 howManyChips[fallingChipPosition] += 1;
                 isChipFalling = false;
-                if(hasWon(fallingChipPosition)){
+                if(hasWon(fallingChipPosition,fallingChipColor)){
                     if(!isPlayersTurn){                     /*the chip which is falling, falls after the turn change*/
                         endScreenMessage = "YOU WIN";
                     }
@@ -537,23 +538,21 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         /*Create new chip and add it to list*/
         fallingChip = new Rect(columnNumber*cellWidth,-cellheight,(columnNumber+1)*cellWidth,0);
 
+        if(isPlayersTurn){
+            fallingChipColor = playerChipColorInt;
+        }
+        else{
+            fallingChipColor = enemyChipColorInt;
+        }
+
         isPlayersTurn = !isPlayersTurn;
 
     }
 
     /*Check if player has won*/
-    private boolean hasWon(int position){
+    private boolean hasWon(int position,int color){
         int row = 6 - howManyChips[position];
         int column = fallingChipPosition;
-        int color;
-
-        /*check which one has turn*/
-        if(!isPlayersTurn){
-            color = playerChipColorInt;
-        }
-        else{
-            color = enemyChipColorInt;
-        }
 
         /*Check same line*/
         int sameColor = 0;
@@ -651,6 +650,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*TODO:complete method*/
     /*Gets the next move from AI or other player*/
     private int getMove(){
+
+        int[][] checkgrid = new int[6][7];
         /*if it is computers first move choose column 3
          *If column 3 is already taken take column 2
          */
@@ -667,6 +668,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             else
                 return 1;
         }
+
+        /*copyGrid*/
+
 
         return 0;
 
