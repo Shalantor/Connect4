@@ -653,6 +653,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
         int[][] checkGrid = new int[6][7];
         int[] checkGridChipCounter = new int[7];
+
         /*if it is computers first move choose column 3
          *If column 3 is already taken take column 2
          */
@@ -734,6 +735,59 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     * Horizontal = 3*/
     private int getGridValue(int[][] grid,int color){
 
+        int vertical = 1;
+        int diagonal = 2;
+        int horizontal = 3;
+
+        int twoSame = 10;
+        int threeSame = 1000;
+
+        int value = 0;
+
+        /*horizontal 2 in the same row */
+        for(int row =0;row < 6;row++){
+            for(int col = 0;col < 4; col++){
+                //XX00
+                if(grid[col][row] == color && grid[col+1][row] == color
+                    && grid[col+2][row] == 0 && grid[col+3][row] == 0){
+                    value += twoSame * horizontal;
+                }
+
+                //X0X0
+                else if (grid[col][row] == color && grid[col+1][row] == 0
+                        && grid[col+2][row] == color && grid[col+3][row] == 0){
+                    value += twoSame * horizontal;
+                }
+
+                //X00X
+                else if (grid[col][row] == color && grid[col+1][row] == 0
+                        && grid[col+2][row] == 0 && grid[col+3][row] == color){
+                    value += twoSame * horizontal;
+                }
+
+                //0XX0
+                else if (grid[col][row] == 0 && grid[col+1][row] == color
+                        && grid[col+2][row] == color && grid[col+3][row] == 0){
+                    value += 2*twoSame * horizontal;
+                }
+
+                //0X0X
+                else if (grid[col][row] == 0 && grid[col+1][row] == color
+                        && grid[col+2][row] == 0 && grid[col+3][row] == color){
+                    value += twoSame * horizontal;
+                }
+
+                //00XX
+                else if (grid[col][row] == 0 && grid[col+1][row] == 0
+                        && grid[col+2][row] == color && grid[col+3][row] == color){
+                    value += twoSame * horizontal;
+                }
+
+            }
+        }
+
+
+        return value;
     }
 
 }
