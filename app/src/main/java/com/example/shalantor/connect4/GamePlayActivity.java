@@ -651,7 +651,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*Gets the next move from AI or other player*/
     private int getMove(){
 
-        int[][] checkgrid = new int[6][7];
+        int[][] checkGrid = new int[6][7];
         int[] checkGridChipCounter = new int[7];
         /*if it is computers first move choose column 3
          *If column 3 is already taken take column 2
@@ -673,7 +673,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         /*copyGrid*/
         for(int i = 0; i < 6; i++){
             for(int j =0; j < 7; j++){
-                checkgrid[i][j] = gameGrid[i][j];
+                checkGrid[i][j] = gameGrid[i][j];
             }
         }
 
@@ -685,26 +685,28 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         /*Now check if computer can win with a move*/
         for(int i = 0; i < 7; i++){
             if(checkGridChipCounter[i] < 6) {
-                checkgrid[5 - checkGridChipCounter[i]][i] = enemyChipColorInt;
+                checkGrid[5 - checkGridChipCounter[i]][i] = enemyChipColorInt;
                 checkGridChipCounter[i] += 1;
-                if(hasWon(i,enemyChipColorInt,checkGridChipCounter,checkgrid)){
+                if(hasWon(i,enemyChipColorInt,checkGridChipCounter,checkGrid)){
+                    Log.d("WIN","COLUMN " + i);
                     return i;
                 }
-                checkgrid[5 - checkGridChipCounter[i]][i] = 0;
                 checkGridChipCounter[i] -= 1;
+                checkGrid[5 - checkGridChipCounter[i]][i] = 0;
             }
         }
 
         /*Now check if player can win , so that computer will stop him*/
         for(int i = 0; i < 7; i++){
             if(checkGridChipCounter[i] < 6) {
-                checkgrid[5 - checkGridChipCounter[i]][i] = playerChipColorInt;
+                checkGrid[5 - checkGridChipCounter[i]][i] = playerChipColorInt;
                 checkGridChipCounter[i] += 1;
-                if(hasWon(i,playerChipColorInt,checkGridChipCounter,checkgrid)){
+                if(hasWon(i,playerChipColorInt,checkGridChipCounter,checkGrid)){
+                    Log.d("WIN_STOP","COLUMN " + i);
                     return i;
                 }
-                checkgrid[5 - checkGridChipCounter[i]][i] = 0;
                 checkGridChipCounter[i] -= 1;
+                checkGrid[5 - checkGridChipCounter[i]][i] = 0;
             }
         }
 
