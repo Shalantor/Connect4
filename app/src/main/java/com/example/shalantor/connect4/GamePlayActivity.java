@@ -786,6 +786,18 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             }
         }
 
+        /*Now check for vertical 2 in same column, with a space above like this:
+        * 0
+        * X
+        * X   */
+
+        for(int row =0; row <= 3; row ++){
+            for(int col = 0; col < 7; col ++){
+                if(grid[row][col] == 0 && grid[row+1][col] == color && grid[row+2][col] == color)
+                    value += twoSame * vertical;
+            }
+        }
+
 
         return value;
     }
