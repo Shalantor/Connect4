@@ -710,8 +710,29 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             }
         }
 
+        /*If none of the above holds, compute move from minimax algorithm*/
+
 
         return 0;
+
+    }
+
+    /*Method to evaluate value of current grid state for the computer or the player
+    * According to the minimax algorithm for a connect 4 game, the value of fields
+    * is described below, where X stands for a chip and a 0 stands for an empty position:
+    * A neutral chip position is given a value of 0 points.
+    * 2 chips in the same row have a value of 10. (00XX) or (0X0X) or (X00X) or (X0X0) or (XX00)
+    * If those two chips don't have adjacent chips, they have a value of 20. (0XX0)
+    * 3 in the same row have a value of 1000 points. (XX0X) or (X0XX) or (XXX0) or (0XXX)
+    * If those three chips have no adjacent chips, they have a value of 2000 (0XXX0)
+    *
+    * The same holds for chips in the same column or diagonal, but there are some
+    * modifiers for their values.Those modifiers are:
+    *
+    * Vertical = 1
+    * Diagonal = 2
+    * Horizontal = 3*/
+    private int getGridValue(int[][] grid,int color){
 
     }
 
