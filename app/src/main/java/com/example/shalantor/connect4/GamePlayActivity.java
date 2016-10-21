@@ -843,6 +843,52 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             }
         }
 
+        /*Now check for 2 in the same diagonal that are arranged like this (\)
+        * Possible arrangements are:
+        * X    X    0    0    X    0
+        *  X    0    0    X    0    X
+        *   0    0    X    0    X    X
+        *    0    X    X    X    0    0*/
+
+        for(int row = 0; row <= 2 ; row ++){
+            for(int col = 0; col <= 3; col ++){
+
+                if(grid[row][col] == color && grid[row+1][col+1] == color
+                        && grid[row+2][col+2] == 0 && grid[row+3][col+3] == 0){
+                    value += twoSame * diagonal;
+                }
+
+                else if(grid[row][col] == color && grid[row+1][col+1] == 0
+                        && grid[row+2][col+2] == 0 && grid[row+3][col+3] == color){
+                    value += twoSame * diagonal;
+                }
+
+                else if(grid[row][col] == 0 && grid[row+1][col+1] == 0
+                        && grid[row+2][col+2] == color && grid[row+3][col+3] == color){
+                    value += twoSame * diagonal;
+                }
+
+                else if(grid[row][col] == 0 && grid[row+1][col+1] == color
+                        && grid[row+2][col+2] == 0 && grid[row+3][col+3] == color){
+                    value += twoSame * diagonal;
+                }
+
+                else if(grid[row][col] == color && grid[row+1][col+1] == 0
+                        && grid[row+2][col+2] == color && grid[row+3][col+3] == 0){
+                    value += twoSame * diagonal;
+                }
+
+                else if(grid[row][col] == 0 && grid[row+1][col+1] == color
+                        && grid[row+2][col+2] == color && grid[row+3][col+3] == 0){
+                    value += 2 * twoSame * diagonal;
+                }
+
+
+            }
+        }
+
+        
+
 
 
         return value;
