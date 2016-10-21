@@ -914,7 +914,23 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
         }
 
+        /*Check for three chips in the same column with an empty space above it
+        like this:
+        0
+        X
+        X
+        X
+         */
+        for (int row = 0; row <= 2 ; row ++){
+            for(int col = 0; col <= 6; col++){
 
+                if(grid[row][col] == 0 && grid[row+1][col] == color
+                        && grid[row+2][col] == color && grid[row+3][col] == color)
+                    value += threeSame * vertical;
+            }
+        }
+
+        
 
         return value;
     }
