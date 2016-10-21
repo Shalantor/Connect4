@@ -713,6 +713,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
         /*If none of the above holds, compute move from minimax algorithm*/
 
+        int test = getGridValue(checkGrid,enemyChipColorInt);
 
         return 0;
 
@@ -748,38 +749,38 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         for(int row =0;row < 6;row++){
             for(int col = 0;col < 4; col++){
                 //XX00
-                if(grid[col][row] == color && grid[col+1][row] == color
-                    && grid[col+2][row] == 0 && grid[col+3][row] == 0){
+                if(grid[row][col] == color && grid[row][col+1] == color
+                    && grid[row][col+2] == 0 && grid[row][col+3] == 0){
                     value += twoSame * horizontal;
                 }
 
                 //X0X0
-                else if (grid[col][row] == color && grid[col+1][row] == 0
-                        && grid[col+2][row] == color && grid[col+3][row] == 0){
+                else if (grid[row][col] == color && grid[row][col+1] == 0
+                        && grid[row][col+2] == color && grid[row][col+3] == 0){
                     value += twoSame * horizontal;
                 }
 
                 //X00X
-                else if (grid[col][row] == color && grid[col+1][row] == 0
-                        && grid[col+2][row] == 0 && grid[col+3][row] == color){
+                else if (grid[row][col] == color && grid[row][col+1] == 0
+                        && grid[row][col+2] == 0 && grid[row][col+3] == color){
                     value += twoSame * horizontal;
                 }
 
                 //0XX0
-                else if (grid[col][row] == 0 && grid[col+1][row] == color
-                        && grid[col+2][row] == color && grid[col+3][row] == 0){
+                else if (grid[row][col] == 0 && grid[row][col+1] == color
+                        && grid[row][col+2] == color && grid[row][col+3] == 0){
                     value += 2*twoSame * horizontal;
                 }
 
                 //0X0X
-                else if (grid[col][row] == 0 && grid[col+1][row] == color
-                        && grid[col+2][row] == 0 && grid[col+3][row] == color){
+                else if (grid[row][col] == 0 && grid[row][col+1] == color
+                        && grid[row][col+2] == 0 && grid[row][col+3] == color){
                     value += twoSame * horizontal;
                 }
 
                 //00XX
-                else if (grid[col][row] == 0 && grid[col+1][row] == 0
-                        && grid[col+2][row] == color && grid[col+3][row] == color){
+                else if (grid[row][col] == 0 && grid[row][col+1] == 0
+                        && grid[row][col+2] == color && grid[row][col+3] == color){
                     value += twoSame * horizontal;
                 }
 
