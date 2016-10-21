@@ -995,6 +995,41 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             }
         }
 
+        /*Now we have to check for 3 in the same row or diagonal which are open ended*/
+
+        /*Same row(0XXX0)*/
+        for(int row=0;row <= 5; row++){
+            for(int col =0; col <= 2; col++){
+
+                if(grid[row][col] == 0 && grid[row][col+1] == color && grid[row][col+2] == color
+                        && grid[row][col+3] == color && grid[row][col+4] == 0)
+                    value += 2 * threeSame * horizontal;
+            }
+        }
+
+        /*Diagonal (\)*/
+        for(int row =0;row <= 1; row ++){
+            for(int col =0; col<=2; col++){
+
+                if(grid[row][col] == 0 && grid[row+1][col+1] == color && grid[row+2][col+2] == color
+                        && grid[row+3][col+3] == color && grid[row+4][col+4] == 0)
+                    value += 2 * threeSame * diagonal;
+            }
+        }
+
+        /*Other Diagonal (/)*/
+        for(int row =5; row >= 4; row --){
+            for(int col =0; col <= 2; col++){
+
+                if(grid[row][col] == 0 && grid[row-1][col+1] == color && grid[row-2][col+2] == color
+                        && grid[row-3][col+3] == color && grid[row-4][col+4] == 0)
+                    value += 2 * threeSame * diagonal;
+
+            }
+        }
+
+
+
         return value;
     }
 
