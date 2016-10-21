@@ -552,7 +552,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*Check if player has won*/
     private boolean hasWon(int position,int color,int[] howManyChips, int[][]gameGrid){
         int row = 6 - howManyChips[position];
-        int column = fallingChipPosition;
+        int column = position;
 
         /*Check same line*/
         int sameColor = 0;
@@ -689,7 +689,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 checkGrid[5 - checkGridChipCounter[i]][i] = enemyChipColorInt;
                 checkGridChipCounter[i] += 1;
                 if(hasWon(i,enemyChipColorInt,checkGridChipCounter,checkGrid)){
-                    Log.d("WIN","COLUMN " + i);
+                    Log.d("WIN_COMP","COLUMN " + i);
                     return i;
                 }
                 checkGridChipCounter[i] -= 1;
