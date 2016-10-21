@@ -174,7 +174,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     }
                     isGameOver = true;
                 }
-                else if(isGridFull()){
+                else if(isGridFull(gameGrid)){
                     endScreenMessage = "TIE";
                     isGameOver = true;
                 }
@@ -550,9 +550,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     }
 
     /*Check if player has won*/
-    private boolean hasWon(int position,int color,int[] howManyChips, int[][]gameGrid){
-        int row = 6 - howManyChips[position];
-        int column = position;
+    private boolean hasWon(int column,int color,int[] howManyChips, int[][]gameGrid){
+        int row = 6 - howManyChips[column];
 
         /*Check same line*/
         int sameColor = 0;
@@ -637,7 +636,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     }
 
     /*Check if grid is full without a player having won*/
-    private boolean isGridFull(){
+    private boolean isGridFull(int[][] gameGrid){
         for(int i =0; i < 6;i++){
             for(int j =0;j<7;j++){
                 if(gameGrid[i][j] == 0)
@@ -717,6 +716,51 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
         return 0;
 
+    }
+
+    /*minimax returns the best move the computer should choose*/
+    public int minimax(int[][] grid,int[]chips,int startValue,int depth,int color,int column){
+
+        int[][] newGrid = new int[6][7];
+        int[] newChips = new int[7];
+        int bestMove = 0;
+        int bestValue = startValue;
+
+        /*first copy both grids*/
+
+        /*copyGrid*/
+        for(int i = 0; i < 6; i++){
+            for(int j =0; j < 7; j++){
+                newGrid[i][j] = grid[i][j];
+            }
+        }
+
+        /*Copy counter array*/
+        for(int j =0; j < 7; j++){
+            newChips[j] = chips[j];
+        }
+
+        /*Now if called recursively check if computer can win or if player can win and
+        * store the value of those situations from the view of the computer*/
+        if(column != -1){
+            if(hasWon(column,enemyChipColorInt,newChips,newGrid)){
+                bestValue = 1000000;
+            }
+            else if(hasWon(column,playerChipColorInt,newChips,newGrid)){
+                bestValue = -1000000;
+            }
+        }
+
+        /*Now check if game is a tie, second condition is for case where someone won*/
+        if(isGridFull(newGrid) && Math.abs(bestValue) < 1000000) {
+            bestValue = 0;
+        }
+        
+
+
+
+
+        return 0;
     }
 
     /*Method to evaluate value of current grid state for the computer or the player
