@@ -887,7 +887,32 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             }
         }
 
-        
+        /*Now check for 3 chips in the same row (horizontal)*/
+        for (int row=0; row < 6; row++){
+            for(int col=0; col < 4; col++){
+
+                /*(XX0X)*/
+                if(grid[row][col] == color && grid[row][col+1] == color
+                        && grid[row][col+2] == 0 && grid[row][col+3] == color)
+                    value += threeSame * horizontal;
+
+                /*(X0XX)*/
+                if(grid[row][col] == color && grid[row][col+1] == 0
+                        && grid[row][col+2] == color && grid[row][col+3] == color)
+                    value += threeSame * horizontal;
+
+                /*(0XXX)*/
+                if(grid[row][col] == 0 && grid[row][col+1] == color
+                        && grid[row][col+2] == color && grid[row][col+3] == color)
+                    value += threeSame * horizontal;
+
+                /*(XXX0)*/
+                if(grid[row][col] == color && grid[row][col+1] == color
+                        && grid[row][col+2] == color && grid[row][col+3] == 0)
+                    value += threeSame * horizontal;
+            }
+
+        }
 
 
 
