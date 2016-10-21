@@ -81,6 +81,10 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*End screen Message for player after match*/
     private String endScreenMessage;
 
+    /*TODO:change hard coded value*/
+    /*Maximum depth for minimax algorithm*/
+    int maxDepth = 2;
+
     public GamePlayActivity(Context context){
         super(context);
         holder = getHolder();
@@ -434,11 +438,11 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 else if(isPlayersTurn && !isChipFalling && !isGameOver){     /*Is it the players turn?*/
                     /*Check which column is active*/
                     if(initialX <= screenWidth/10){
-                        if(activeColumnNumber == 0 && hasSpace(0)) {
+                        if(activeColumnNumber == 0 && hasSpace(0,howManyChips)) {
                             makeMove(0);
                             activeColumnNumber = -1;
                         }
-                        else if(!hasSpace(0)){
+                        else if(!hasSpace(0,howManyChips)){
                             activeColumnNumber = -1;
                         }
                         else {
@@ -446,11 +450,11 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                         }
                     }
                     else if(initialX <= 2*screenWidth/10){
-                        if(activeColumnNumber ==1 && hasSpace(1)) {
+                        if(activeColumnNumber ==1 && hasSpace(1,howManyChips)) {
                             makeMove(1);
                             activeColumnNumber = -1;
                         }
-                        else if(!hasSpace(1)){
+                        else if(!hasSpace(1,howManyChips)){
                             activeColumnNumber = -1;
                         }
                         else {
@@ -458,11 +462,11 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                         }
                     }
                     else if(initialX <= 3*screenWidth/10){
-                        if(activeColumnNumber ==2 && hasSpace(2)) {
+                        if(activeColumnNumber ==2 && hasSpace(2,howManyChips)) {
                             makeMove(2);
                             activeColumnNumber = -1;
                         }
-                        else if(!hasSpace(2)){
+                        else if(!hasSpace(2,howManyChips)){
                             activeColumnNumber = -1;
                         }
                         else {
@@ -470,11 +474,11 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                         }
                     }
                     else if(initialX <= 4*screenWidth/10){
-                        if(activeColumnNumber ==3 && hasSpace(3)) {
+                        if(activeColumnNumber ==3 && hasSpace(3,howManyChips)) {
                             makeMove(3);
                             activeColumnNumber = -1;
                         }
-                        else if(!hasSpace(3)){
+                        else if(!hasSpace(3,howManyChips)){
                             activeColumnNumber = -1;
                         }
                         else {
@@ -482,11 +486,11 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                         }
                     }
                     else if(initialX <= 5*screenWidth/10){
-                        if(activeColumnNumber ==4 && hasSpace(4)) {
+                        if(activeColumnNumber ==4 && hasSpace(4,howManyChips)) {
                             makeMove(4);
                             activeColumnNumber = -1;
                         }
-                        else if(!hasSpace(4)){
+                        else if(!hasSpace(4,howManyChips)){
                             activeColumnNumber = -1;
                         }
                         else {
@@ -494,11 +498,11 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                         }
                     }
                     else if(initialX <= 6*screenWidth/10){
-                        if(activeColumnNumber ==5 && hasSpace(5)) {
+                        if(activeColumnNumber ==5 && hasSpace(5,howManyChips)) {
                             makeMove(5);
                             activeColumnNumber = -1;
                         }
-                        else if(!hasSpace(5)){
+                        else if(!hasSpace(5,howManyChips)){
                             activeColumnNumber = -1;
                         }
                         else {
@@ -506,11 +510,11 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                         }
                     }
                     else if(initialX <= 7*screenWidth/10){
-                        if(activeColumnNumber ==6 && hasSpace(6)) {
+                        if(activeColumnNumber ==6 && hasSpace(6,howManyChips)) {
                             makeMove(6);
                             activeColumnNumber = -1;
                         }
-                        else if(!hasSpace(6)){
+                        else if(!hasSpace(6,howManyChips)){
                             activeColumnNumber = -1;
                         }
                         else {
@@ -525,8 +529,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     }
 
     /*Check if chip can be inserted in specified field*/
-    private boolean hasSpace(int columnNumber){
-        return howManyChips[columnNumber] < 6;
+    private boolean hasSpace(int columnNumber,int[]chips){
+        return chips[columnNumber] < 6;
     }
 
     /*Insert chip in specified position*/
@@ -712,9 +716,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
         /*If none of the above holds, compute move from minimax algorithm*/
 
-        int test = getGridValue(checkGrid,enemyChipColorInt);
-
-        return 0;
+        return minimax(checkGrid,checkGridChipCounter,-1000000,0,enemyChipColorInt,-1);
 
     }
 
@@ -755,12 +757,65 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         if(isGridFull(newGrid) && Math.abs(bestValue) < 1000000) {
             bestValue = 0;
         }
-        
+        else if(depth == maxDepth){
+            int evaluation = getGridValue(newGrid,enemyChipColorInt);
+            if(evaluation != 0){
+                bestValue = evaluation;
+            }
+            else{
+                bestValue = 0;
+            }
+        }
+        else if(depth < maxDepth){
+            /*now generate moves for each column and test their values*/
+            for(int i =0; i < 7; i++){
 
+                /*Add chip to grid if there is space*/
+                if(hasSpace(i,newChips)) {
+                    newGrid[5 - newChips[i]][i] = color;
+                    newChips[i] += 1;
 
+                    int[][] nextGrid = new int[6][7];
+                    int[] nextChips = new int[7];
 
+                    /*copyGrid*/
+                    for(int k = 0; k < 6; k++){
+                        for(int j =0; j < 7; j++){
+                            nextGrid[k][j] = newGrid[k][j];
+                        }
+                    }
 
-        return 0;
+                    /*Copy counter array*/
+                    for(int j =0; j < 7; j++){
+                        nextChips[j] = newChips[j];
+                    }
+
+                    /*Set the right color*/
+                    int nextColor;
+                    if(color == enemyChipColorInt){
+                        nextColor = playerChipColorInt;
+                    }
+                    else{
+                        nextColor = enemyChipColorInt;
+                    }
+                    int nextValue = minimax(nextGrid,nextChips,-1000000,depth+1,nextColor,i);
+
+                    if(nextValue >= bestValue){
+                        bestValue = nextValue;
+                        bestMove = i;
+                    }
+                    newChips[i] -= 1;
+                    newGrid[5 - newChips[i]][i] = 0;
+                }
+            }
+        }
+
+        if(depth == 0){
+            return bestMove;
+        }
+        else{
+            return bestValue;
+        }
     }
 
     /*Method to evaluate value of current grid state for the computer or the player
