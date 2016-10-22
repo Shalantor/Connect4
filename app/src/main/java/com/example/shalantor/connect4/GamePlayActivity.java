@@ -21,8 +21,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
     private Thread thread = null;
     private SurfaceHolder holder;
+    private static final String DIFFICULTY = "DIFFICULTY";
     volatile boolean playingConnect4;
-    /*TODO: remove hard coded values from boolean variables*/
     volatile boolean isSinglePlayer;
     volatile boolean isMultiPlayer ;
     volatile boolean isMuted;
@@ -81,9 +81,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*End screen Message for player after match*/
     private String endScreenMessage;
 
-    /*TODO:change hard coded value*/
     /*Maximum depth for minimax algorithm*/
-    int maxDepth = 2;
+    int maxDepth;
 
     public GamePlayActivity(Context context){
         super(context);
@@ -98,6 +97,19 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         else{
             isMultiPlayer = true;
             isSinglePlayer = false;
+        }
+
+        int difficulty = intent.getIntExtra(DIFFICULTY,0);
+        Log.d("DIFFICULTY","difficulty is " + difficulty);
+
+        if(difficulty == 0){
+            maxDepth = 1;
+        }
+        else if(difficulty == 1){
+            maxDepth = 3;
+        }
+        else{
+            maxDepth = 5;
         }
 
         fallingChip = null;

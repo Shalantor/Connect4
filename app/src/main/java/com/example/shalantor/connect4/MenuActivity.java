@@ -334,7 +334,6 @@ public class MenuActivity extends SurfaceView implements Runnable{
     }
 
     /*check what player touched on screen*/
-    /*TODO:complete method*/
     public boolean validateTouchEvent(MotionEvent event){
         float initialY;
         float initialX;
@@ -468,6 +467,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
                 Intent intent = new Intent(associatedActiviry,GameActivity.class);
                 pause();
                 intent.putExtra("MODE",0);
+                intent.putExtra(DIFFICULTY,difficulty);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 associatedActiviry.startActivity(intent);
                 associatedActiviry.finish();
