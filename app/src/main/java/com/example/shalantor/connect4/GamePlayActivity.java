@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -25,7 +26,6 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     volatile boolean playingConnect4;
     volatile boolean isSinglePlayer;
     volatile boolean isMultiPlayer ;
-    volatile boolean isMuted;
     volatile boolean isExitMenuVisible ;
     volatile boolean isPlayersTurn ;
     volatile boolean isColorChoiceVisible;
@@ -84,6 +84,11 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*Maximum depth for minimax algorithm*/
     int maxDepth;
 
+    /*Mediaplayer for sound*/
+    private MediaPlayer player;
+    volatile boolean isMuted;
+    volatile boolean needVolumeChange;
+
     public GamePlayActivity(Context context){
         super(context);
         holder = getHolder();
@@ -123,6 +128,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         isGameOver = false;
         /*Will change after choosing menu, is just set true to stop AI from making a move*/
         isPlayersTurn = true;
+        needVolumeChange = false;
 
         /*Get screen dimensions*/
         Display display = associatedActivity.getWindowManager().getDefaultDisplay();
@@ -152,9 +158,30 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
     }
 
+    /*Mute and unmute player*/
+    public void changeVolume(){
+        if(isMuted){
+            player.setVolume(0,0);
+        }
+        else{
+            player.setVolume(1,1);
+        }
+        needVolumeChange = false;
+    }
+
     @Override
     public void run(){
+
+        /*Create player object*/
+        player = MediaPlayer.create(associatedActivity,R.raw.menusong);
+        player.setLooping(true);
+        player.setVolume(1,1);
+        player.start();
+
         while(playingConnect4){
+            if(needVolumeChange){
+                changeVolume();
+            }
             if(!isPlayersTurn && !isChipFalling && !isGameOver){   /*wait for chip to fall and then get move of AI*/
                 int move = getMove();
                 makeMove(move);
@@ -163,6 +190,11 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             drawScreen();
             controlFPS();
         }
+
+        /*Stop and release player*/
+        player.pause();
+        player.release();
+        player = null;
     }
 
 
@@ -411,8 +443,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 /*SOUND BUTTON*/
                 else if(initialX >= 7*screenWidth/10 && initialX <= 8*screenWidth/10
                         && initialY >= screenHeight - screenWidth/10 && initialY <= screenHeight) {
-                    /*TODO:add code to mute sound when we have a soundtrack*/
                     isMuted = !isMuted;
+                    needVolumeChange = true;
                 }
                 /*RED CHIP ICON*/
                 else if(initialX >= screenWidth/10 && initialX <= 3*screenWidth/10
@@ -444,7 +476,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 /*SOUND BUTTON*/
                 else if(initialX >= 7*screenWidth/10 && initialX <= 8*screenWidth/10
                         && initialY >= screenHeight - screenWidth/10 && initialY <= screenHeight){
-                    /*TODO:add code to mute sound when we have a soundtrack*/
+                    needVolumeChange = true;
                     isMuted = !isMuted;
                 }
                 else if(isPlayersTurn && !isChipFalling && !isGameOver){     /*Is it the players turn?*/
