@@ -104,8 +104,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             isSinglePlayer = false;
         }
 
+        /*Set difficulty*/
         int difficulty = intent.getIntExtra(DIFFICULTY,0);
-        Log.d("DIFFICULTY","difficulty is " + difficulty);
 
         if(difficulty == 0){
             maxDepth = 1;
@@ -116,6 +116,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         else{
             maxDepth = 5;
         }
+
+        /*set sound volume*/
+        isMuted = intent.getBooleanExtra("SOUND_MUTED",false);
 
         fallingChip = null;
 
@@ -155,7 +158,6 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         gameGrid = new int[6][7];
         howManyChips = new int[7];
 
-
     }
 
     /*Mute and unmute player*/
@@ -175,7 +177,12 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         /*Create player object*/
         player = MediaPlayer.create(associatedActivity,R.raw.menusong);
         player.setLooping(true);
-        player.setVolume(1,1);
+        if(isMuted){
+            player.setVolume(0,0);
+        }
+        else {
+            player.setVolume(1, 1);
+        }
         player.start();
 
         while(playingConnect4){
@@ -423,6 +430,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     pause();
                     Intent intent = new Intent(associatedActivity,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("SOUND_MUTED",isMuted);
                     associatedActivity.startActivity(intent);
                     associatedActivity.finish();
                 }

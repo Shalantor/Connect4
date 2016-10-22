@@ -92,12 +92,16 @@ public class MenuActivity extends SurfaceView implements Runnable{
         showingMenu = true;
         listOfFallingChips = new ArrayList<>();
         isStartMenuVisible = true;
-        isPlayerMuted = false;
         needVolumeChange = false;
 
         /*Type cast to get screen resolution*/
         associatedActiviry = (Activity) context;
         holder = getHolder();
+
+        /*Mute sound if created form back button*/
+        Intent intent = associatedActiviry.getIntent();
+
+        isPlayerMuted = intent.getBooleanExtra("SOUND_MUTED",false);
 
         /*get screen dimensions*/
         Display display = associatedActiviry.getWindowManager().getDefaultDisplay();
@@ -134,7 +138,14 @@ public class MenuActivity extends SurfaceView implements Runnable{
         /*Load sound*/
         player = MediaPlayer.create(associatedActiviry,R.raw.menusong);
         player.setLooping(true);
-        player.setVolume(1,1);
+
+        if(!isPlayerMuted) {
+            player.setVolume(1, 1);
+        }
+        else{
+            player.setVolume(0,0);
+        }
+
         player.start();
 
         while(showingMenu){
@@ -468,6 +479,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
                 pause();
                 intent.putExtra("MODE",0);
                 intent.putExtra(DIFFICULTY,difficulty);
+                intent.putExtra("SOUND_MUTED",isPlayerMuted);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 associatedActiviry.startActivity(intent);
                 associatedActiviry.finish();
