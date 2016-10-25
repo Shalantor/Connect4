@@ -137,7 +137,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
     public void run(){
 
         /*Load sound*/
-        player = MediaPlayer.create(associatedActiviry,R.raw.menusong);
+        player = MediaPlayer.create(associatedActiviry,R.raw.enter);
         player.setLooping(true);
 
         if(!isPlayerMuted) {
