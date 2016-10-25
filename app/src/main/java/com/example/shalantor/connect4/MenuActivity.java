@@ -104,8 +104,6 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
         isPlayerMuted = intent.getBooleanExtra(MUTE,false);
 
-        Log.d("MUTE","Player is muted variable in menu is " + isPlayerMuted );
-
         /*get screen dimensions*/
         Display display = associatedActiviry.getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -484,7 +482,6 @@ public class MenuActivity extends SurfaceView implements Runnable{
                 intent.putExtra("MODE",0);
                 intent.putExtra(DIFFICULTY,difficulty);
                 intent.putExtra(MUTE,isPlayerMuted);
-                Log.d("MUTE","Player in put extra is " + isPlayerMuted);
                 associatedActiviry.startActivity(intent);
                 associatedActiviry.finish();
             }

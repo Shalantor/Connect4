@@ -129,8 +129,6 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         /*set sound volume*/
         isMuted = intent.getBooleanExtra(MUTE,false);
 
-        Log.d("MUTE","Muted variable in game activity is " + isMuted);
-
         fallingChip = null;
 
         /*Boolean variables*/
@@ -467,7 +465,6 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     Intent intent = new Intent(associatedActivity,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra(MUTE,isMuted);
-                    Log.d("MUTE","Mute in game activity put is " + isMuted);
                     associatedActivity.startActivity(intent);
                     associatedActivity.finish();
                 }
