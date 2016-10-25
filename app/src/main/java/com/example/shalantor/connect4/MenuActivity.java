@@ -121,7 +121,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
         backButton = BitmapFactory.decodeResource(getResources(),R.mipmap.back_button);
 
         /*Get preferences if there exist any and set variables accordingly*/
-        SharedPreferences preferences = associatedActiviry.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences preferences = associatedActiviry.getSharedPreferences(associatedActiviry.getPackageName(),Context.MODE_PRIVATE);
         playerRank = preferences.getInt(RANK,0);
         onlineLosses = preferences.getInt(ONLINE_LOS,0);
         onlineWins = preferences.getInt(ONLINE_WIN,0);
@@ -451,7 +451,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
                     commitChange = true;
                 }
                 if(commitChange) {
-                    SharedPreferences preferences = associatedActiviry.getPreferences(Context.MODE_PRIVATE);
+                    SharedPreferences preferences = associatedActiviry.getSharedPreferences(associatedActiviry.getPackageName(),Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putInt(DIFFICULTY,difficulty);
                     editor.apply();
