@@ -101,7 +101,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
         /*Mute sound if created form back button*/
         Intent intent = associatedActiviry.getIntent();
 
-        isPlayerMuted = intent.getBooleanExtra("SOUND_MUTED",false);
+        isPlayerMuted = intent.getBooleanExtra("MUTE",false);
 
         /*get screen dimensions*/
         Display display = associatedActiviry.getWindowManager().getDefaultDisplay();
@@ -477,10 +477,10 @@ public class MenuActivity extends SurfaceView implements Runnable{
                     && initialY <= screenHeight/3 + 2*screenHeight/25){
                 Intent intent = new Intent(associatedActiviry,GameActivity.class);
                 pause();
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("MODE",0);
                 intent.putExtra(DIFFICULTY,difficulty);
-                intent.putExtra("SOUND_MUTED",isPlayerMuted);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("MUTE",isPlayerMuted);
                 associatedActiviry.startActivity(intent);
                 associatedActiviry.finish();
             }

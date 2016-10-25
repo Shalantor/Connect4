@@ -118,7 +118,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         }
 
         /*set sound volume*/
-        isMuted = intent.getBooleanExtra("SOUND_MUTED",false);
+        isMuted = intent.getBooleanExtra("MUTE",false);
 
         fallingChip = null;
 
@@ -430,7 +430,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     pause();
                     Intent intent = new Intent(associatedActivity,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra("SOUND_MUTED",isMuted);
+                    intent.putExtra("MUTE",isMuted);
                     associatedActivity.startActivity(intent);
                     associatedActivity.finish();
                 }
