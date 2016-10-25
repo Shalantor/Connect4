@@ -4,6 +4,7 @@ package com.example.shalantor.connect4;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -22,7 +23,6 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
     private Thread thread = null;
     private SurfaceHolder holder;
-    private static final String DIFFICULTY = "DIFFICULTY";
     volatile boolean playingConnect4;
     volatile boolean isSinglePlayer;
     volatile boolean isMultiPlayer ;
@@ -88,6 +88,14 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     private MediaPlayer player;
     volatile boolean isMuted;
     volatile boolean needVolumeChange;
+
+    /*static variables*/
+    private static final String RANK = "PLAYER_RANK";
+    private static final String OFFLINE_WIN = "OFFLINE_WINS";
+    private static final String ONLINE_WIN = "ONLINE_WINS";
+    private static final String OFFLINE_LOS = "OFFLINE_LOSSES";
+    private static final String ONLINE_LOS = "ONLINE_LOSSES";
+    private static final String DIFFICULTY = "DIFFICULTY";
 
     public GamePlayActivity(Context context){
         super(context);
@@ -221,12 +229,38 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 howManyChips[fallingChipPosition] += 1;
                 isChipFalling = false;
                 if(hasWon(fallingChipPosition,fallingChipColor,howManyChips,gameGrid)){
+
+                    /*Now save to stats*/
+                    SharedPreferences preferences = associatedActivity.getSharedPreferences(associatedActivity.getPackageName(),Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+
                     if(!isPlayersTurn){                     /*the chip which is falling, falls after the turn change*/
                         endScreenMessage = "YOU WIN";
+                        if(isSinglePlayer){
+                            int wins = preferences.getInt(OFFLINE_WIN,0);
+                            wins++;
+                            editor.putInt(OFFLINE_WIN,wins);
+                        }
+                        else{
+                            int wins = preferences.getInt(ONLINE_WIN,0);
+                            wins++;
+                            editor.putInt(ONLINE_WIN,wins);
+                        }
                     }
                     else{
                         endScreenMessage = "YOU LOSE";
+                        if(isSinglePlayer){
+                            int losses = preferences.getInt(OFFLINE_LOS,0);
+                            losses++;
+                            editor.putInt(OFFLINE_LOS,losses);
+                        }
+                        else{
+                            int losses = preferences.getInt(ONLINE_LOS,0);
+                            losses++;
+                            editor.putInt(ONLINE_LOS,losses);
+                        }
                     }
+                    editor.apply();
                     isGameOver = true;
                 }
                 else if(isGridFull(gameGrid)){
@@ -702,7 +736,6 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         return true;
     }
 
-    /*TODO:complete method*/
     /*Gets the next move from AI or other player*/
     private int getMove(){
 
@@ -744,7 +777,6 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 checkGrid[5 - checkGridChipCounter[i]][i] = enemyChipColorInt;
                 checkGridChipCounter[i] += 1;
                 if(hasWon(i,enemyChipColorInt,checkGridChipCounter,checkGrid)){
-                    Log.d("WIN_COMP","COLUMN " + i);
                     return i;
                 }
                 checkGridChipCounter[i] -= 1;
@@ -758,7 +790,6 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 checkGrid[5 - checkGridChipCounter[i]][i] = playerChipColorInt;
                 checkGridChipCounter[i] += 1;
                 if(hasWon(i,playerChipColorInt,checkGridChipCounter,checkGrid)){
-                    Log.d("WIN_STOP","COLUMN " + i);
                     return i;
                 }
                 checkGridChipCounter[i] -= 1;
