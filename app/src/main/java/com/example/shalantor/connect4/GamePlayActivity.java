@@ -96,6 +96,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     private static final String OFFLINE_LOS = "OFFLINE_LOSSES";
     private static final String ONLINE_LOS = "ONLINE_LOSSES";
     private static final String DIFFICULTY = "DIFFICULTY";
+    private static final String MUTE = "MUTE";
 
     public GamePlayActivity(Context context){
         super(context);
@@ -126,13 +127,14 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         }
 
         /*set sound volume*/
-        isMuted = intent.getBooleanExtra("MUTE",false);
+        isMuted = intent.getBooleanExtra(MUTE,false);
+
+        Log.d("MUTE","Muted variable in game activity is " + isMuted);
 
         fallingChip = null;
 
         /*Boolean variables*/
         isExitMenuVisible = false;
-        isMuted = false;
         activeColumnNumber = -1;
         isColorChoiceVisible = true;
         isChipFalling = false;
@@ -464,7 +466,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     pause();
                     Intent intent = new Intent(associatedActivity,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra("MUTE",isMuted);
+                    intent.putExtra(MUTE,isMuted);
+                    Log.d("MUTE","Mute in game activity put is " + isMuted);
                     associatedActivity.startActivity(intent);
                     associatedActivity.finish();
                 }

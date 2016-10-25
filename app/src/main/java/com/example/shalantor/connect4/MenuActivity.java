@@ -32,6 +32,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
     private static final String OFFLINE_LOS = "OFFLINE_LOSSES";
     private static final String ONLINE_LOS = "ONLINE_LOSSES";
     private static final String DIFFICULTY = "DIFFICULTY";
+    private static final String MUTE = "MUTE";
 
     private volatile boolean showingMenu;                //to stop animations on menu if not necessary
     private Canvas canvas;
@@ -101,7 +102,9 @@ public class MenuActivity extends SurfaceView implements Runnable{
         /*Mute sound if created form back button*/
         Intent intent = associatedActiviry.getIntent();
 
-        isPlayerMuted = intent.getBooleanExtra("MUTE",false);
+        isPlayerMuted = intent.getBooleanExtra(MUTE,false);
+
+        Log.d("MUTE","Player is muted variable in menu is " + isPlayerMuted );
 
         /*get screen dimensions*/
         Display display = associatedActiviry.getWindowManager().getDefaultDisplay();
@@ -480,7 +483,8 @@ public class MenuActivity extends SurfaceView implements Runnable{
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("MODE",0);
                 intent.putExtra(DIFFICULTY,difficulty);
-                intent.putExtra("MUTE",isPlayerMuted);
+                intent.putExtra(MUTE,isPlayerMuted);
+                Log.d("MUTE","Player in put extra is " + isPlayerMuted);
                 associatedActiviry.startActivity(intent);
                 associatedActiviry.finish();
             }
