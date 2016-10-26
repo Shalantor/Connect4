@@ -98,6 +98,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     private static final String DIFFICULTY = "DIFFICULTY";
     private static final String MUTE = "MUTE";
 
+    /*Time variable to reset game*/
+    private long gameEndTime;
+
     public GamePlayActivity(Context context){
         super(context);
         holder = getHolder();
@@ -130,6 +133,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         isMuted = intent.getBooleanExtra(MUTE,false);
 
         fallingChip = null;
+        gameEndTime = -1;
 
         /*Boolean variables*/
         isExitMenuVisible = false;
@@ -204,12 +208,37 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             updateGUIObjects();
             drawScreen();
             controlFPS();
+            if(gameEndTime > 0) {
+                if (System.currentTimeMillis() - gameEndTime > 3000) {
+                    resetGame();
+                }
+            }
         }
 
         /*Stop and release player*/
         player.pause();
         player.release();
         player = null;
+    }
+
+    /*Method to reset game*/
+    public void resetGame(){
+        fallingChip = null;
+        gameEndTime = -1;
+
+        /*Boolean variables*/
+        isExitMenuVisible = false;
+        activeColumnNumber = -1;
+        isColorChoiceVisible = true;
+        isChipFalling = false;
+        isGameOver = false;
+        /*Will change after choosing menu, is just set true to stop AI from making a move*/
+        isPlayersTurn = true;
+        needVolumeChange = false;
+
+        /*Create array for field, 0 means empty , 1 means red chip, 2 means yellow chip*/
+        gameGrid = new int[6][7];
+        howManyChips = new int[7];
     }
 
 
@@ -262,10 +291,12 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     }
                     editor.apply();
                     isGameOver = true;
+                    gameEndTime = System.currentTimeMillis();
                 }
                 else if(isGridFull(gameGrid)){
                     endScreenMessage = "TIE";
                     isGameOver = true;
+                    gameEndTime = System.currentTimeMillis();
                 }
             }
         }
