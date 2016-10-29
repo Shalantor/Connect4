@@ -1,17 +1,7 @@
 #This file contains various functions to be used by the server for saving
 #data, processing passwords and calculating a players elo
 import string,random
-
-SALT_LENGTH = 100
-
-#Generate a string that will be used for password storing
-def generateSaltString():
-    salt = ""
-    for i in range(SALT_LENGTH):
-        randomCharacter = random.choice(string.ascii_letters)
-        salt = salt + randomCharacter
-    print salt
-    return salt
+import uuid,hashlib,sqlite3
 
 def insertUser(database,name,email,password):
 
@@ -19,4 +9,17 @@ def insertUser(database,name,email,password):
     wins = 0
     losses = 0
     elo = 0
-    salt = generateSaltString()
+
+    #Generate hashed password
+    salt = uuid.uuid4().hex
+    hashed_password = hashlib.sha512(password + salt).hexdigest()
+
+    #organize data
+    data = (name,email,salt,hashed_password,wins,losses,elo)
+
+    #now store in database
+    connection = sqlite3.connect(database)
+    cursor = connection.cursor()
+    cursor.execute('INSERT INTO Users VALUES (?,?,?,?,?,?,?)',data)
+    connection.commit()
+    connection.close()
