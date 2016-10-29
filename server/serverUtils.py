@@ -55,21 +55,21 @@ def insertUserFacebook(database,facebookID,name,email):
     return True
 
 #Validate user that logged in with account form game client
-def userLogin(database,name):
+def userLogin(database,name,password):
 
     connection = sqlite3.connect(database)
     cursor = connection.cursor()
-    cursor.execute('SELECT username,email FROM Users')
+    nameTuple = (name,)
+    cursor.execute('SELECT salt,password FROM Users WHERE username =?',nameTuple)
 
-    for a,b in cursor:
-        if name == a:
-            #User found
-            connection.close()
-            return True
-
-    #No such user
+    if cursor == None:#no such user
+        return False
+    else:
+        for a,b in cursor:
+            if hashlib.sha512(password + a).hexdigest() == b:
+                return True
     connection.close()
-    return False
+
 
 #Validate user that logged in with facebook
 def userLoginFacebook(database,ID):
@@ -87,3 +87,10 @@ def userLoginFacebook(database,ID):
     #No such user
     connection.close()
     return False
+
+action = insertUser('connect4.db','George1234','mail2','123')
+if action:
+    print 'success'
+action = userLogin('connect4.db','George123412321321','123')
+if action:
+    print 'User is stored in database'
