@@ -88,9 +88,49 @@ def userLoginFacebook(database,ID):
     connection.close()
     return False
 
+
+#Update wins,losses,elo of user logged in with client
+def udpateUser(database,name,winDiff,loseDiff):
+    connection = sqlite3.connect(database)
+    cursor = connection.cursor()
+    nameTuple = (name,)
+    cursor.execute('SELECT wins,losses FROM Users WHERE username =?',nameTuple)
+
+    #Calculate elo/rank
+    for a,b in cursor:
+        newWins = a + winDiff
+        newLosses = b + loseDiff
+        newElo = int((newWins / (newWins + newLosses)) * 10)
+
+    #now store into database
+    data = (newWins,newLosses,newElo,name)
+    cursor.execute('UPDATE Users SET wins=?,losses=?,elo=? WHERE username=?',data)
+    cursor.commit()
+    connection.close()
+
+
+#Update wins,losses,elo of facebook user
+def updateFacebookUser(database,facebookID,winDiff,loseDiff):
+    connection = sqlite3.connect(database)
+    cursor = connection.cursor()
+    nameTuple = (facebookID,)
+    cursor.execute('SELECT wins,losses FROM UsersFacebook WHERE facebookid =?',nameTuple)
+
+    #Calculate elo/rank
+    for a,b in cursor:
+        newWins = a + winDiff
+        newLosses = b + loseDiff
+        newElo = int((newWins / (newWins + newLosses)) * 10)
+
+    #now store into database
+    data = (newWins,newLosses,newElo,facebookID)
+    cursor.execute('UPDATE UsersFacebook SET wins=?,losses=?,elo=? WHERE facebookid=?',data)
+    cursor.commit()
+    connection.close()
+
 action = insertUser('connect4.db','George1234','mail2','123')
 if action:
     print 'success'
-action = userLogin('connect4.db','George123412321321','123')
+action = userLogin('connect4.db','George1234','123')
 if action:
     print 'User is stored in database'
