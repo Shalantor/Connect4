@@ -1,5 +1,4 @@
 import sqlite3
-from serverUtils import *
 
 #create database
 connection = sqlite3.connect('connect4.db')
