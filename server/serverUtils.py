@@ -100,7 +100,7 @@ def updateUser(database,name,winDiff,loseDiff):
     for a,b in cursor:
         newWins = a + winDiff
         newLosses = b + loseDiff
-        newElo = int((newWins / (newWins + newLosses)) * 10)
+        newElo = int(10*newWins / (newWins + newLosses) )
 
     #now store into database
     data = (newWins,newLosses,newElo,name)
@@ -120,7 +120,7 @@ def updateUserFacebook(database,facebookID,winDiff,loseDiff):
     for a,b in cursor:
         newWins = a + winDiff
         newLosses = b + loseDiff
-        newElo = int((newWins / (newWins + newLosses)) * 10)
+        newElo = int(10*newWins / (newWins + newLosses) )
 
     #now store into database
     data = (newWins,newLosses,newElo,facebookID)
