@@ -90,7 +90,7 @@ def userLoginFacebook(database,ID):
 
 
 #Update wins,losses,elo of user logged in with client
-def udpateUser(database,name,winDiff,loseDiff):
+def updateUser(database,name,winDiff,loseDiff):
     connection = sqlite3.connect(database)
     cursor = connection.cursor()
     nameTuple = (name,)
@@ -105,12 +105,12 @@ def udpateUser(database,name,winDiff,loseDiff):
     #now store into database
     data = (newWins,newLosses,newElo,name)
     cursor.execute('UPDATE Users SET wins=?,losses=?,elo=? WHERE username=?',data)
-    cursor.commit()
+    connection.commit()
     connection.close()
 
 
 #Update wins,losses,elo of facebook user
-def updateFacebookUser(database,facebookID,winDiff,loseDiff):
+def updateUserFacebook(database,facebookID,winDiff,loseDiff):
     connection = sqlite3.connect(database)
     cursor = connection.cursor()
     nameTuple = (facebookID,)
@@ -125,7 +125,18 @@ def updateFacebookUser(database,facebookID,winDiff,loseDiff):
     #now store into database
     data = (newWins,newLosses,newElo,facebookID)
     cursor.execute('UPDATE UsersFacebook SET wins=?,losses=?,elo=? WHERE facebookid=?',data)
-    cursor.commit()
+    connection.commit()
+    connection.close()
+
+#TODO:REMOVE AFTER TESTING
+#Add function to test database integrity
+def showAllEntries():
+    connection = sqlite3.connect('connect4.db')
+    cursor = connection.cursor()
+    cursor.execute('SELECT * FROM Users')
+    results = cursor.fetchall()
+    for r in results:
+        print r
     connection.close()
 
 action = insertUser('connect4.db','George1234','mail2','123')
@@ -134,3 +145,5 @@ if action:
 action = userLogin('connect4.db','George1234','123')
 if action:
     print 'User is stored in database'
+updateUser('connect4.db','George1234',1,1)
+showAllEntries()
