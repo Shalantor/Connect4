@@ -53,10 +53,3 @@ def insertUserFacebook(database,facebookID,name,email):
     connection.commit()
     connection.close()
     return True
-
-action = insertUser('connect4.db','Sherlock','@gmail','123')
-if action :
-    print 'Worked fine'
-action = insertUser('connect4.db','Sherlock','@gmail','123')
-if not action :
-    print 'Worked fine again'
