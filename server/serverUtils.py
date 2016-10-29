@@ -53,3 +53,37 @@ def insertUserFacebook(database,facebookID,name,email):
     connection.commit()
     connection.close()
     return True
+
+#Validate user that logged in with account form game client
+def userLogin(database,name):
+
+    connection = sqlite3.connect(database)
+    cursor = connection.cursor()
+    cursor.execute('SELECT username,email FROM Users')
+
+    for a,b in cursor:
+        if name == a:
+            #User found
+            connection.close()
+            return True
+
+    #No such user
+    connection.close()
+    return False
+
+#Validate user that logged in with facebook
+def userLoginFacebook(database,ID):
+
+    connection = sqlite3.connect(database)
+    cursor = connection.cursor()
+    cursor.execute('SELECT facebookid,email FROM UsersFacebook')
+
+    for a,b in cursor:
+        if ID == a:
+            #User found
+            connection.close()
+            return True
+
+    #No such user
+    connection.close()
+    return False
