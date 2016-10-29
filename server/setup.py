@@ -6,10 +6,10 @@ cursor = connection.cursor()
 
 #Create a table for users logging in from connect4 game
 cursor.execute('''CREATE TABLE IF NOT EXISTS Users (username text,
-                                email text,
+                                email text UNIQUE,
                                 salt text,
                                 password text,
-                                wins integer,
+                                wins integer ,
                                 losses integer,
                                 elo integer,
                                 PRIMARY KEY(username))''')
