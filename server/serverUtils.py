@@ -29,10 +29,10 @@ def insertUser(database,name,email,password):
     hashed_password = hashlib.sha512(password + salt).hexdigest()
 
     #organize data
-    data = (name,email,salt,hashed_password,wins,losses,elo)
+    data = (name,email,salt,hashed_password,wins,losses,elo,0)
 
     #now store in database
-    cursor.execute('INSERT INTO Users VALUES (?,?,?,?,?,?,?)',data)
+    cursor.execute('INSERT INTO Users VALUES (?,?,?,?,?,?,?,?)',data)
     connection.commit()
     connection.close()
 
@@ -148,6 +148,8 @@ def changePassword(database,email,newPassword):
     connection.commit()
     connection.close()
 
+#Function to send email to user with code to change password
+
 
 #TODO:REMOVE EVERYTHING BELOW AFTER TESTING
 #Add function to test database integrity
@@ -168,6 +170,6 @@ else:
 action = userLogin('connect4.db','George1234','123')
 if action:
     print 'User is stored in database'
-updateUser('connect4.db','George1234',1,1)
-changePassword('connect4.db','failord@gmail.com','geia')
+updateUser('connect4.db','FlorianosOpro',1,1)
 showAllEntries()
+changePassword('connect4.db','enai@gmail.com','geia')

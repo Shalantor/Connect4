@@ -12,6 +12,7 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS Users (username text,
                                 wins integer ,
                                 losses integer,
                                 elo integer,
+                                resetCode integer,
                                 PRIMARY KEY(username))''')
 
 #Create a table for users logging in from facebook
