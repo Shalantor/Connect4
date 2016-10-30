@@ -163,7 +163,7 @@ def forgotPassword(database,email):
     if cursor.fetchone() == None:
         return False
 
-    Generate random 10 digit integer as a reset code and store it
+    #Generate random 10 digit integer as a reset code and store it
     code = random.randint(1000000000,9999999999)
     data = (code,email)
     cursor.execute('UPDATE Users SET resetCode=? WHERE email=?',data)
