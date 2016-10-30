@@ -59,6 +59,7 @@ def insertUserFacebook(database,facebookID,name,email):
     return True
 
 #Validate user that logged in with account form game client
+#TODO:Login with email
 def userLogin(database,name,password):
 
     connection = sqlite3.connect(database)
@@ -132,6 +133,22 @@ def updateUserFacebook(database,facebookID,winDiff,loseDiff):
     connection.commit()
     connection.close()
 
+
+#Function to send the user an email with a code to reset password
+def changePassword(database,email,newPassword):
+    connection = sqlite3.connect(database)
+    cursor = connection.cursor()
+    data = (email,)
+
+    cursor.execute('SELECT salt FROM Users WHERE email=?',data)
+    hashed_password = hashlib.sha512(newPassword + cursor.fetchone()[0]).hexdigest()
+    data = (hashed_password,email)
+    cursor.execute('UPDATE Users SET password=? WHERE email=?',data)
+
+    connection.commit()
+    connection.close()
+
+
 #TODO:REMOVE EVERYTHING BELOW AFTER TESTING
 #Add function to test database integrity
 def showAllEntries():
@@ -143,7 +160,7 @@ def showAllEntries():
         print r
     connection.close()
 
-action = insertUser('connect4.db','Florianovic2','failord','123')
+action = insertUser('connect4.db','FlorianosOpro','enai@gmail.com','123')
 if action:
     print 'success'
 else:
@@ -152,4 +169,5 @@ action = userLogin('connect4.db','George1234','123')
 if action:
     print 'User is stored in database'
 updateUser('connect4.db','George1234',1,1)
+changePassword('connect4.db','failord@gmail.com','geia')
 showAllEntries()
