@@ -1,7 +1,7 @@
 #This file contains various functions to be used by the server for saving
 #data, processing passwords and calculating a players elo
 import string,random
-import uuid,hashlib,sqlite3
+import uuid,hashlib,sqlite3,re
 
 #Insert users in database that decided to log in with game client
 def insertUser(database,name,email,password):
@@ -14,6 +14,10 @@ def insertUser(database,name,email,password):
     for a,b in cursor:
         if a == name or b == email:
             return False
+
+    #now check email validity
+    if not re.match('[^@]+@[^@]+\.[^@]+',email):
+        return False
 
     #first set variables that will have a fixed value for a new player
     wins = 0
@@ -128,7 +132,7 @@ def updateUserFacebook(database,facebookID,winDiff,loseDiff):
     connection.commit()
     connection.close()
 
-#TODO:REMOVE AFTER TESTING
+#TODO:REMOVE EVERYTHING BELOW AFTER TESTING
 #Add function to test database integrity
 def showAllEntries():
     connection = sqlite3.connect('connect4.db')
@@ -139,9 +143,11 @@ def showAllEntries():
         print r
     connection.close()
 
-action = insertUser('connect4.db','George1234','mail2','123')
+action = insertUser('connect4.db','Florianovic2','failord','123')
 if action:
     print 'success'
+else:
+    print 'failure'
 action = userLogin('connect4.db','George1234','123')
 if action:
     print 'User is stored in database'
