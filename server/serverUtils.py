@@ -1,7 +1,8 @@
 #This file contains various functions to be used by the server for saving
 #data, processing passwords and calculating a players elo
-import string,random
+import string,random,smtplib
 import uuid,hashlib,sqlite3,re
+from email.mime.text import MIMEText
 
 #Insert users in database that decided to log in with game client
 def insertUser(database,name,email,password):
@@ -135,6 +136,7 @@ def updateUserFacebook(database,facebookID,winDiff,loseDiff):
 
 
 #Function to send the user an email with a code to reset password
+#TODO:also add capability for name to reset a password instead of email
 def changePassword(database,email,newPassword):
     connection = sqlite3.connect(database)
     cursor = connection.cursor()
@@ -148,7 +150,37 @@ def changePassword(database,email,newPassword):
     connection.commit()
     connection.close()
 
+
 #Function to send email to user with code to change password
+#TODO:also support name
+def forgotPassword(database,email):
+    connection = sqlite3.connect(database)
+    cursor = connection.cursor()
+
+    #data = (email,)
+    #cursor.execute('SELECT * FROM Users WHERE email=?',data)
+    #False email
+    #if cursor.fetchone() == None:
+    #    return False
+
+    #Generate random 10 digit integer as a reset code and store it
+    code = random.randint(1000000000,9999999999)
+    #data = (code,email)
+    #cursor.execute('UPDATE Users SET resetCode=? WHERE email=?',data)
+    #connection.commit()
+
+    msg = MIMEText('Dear User, we send you this reset code : %d' % code)
+    msg['Subject'] = 'Reset code for connect4'
+    me = 'georgkaraolanis@gmail.com'
+    msg['From'] = me
+    msg['To'] = email
+    s = smtplib.SMTP('smtp.gmail.com:587')
+    s.ehlo()
+    s.starttls()
+    s.login(me,'')
+    s.sendmail(me,[email],msg.as_string())
+    s.quit()
+    connection.close()
 
 
 #TODO:REMOVE EVERYTHING BELOW AFTER TESTING
@@ -171,5 +203,6 @@ action = userLogin('connect4.db','George1234','123')
 if action:
     print 'User is stored in database'
 updateUser('connect4.db','FlorianosOpro',1,1)
-showAllEntries()
 changePassword('connect4.db','enai@gmail.com','geia')
+forgotPassword('connect4.db','hello')
+showAllEntries()
