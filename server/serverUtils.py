@@ -157,19 +157,20 @@ def forgotPassword(database,email):
     connection = sqlite3.connect(database)
     cursor = connection.cursor()
 
-    #data = (email,)
-    #cursor.execute('SELECT * FROM Users WHERE email=?',data)
+    data = (email,)
+    cursor.execute('SELECT * FROM Users WHERE email=?',data)
     #False email
-    #if cursor.fetchone() == None:
-    #    return False
+    if cursor.fetchone() == None:
+        return False
 
-    #Generate random 10 digit integer as a reset code and store it
+    Generate random 10 digit integer as a reset code and store it
     code = random.randint(1000000000,9999999999)
-    #data = (code,email)
-    #cursor.execute('UPDATE Users SET resetCode=? WHERE email=?',data)
-    #connection.commit()
+    data = (code,email)
+    cursor.execute('UPDATE Users SET resetCode=? WHERE email=?',data)
+    connection.commit()
 
-    msg = MIMEText('Dear User, we send you this reset code : %d' % code)
+    #Commented out for start, but it is tested and works
+    """msg = MIMEText('Dear User, we send you this reset code : %d' % code)
     msg['Subject'] = 'Reset code for connect4'
     me = 'georgkaraolanis@gmail.com'
     msg['From'] = me
@@ -179,7 +180,9 @@ def forgotPassword(database,email):
     s.starttls()
     s.login(me,'')
     s.sendmail(me,[email],msg.as_string())
-    s.quit()
+    s.quit()"""
+
+
     connection.close()
 
 
