@@ -152,22 +152,32 @@ def changePassword(database,email,newPassword):
 
 
 #Function to send email to user with code to change password
-#TODO:also support name
-def forgotPassword(database,email):
+def forgotPassword(database,email,name):
     connection = sqlite3.connect(database)
     cursor = connection.cursor()
-
-    data = (email,)
-    cursor.execute('SELECT * FROM Users WHERE email=?',data)
-    #False email
-    if cursor.fetchone() == None:
-        return False
-
     #Generate random 10 digit integer as a reset code and store it
     code = random.randint(1000000000,9999999999)
-    data = (code,email)
-    cursor.execute('UPDATE Users SET resetCode=? WHERE email=?',data)
+
+    if name == None:
+        data = (email,)
+        cursor.execute('SELECT * FROM Users WHERE email=?',data)
+        #False email
+        if cursor.fetchone() == None:
+            return False
+        data = (code,email)
+        cursor.execute('UPDATE Users SET resetCode=? WHERE email=?',data)
+
+    elif email == None:
+        data = (name,)
+        cursor.execute('SELECT * FROM Users WHERE username=?',data)
+        #False name
+        if cursor.fetchone() == None:
+            return False
+        data = (code,name)
+        cursor.execute('UPDATE Users SET resetCode=? WHERE username=?',data)
+
     connection.commit()
+
 
     #Commented out for start, but it is tested and works
     """msg = MIMEText('Dear User, we send you this reset code : %d' % code)
@@ -187,7 +197,7 @@ def forgotPassword(database,email):
 
 
 #TODO:REMOVE EVERYTHING BELOW AFTER TESTING
-#Add function to test database integrity
+#Add function to test database contents
 def showAllEntries():
     connection = sqlite3.connect('connect4.db')
     cursor = connection.cursor()
@@ -207,5 +217,5 @@ if action:
     print 'User is stored in database'
 updateUser('connect4.db','FlorianosOpro',1,1)
 changePassword('connect4.db','enai@gmail.com','geia')
-forgotPassword('connect4.db','hello')
+forgotPassword('connect4.db',None,'FlorianosOpro')
 showAllEntries()
