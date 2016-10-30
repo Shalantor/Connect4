@@ -136,16 +136,22 @@ def updateUserFacebook(database,facebookID,winDiff,loseDiff):
 
 
 #Function to send the user an email with a code to reset password
-#TODO:also add capability for name to reset a password instead of email
-def changePassword(database,email,newPassword):
+def changePassword(database,email,name,newPassword):
     connection = sqlite3.connect(database)
     cursor = connection.cursor()
-    data = (email,)
 
-    cursor.execute('SELECT salt FROM Users WHERE email=?',data)
-    hashed_password = hashlib.sha512(newPassword + cursor.fetchone()[0]).hexdigest()
-    data = (hashed_password,email)
-    cursor.execute('UPDATE Users SET password=? WHERE email=?',data)
+    if name == None:
+        data = (email,)
+        cursor.execute('SELECT salt FROM Users WHERE email=?',data)
+        hashed_password = hashlib.sha512(newPassword + cursor.fetchone()[0]).hexdigest()
+        data = (hashed_password,email)
+        cursor.execute('UPDATE Users SET password=? WHERE email=?',data)
+    elif email == None:
+        data = (name,)
+        cursor.execute('SELECT salt FROM Users WHERE username=?',data)
+        hashed_password = hashlib.sha512(newPassword + cursor.fetchone()[0]).hexdigest()
+        data = (hashed_password,name)
+        cursor.execute('UPDATE Users SET password=? WHERE username=?',data)
 
     connection.commit()
     connection.close()
@@ -216,6 +222,6 @@ action = userLogin('connect4.db','George1234','123')
 if action:
     print 'User is stored in database'
 updateUser('connect4.db','FlorianosOpro',1,1)
-changePassword('connect4.db','enai@gmail.com','geia')
+changePassword('connect4.db',None,'FlorianosOpro','geia')
 forgotPassword('connect4.db',None,'FlorianosOpro')
 showAllEntries()
