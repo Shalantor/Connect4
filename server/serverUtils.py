@@ -183,9 +183,7 @@ def forgotPassword(database,email,name):
         cursor.execute('UPDATE Users SET resetCode=? WHERE username=?',data)
 
     connection.commit()
-
-
-    #Commented out for start, but it is tested and works
+    #Commented out for start, but it is tested and works, it just isnt safe to keep it
     """msg = MIMEText('Dear User, we send you this reset code : %d' % code)
     msg['Subject'] = 'Reset code for connect4'
     me = 'georgkaraolanis@gmail.com'
@@ -197,9 +195,22 @@ def forgotPassword(database,email,name):
     s.login(me,'')
     s.sendmail(me,[email],msg.as_string())
     s.quit()"""
-
-
     connection.close()
+
+#To confirm code for changing password
+def confirmPasswordChangeCode(database,email,name,code):
+    connection = sqlite3.connect(database)
+    cursor = connection.cursor()
+
+    if name == None:
+        data = (email,)
+        cursor.execute('SELECT resetCode FROM Users WHERE email=?',data)
+        resetCode = cursor.fetchone()[0]
+    elif email == None:
+        data = (name,)
+        cursor.execute('SELECT resetCode FROM Users WHERE username=?',data)
+        resetCode = cursor.fetchone()[0]
+    return resetCode == code
 
 
 #TODO:REMOVE EVERYTHING BELOW AFTER TESTING
@@ -213,15 +224,16 @@ def showAllEntries():
         print r
     connection.close()
 
-action = insertUser('connect4.db','FlorianosOpro','enai@gmail.com','123')
+action = insertUser('connect4.db','Florian','nai@gmail.com','123')
 if action:
     print 'success'
 else:
     print 'failure'
-action = userLogin('connect4.db','George1234','123')
+action = userLogin('connect4.db','FlorianosOpro','123')
 if action:
     print 'User is stored in database'
+else:
+    print 'no such user'
 updateUser('connect4.db','FlorianosOpro',1,1)
 changePassword('connect4.db',None,'FlorianosOpro','geia')
 forgotPassword('connect4.db',None,'FlorianosOpro')
-showAllEntries()
