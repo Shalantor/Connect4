@@ -227,17 +227,3 @@ def showAllEntries():
     for r in results:
         print r
     connection.close()
-
-action = insertUser('connect4.db','Watson1','apapa@gmail.com','123')
-if action:
-    print 'success'
-else:
-    print 'failure'
-action = userLogin('connect4.db',None,'nai@gmail.com','123')
-if action:
-    print 'User is stored in database'
-else:
-    print 'no such user'
-updateUser('connect4.db','FlorianosOpro',1,1)
-changePassword('connect4.db',None,'FlorianosOpro','geia')
-forgotPassword('connect4.db',None,'FlorianosOpro')
