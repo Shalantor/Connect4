@@ -60,13 +60,16 @@ def insertUserFacebook(database,facebookID,name,email):
     return True
 
 #Validate user that logged in with account form game client
-#TODO:Login with email
-def userLogin(database,name,password):
+def userLogin(database,name,email,password):
 
     connection = sqlite3.connect(database)
     cursor = connection.cursor()
-    nameTuple = (name,)
-    cursor.execute('SELECT salt,password FROM Users WHERE username =?',nameTuple)
+    if email == None:
+        nameTuple = (name,)
+        cursor.execute('SELECT salt,password FROM Users WHERE username =?',nameTuple)
+    elif name == None:
+        nameTuple = (email,)
+        cursor.execute('SELECT salt,password FROM Users WHERE email =?',nameTuple)
 
     if cursor == None:#no such user
         return False
@@ -135,7 +138,7 @@ def updateUserFacebook(database,facebookID,winDiff,loseDiff):
     connection.close()
 
 
-#Function to send the user an email with a code to reset password
+#Function to change the password of a user
 def changePassword(database,email,name,newPassword):
     connection = sqlite3.connect(database)
     cursor = connection.cursor()
@@ -229,7 +232,7 @@ if action:
     print 'success'
 else:
     print 'failure'
-action = userLogin('connect4.db','FlorianosOpro','123')
+action = userLogin('connect4.db','Florian',None,'123')
 if action:
     print 'User is stored in database'
 else:
