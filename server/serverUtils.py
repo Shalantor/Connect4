@@ -199,6 +199,7 @@ def forgotPassword(database,email,name):
     s.sendmail(me,[email],msg.as_string())
     s.quit()"""
     connection.close()
+    return True
 
 #To confirm code for changing password
 def confirmPasswordChangeCode(database,email,name,code):
@@ -227,12 +228,12 @@ def showAllEntries():
         print r
     connection.close()
 
-action = insertUser('connect4.db','Florian','nai@gmail.com','123')
+action = insertUser('connect4.db','Watson1','apapa@gmail.com','123')
 if action:
     print 'success'
 else:
     print 'failure'
-action = userLogin('connect4.db','Florian',None,'123')
+action = userLogin('connect4.db',None,'nai@gmail.com','123')
 if action:
     print 'User is stored in database'
 else:
