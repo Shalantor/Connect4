@@ -218,7 +218,6 @@ def confirmPasswordChangeCode(database,email,name,code):
 
 
 #TODO:REMOVE EVERYTHING BELOW AFTER TESTING
-#Add function to test database contents
 def showAllEntries():
     connection = sqlite3.connect('connect4.db')
     cursor = connection.cursor()

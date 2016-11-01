@@ -27,6 +27,7 @@ def dbThread(requestQueue):
         op = data.get('operation')
         answerQueue = data.get('answer')
         result = True
+        print 'operation is %d' %op
         #now check what to do with the data
         if op == 0:
             result = insertUser(DATABASE,data.get('name'),data.get('email'),data.get('password'))
@@ -47,5 +48,6 @@ def dbThread(requestQueue):
         elif op == 8:
             result = confirmPasswordChangeCode(DATABASE,data.get('email'),data.get('name'),data.get('code'))
         elif op == 9:
+            answerQueue.put(True)
             break
-        answerQueue.put_nowait(result)
+        answerQueue.put(result)
