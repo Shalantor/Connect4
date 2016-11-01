@@ -97,7 +97,7 @@ def userLoginFacebook(database,ID):
     connection.close()
     return False
 
-
+#TODO:fix elo calculation for a user with only a few games
 #Update wins,losses,elo of user logged in with client
 def updateUser(database,name,winDiff,loseDiff):
     connection = sqlite3.connect(database)

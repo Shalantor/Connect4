@@ -13,7 +13,7 @@
 # 6 --- changePassword              |       email,name,newPassword
 # 7 --- forgotPassword              |       email,name
 # 8 --- confirmPasswordChangeCode   |       email,name,code
-# 9 --- end this thread            |       -
+# 9 --- end this thread             |       -
 #Data is sent in form of dictionaries, which also contain the queue that
 #will be used to answering to the thread that sent the request
 import Queue
