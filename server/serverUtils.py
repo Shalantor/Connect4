@@ -201,6 +201,7 @@ def forgotPassword(database,email,name):
     connection.close()
     return True
 
+#TODO:after verification maybe place 0 again in reset code field
 #To confirm code for changing password
 def confirmPasswordChangeCode(database,email,name,code):
     connection = sqlite3.connect(database)

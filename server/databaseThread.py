@@ -32,11 +32,11 @@ def dbThread(requestQueue):
         if op == 0:
             result = insertUser(DATABASE,data.get('name'),data.get('email'),data.get('password'))
         elif op == 1:
-            result = insertUserFacebook(DATABASE,data.get('ID'),data.get('name'),data.get('email'))
+            result = insertUserFacebook(DATABASE,data.get('id'),data.get('name'),data.get('email'))
         elif op == 2:
             result = userLogin(DATABASE,data.get('name'),data.get('email'),data.get('password'))
         elif op == 3:
-            result = userLoginFacebook(DATABASE,data.get('ID'))
+            result = userLoginFacebook(DATABASE,data.get('id'))
         elif op == 4:
             updateUser(DATABASE,data.get('name'),data.get('win'),data.get('loss'))
         elif op == 5:
