@@ -13,6 +13,7 @@
 # 1) Add to match making lists
 # 2) Terminate itself
 MAX_LOOPS = 10
+MAX_WAIT = 1
 import Queue,time,random
 
 #inputQueue is for getting players from account threads
@@ -37,7 +38,6 @@ def mmThread(inputQueue,exitQueue,outputQueue):
         while loopCounter < MAX_LOOPS:
             try:
                 newPlayer = inputQueue.get(False)
-                print 'got new player, loop Counter is %d ' % loopCounter
                 playerRank = newPlayer.get('rank')
                 listIndex = playerRank // 3
                 newPlayer['entryTime'] = time.time()
@@ -45,6 +45,29 @@ def mmThread(inputQueue,exitQueue,outputQueue):
             except Queue.Empty:
                 break
             loopCounter += 1
+        #First check for previous players in a copy of list
+        for player in needRematch[:]:
+            position = player.get('rank') // 3
+            foundMatch = False
+            if len(playerList[position]) == 0 or playerList[position][0] != player:
+                continue
+            if position + 1 < len(playerList) and len(playerList[position+1]) >= 1:
+                foundMatch = True
+                firstPlayer = playerList[position].pop(0)
+                secondPlayer = playerList[position+1].pop(0)
+                needRematch.remove(player)
+            elif (position - 1 >= 0) and len(playerList[position-1]) >= 1:
+                foundMatch = True
+                firstPlayer = playerList[position].pop(0)
+                secondPlayer = playerList[position-1].pop(0)
+                needRematch.remove(player)
+            if foundMatch:
+                bothPlayers = [firstPlayer,secondPlayer]
+                data = {'turn':0,'players':bothPlayers}
+                print'Add new Player token'
+                outputQueue.put(data)
+
+        #Match players in same list
         for category in playerList:
             while True:
                 try:
@@ -60,5 +83,9 @@ def mmThread(inputQueue,exitQueue,outputQueue):
                     if secondPlayer == None and firstPlayer != None:
                         category.insert(0,firstPlayer)
                     break
-
+        #Check for players that didnt find a match and alert thread
+        for i in range(0,3):
+            if len(playerList[i]) > 0:
+                if time.time() - playerList[i][0].get('entryTime') >= MAX_WAIT:
+                    needRematch.append(playerList[i][0])
     print 'exit success'

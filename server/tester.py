@@ -32,11 +32,10 @@ outputQueue = Queue.Queue()
 exitQueue = Queue.Queue()
 myThread = Thread(target=mmThread,args=(inputQueue,exitQueue,outputQueue))
 myThread.start()
-rank = 0
 for i in range(0,20):
+    rank = i % 11
     inputQueue.put({'rank':rank})
-    rank = (rank + 1) % 10
-time.sleep(3)
+time.sleep(4)
 while True:
     try:
         token = outputQueue.get(False)
