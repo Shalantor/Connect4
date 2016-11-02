@@ -12,27 +12,53 @@
 #This thread support only 2 operations:
 # 1) Add to match making lists
 # 2) Terminate itself
-import Queue
+MAX_LOOPS = 10
+import Queue,time,random
 
 #inputQueue is for getting players from account threads
-#outputQueue is for sending match tokes to the thread that handles the matches
-def mmThread(inputQueue,outputQueue):
+#outputQueue is for sending match tokens to the thread that handles the matches
+#exitQueue is used for exiting the thread
+def mmThread(inputQueue,exitQueue,outputQueue):
     noviceList = []
     apprenticeList = []
     adeptList = []
     expertList = []
     playerList = [noviceList,apprenticeList,adeptList,expertList]
+    needRematch = []
     while True:
-        #loop over new entries at most ten times then do it again
-        while True:
+        loopCounter = 0
+        try:
+            exit = exitQueue.get(False)
+            if exit:
+                break
+        except:
+            pass
+        #loop over new entries at most X times then do it again
+        while loopCounter < MAX_LOOPS:
             try:
                 newPlayer = inputQueue.get(False)
+                print 'got new player, loop Counter is %d ' % loopCounter
                 playerRank = newPlayer.get('rank')
                 listIndex = playerRank // 3
-
-            except:
+                newPlayer['entryTime'] = time.time()
+                playerList[listIndex].append(newPlayer)
+            except Queue.Empty:
                 break
+            loopCounter += 1
         for category in playerList:
-            if len(category) >= 2:
-                #create new match object
-                matchToken =
+            while True:
+                try:
+                    firstPlayer = None
+                    secondPlayer = None
+                    firstPlayer = category.pop(0)
+                    secondPlayer = category.pop(0)
+                    bothPlayers = [firstPlayer,secondPlayer]
+                    data = {'turn':0,'players':bothPlayers}
+                    print'Add new Player token'
+                    outputQueue.put(data)
+                except:
+                    if secondPlayer == None and firstPlayer != None:
+                        category.insert(0,firstPlayer)
+                    break
+
+    print 'exit success'
