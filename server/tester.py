@@ -7,12 +7,12 @@ from threading import *
 from matchMakingThread import *
 
 #this code tests the database thread
-"""requestQueue = Queue.Queue()
+requestQueue = Queue.Queue()
 answerQueue = Queue.Queue()
 myThread = Thread(target=dbThread,args=(requestQueue,))
 myThread.start()
 #First create a user
-data = {'operation':8,'answer':answerQueue,'name':'SherlockHolmes1','email':None,'code':8038379981}
+data = {'operation':1,'answer':answerQueue,'name':'Watson','email':'fail@gmail.com','password':'elapre','id':'yeper'}
 requestQueue.put(data)
 print 'waiting for answer'
 result = answerQueue.get()
@@ -20,21 +20,24 @@ if result:
     print 'Success with this user'
 else:
     print 'No success with this user'
-data = {'operation':9,'answer':answerQueue}
+data = {'operation':10,'answer':answerQueue,'name':'Watson','email':None,'id':'yeper'}
+requestQueue.put(data)
+result = answerQueue.get()
+print result
+data = {'operation':11,'answer':answerQueue,'name':'Watson','email':None,'id':'Watsid'}
 requestQueue.put(data)
 result = answerQueue.get()
 if result:
-    print 'thread exited normally'"""
+    print 'thread exited normally'
 
 #this code tests the match making thread
-inputQueue = Queue.Queue()
+"""inputQueue = Queue.Queue()
 outputQueue = Queue.Queue()
 exitQueue = Queue.Queue()
 myThread = Thread(target=mmThread,args=(inputQueue,exitQueue,outputQueue))
 myThread.start()
-for i in range(0,20):
-    rank = i % 11
-    inputQueue.put({'rank':rank})
+inputQueue.put({'rank':0})
+inputQueue.put({'rank':5})
 time.sleep(4)
 while True:
     try:
@@ -43,4 +46,4 @@ while True:
     except:
         break
 exitQueue.put(True)
-print 'exit main'
+print 'exit main'"""

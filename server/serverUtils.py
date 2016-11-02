@@ -215,7 +215,34 @@ def confirmPasswordChangeCode(database,email,name,code):
         data = (name,)
         cursor.execute('SELECT resetCode FROM Users WHERE username=?',data)
         resetCode = cursor.fetchone()[0]
+    connection.close()
     return resetCode == code
+
+#To get normal user data
+def getUserData(database,name,email):
+    connection = sqlite3.connect(database)
+    cursor = connection.cursor()
+    if name == None:
+        data = (email,)
+        cursor.execute('SELECT username,email,elo FROM Users WHERE email=?',data)
+    elif email == None:
+        data=(name,)
+        cursor.execute('SELECT * FROM Users WHERE username=?',data)
+    result = cursor.fetchone()
+    userToken = {'name':result[0],'email':result[1],'rank':result[2]}
+    connection.close()
+    return userToken
+
+#To get facebook user data
+def getFbUserData(database,facebookid):
+    connection = sqlite3.connect(database)
+    cursor = connection.cursor()
+    data = (facebookid,)
+    cursor.execute('SELECT facebookid,name,elo FROM UsersFacebook WHERE facebookid=?',data)
+    result = cursor.fetchone()
+    userToken = {'id':result[0],'email':result[1],'rank':result[2]}
+    connection.close()
+    return userToken
 
 
 #TODO:REMOVE EVERYTHING BELOW AFTER TESTING

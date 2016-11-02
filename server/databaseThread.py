@@ -13,7 +13,9 @@
 # 6 --- changePassword              |       email,name,newPassword
 # 7 --- forgotPassword              |       email,name
 # 8 --- confirmPasswordChangeCode   |       email,name,code
-# 9 --- end this thread             |       -
+# 9 --- getUserData                 |       name,email
+#10 --- getFbUserData               |       facebookID,
+#11 --- Terminate                   |           -
 #Data is sent in form of dictionaries, which also contain the queue that
 #will be used to answering to the thread that sent the request
 import Queue
@@ -48,6 +50,10 @@ def dbThread(requestQueue):
         elif op == 8:
             result = confirmPasswordChangeCode(DATABASE,data.get('email'),data.get('name'),data.get('code'))
         elif op == 9:
+            result = getUserData(DATABASE,data.get('name'),data.get('email'))
+        elif op == 10:
+            result = getFbUserData(DATABASE,data.get('id'))
+        elif op == 11:
             answerQueue.put(True)
             break
         answerQueue.put(result)
