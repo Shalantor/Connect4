@@ -239,9 +239,9 @@ def getFbUserData(database,facebookid):
     connection = sqlite3.connect(database)
     cursor = connection.cursor()
     data = (facebookid,)
-    cursor.execute('SELECT facebookid,name,elo FROM UsersFacebook WHERE facebookid=?',data)
+    cursor.execute('SELECT facebookid,name,email,elo FROM UsersFacebook WHERE facebookid=?',data)
     result = cursor.fetchone()
-    userToken = {'id':result[0],'email':result[1],'rank':result[2]}
+    userToken = {'id':result[0],'name':result[1],'email':result[2],'rank':result[3]}
     connection.close()
     return userToken
 
