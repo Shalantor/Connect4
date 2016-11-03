@@ -5,8 +5,10 @@ import Queue,time
 from databaseThread import *
 from threading import *
 from matchMakingThread import *
+import socket
+from userThread import *
 
-#this code tests the database thread
+"""#this code tests the database thread
 requestQueue = Queue.Queue()
 answerQueue = Queue.Queue()
 myThread = Thread(target=dbThread,args=(requestQueue,))
@@ -28,7 +30,7 @@ data = {'operation':11,'answer':answerQueue,'name':'Watson','email':None,'id':'W
 requestQueue.put(data)
 result = answerQueue.get()
 if result:
-    print 'thread exited normally'
+    print 'thread exited normally'"""
 
 #this code tests the match making thread
 """inputQueue = Queue.Queue()
@@ -47,3 +49,14 @@ while True:
         break
 exitQueue.put(True)
 print 'exit main'"""
+
+#This code tests the listener thread and the user threads
+listenerThread = Thread(target=listener,args=(None,None))
+listenerThread.start()
+time.sleep(1)
+clientSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM,0)
+clientSocket.connect(('localhost',PORT))
+time.sleep(1)
+clientSocket.send('e yo')
+clientSocket.shutdown(socket.SHUT_RDWR)
+clientSocket.close()

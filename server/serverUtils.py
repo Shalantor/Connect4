@@ -1,5 +1,6 @@
 #This file contains various functions to be used by the server for saving
 #data, processing passwords and calculating a players elo
+#TODO:open authentication 2 Android
 import string,random,smtplib
 import uuid,hashlib,sqlite3,re
 from email.mime.text import MIMEText
