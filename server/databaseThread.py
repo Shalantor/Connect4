@@ -54,6 +54,7 @@ def dbThread(requestQueue):
         elif op == 10:
             result = getFbUserData(DATABASE,data.get('id'))
         elif op == 11:
+            print 'Database thread out'
             answerQueue.put(True)
             break
         answerQueue.put(result)

@@ -68,7 +68,7 @@ def userLogin(database,name,email,password):
     if email == None:
         nameTuple = (name,)
         cursor.execute('SELECT salt,password FROM Users WHERE username =?',nameTuple)
-    elif name == None:
+    elif name == None or (name != None and email!=None):
         nameTuple = (email,)
         cursor.execute('SELECT salt,password FROM Users WHERE email =?',nameTuple)
 
@@ -150,7 +150,7 @@ def changePassword(database,email,name,newPassword):
         hashed_password = hashlib.sha512(newPassword + cursor.fetchone()[0]).hexdigest()
         data = (hashed_password,email)
         cursor.execute('UPDATE Users SET password=? WHERE email=?',data)
-    elif email == None:
+    elif email == None or (name != None and email!=None):
         data = (name,)
         cursor.execute('SELECT salt FROM Users WHERE username=?',data)
         hashed_password = hashlib.sha512(newPassword + cursor.fetchone()[0]).hexdigest()
@@ -177,7 +177,7 @@ def forgotPassword(database,email,name):
         data = (code,email)
         cursor.execute('UPDATE Users SET resetCode=? WHERE email=?',data)
 
-    elif email == None:
+    elif email == None or (name != None and email!=None):
         data = (name,)
         cursor.execute('SELECT * FROM Users WHERE username=?',data)
         #False name
@@ -212,7 +212,7 @@ def confirmPasswordChangeCode(database,email,name,code):
         data = (email,)
         cursor.execute('SELECT resetCode FROM Users WHERE email=?',data)
         resetCode = cursor.fetchone()[0]
-    elif email == None:
+    elif email == None or (name != None and email!=None):
         data = (name,)
         cursor.execute('SELECT resetCode FROM Users WHERE username=?',data)
         resetCode = cursor.fetchone()[0]
@@ -226,7 +226,7 @@ def getUserData(database,name,email):
     if name == None:
         data = (email,)
         cursor.execute('SELECT username,email,elo FROM Users WHERE email=?',data)
-    elif email == None:
+    elif email == None or (name != None and email!=None):
         data=(name,)
         cursor.execute('SELECT * FROM Users WHERE username=?',data)
     result = cursor.fetchone()

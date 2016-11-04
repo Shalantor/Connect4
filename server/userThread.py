@@ -21,19 +21,23 @@ import socket,Queue
 from threading import *
 PORT = 5501
 
-"""TODO:CHANGE MESSAGES TO NOT SEND EMALI AND USERNAME AGAIN BECAUSE IT IS POINTLESS"""
 #TODO:also send back result to user for operations
 #This function-thread listens on a port for connections
 def listener(queueToDatabase,queueToMatchMaking):
     setupSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM,0)
     setupSocket.bind(('localhost',PORT))
+    setupSocket.settimeout(5)
     setupSocket.listen(1)
     while True:
-        replySocket,address = setupSocket.accept()
-        #now create a new userThread
-        uThread = Thread(target=userThread,args=(replySocket,address,queueToDatabase,queueToMatchMaking))
-        uThread.start()
-        print 'Created new user thread'
+        try:
+            replySocket,address = setupSocket.accept()
+            #now create a new userThread
+            uThread = Thread(target=userThread,args=(replySocket,address,queueToDatabase,queueToMatchMaking))
+            uThread.start()
+            print 'Created new user thread'
+        except socket.timeout:
+            break
+    print('Listener Thread ends now')
     setupSocket.close()
 
 #dbQueue is for communicating with database thread
@@ -87,16 +91,16 @@ def userThread(replySocket,address,dbQueue,matchQueue):
             dbQueue.put(data)
             playerToken = answerQueue.get()
             #now send to matchmaking thread
-            queueToMatchMaking.put(playerToken)
+            matchQueue.put(playerToken)
             print 'Send data to match making thread'
             break
 
         #now send data
         dbQueue.put(data)
         result = answerQueue.get()
-        print 'result of operation is %b' % result
+        print 'result of operation is %r' % result
 
     #Terminate thread
-    print 'Terminating myself'
+    print 'User Thread out'
     replySocket.shutdown(socket.SHUT_RDWR)
     replySocket.close()

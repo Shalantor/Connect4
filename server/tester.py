@@ -51,12 +51,30 @@ exitQueue.put(True)
 print 'exit main'"""
 
 #This code tests the listener thread and the user threads
-listenerThread = Thread(target=listener,args=(None,None))
+queueToDatabase = Queue.Queue()
+queueToMatchMaking = Queue.Queue()
+listenerThread = Thread(target=listener,args=(queueToDatabase,queueToMatchMaking))
 listenerThread.start()
+dataThread = Thread(target=dbThread,args=(queueToDatabase,))
+dataThread.start()
+exitQueue = Queue.Queue()
+outputQueue = Queue.Queue()
+matchMakingThread = Thread(target=mmThread,args=(queueToMatchMaking,exitQueue,outputQueue))
+matchMakingThread.start()
 time.sleep(1)
 clientSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM,0)
 clientSocket.connect(('localhost',PORT))
 time.sleep(1)
-clientSocket.send('e yo')
+clientSocket.send('0 0 0 Lestrade bakerstreet@gmail.com olaole2')
+time.sleep(1)
+#Kills threads
+#matchMakingThread
+exitQueue.put(True)
+#userThread
+clientSocket.send('5')
 clientSocket.shutdown(socket.SHUT_RDWR)
 clientSocket.close()
+time.sleep(1)
+#databaseThread
+answerQueue = Queue.Queue()
+queueToDatabase.put({'operation':11,'answer':answerQueue})

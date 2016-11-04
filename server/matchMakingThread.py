@@ -88,4 +88,4 @@ def mmThread(inputQueue,exitQueue,outputQueue):
             if len(playerList[i]) > 0:
                 if time.time() - playerList[i][0].get('entryTime') >= MAX_WAIT:
                     needRematch.append(playerList[i][0])
-    print 'exit success'
+    print 'match making thread out'
