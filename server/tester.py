@@ -66,6 +66,11 @@ clientSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM,0)
 clientSocket.connect(('localhost',PORT))
 time.sleep(1)
 clientSocket.send('0 0 0 Lestrade bakerstreet@gmail.com olaole2')
+answer = clientSocket.recv(512)
+print 'GOT ANSWER ' + answer
+clientSocket.send('3')
+answer = clientSocket.recv(512)
+print 'GOT ANSWER ' + answer
 time.sleep(1)
 #Kills threads
 #userThread

@@ -99,6 +99,10 @@ def userThread(replySocket,address,dbQueue,matchQueue):
         dbQueue.put(data)
         result = answerQueue.get()
         print 'result of operation is %r' % result
+        if not result:
+            replySocket.send('0')
+        else:
+            replySocket.send('1')
 
     #Terminate thread
     print 'User Thread out'
