@@ -228,7 +228,7 @@ def getUserData(database,name,email):
         cursor.execute('SELECT username,email,elo FROM Users WHERE email=?',data)
     elif email == None or (name != None and email!=None):
         data=(name,)
-        cursor.execute('SELECT * FROM Users WHERE username=?',data)
+        cursor.execute('SELECT username,email,elo FROM Users WHERE username=?',data)
     result = cursor.fetchone()
     userToken = {'name':result[0],'email':result[1],'rank':result[2]}
     connection.close()

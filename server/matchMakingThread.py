@@ -39,9 +39,11 @@ def mmThread(inputQueue,exitQueue,outputQueue):
             try:
                 newPlayer = inputQueue.get(False)
                 playerRank = newPlayer.get('rank')
+                print playerRank
                 listIndex = playerRank // 3
                 newPlayer['entryTime'] = time.time()
                 playerList[listIndex].append(newPlayer)
+                print 'MMTHREAD : Got user '
             except Queue.Empty:
                 break
             loopCounter += 1

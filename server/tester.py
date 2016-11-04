@@ -68,8 +68,6 @@ time.sleep(1)
 clientSocket.send('0 0 0 Lestrade bakerstreet@gmail.com olaole2')
 time.sleep(1)
 #Kills threads
-#matchMakingThread
-exitQueue.put(True)
 #userThread
 clientSocket.send('5')
 clientSocket.shutdown(socket.SHUT_RDWR)
@@ -78,3 +76,6 @@ time.sleep(1)
 #databaseThread
 answerQueue = Queue.Queue()
 queueToDatabase.put({'operation':11,'answer':answerQueue})
+time.sleep(1)
+#matchMakingThread
+exitQueue.put(True)
