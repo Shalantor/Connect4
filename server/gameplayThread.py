@@ -6,7 +6,7 @@
 #Once the game play thread gets a token it sends both players a message to signal
 #them that the game started.Again individual messages will be separated with a
 #space between them
-#                   COMMUNITATION PROTOCOL
+#                   COMMUNICATION PROTOCOL
 # GAME START :                           0 turn rank wins losses TODO: Add data to user token
 # SEND OTHER PLAYER MOVE AND NOTIFY :    1 move state(0 = neutral,1=win,2=lose,3=tie)
 # CONFIRM MOVE                           3 -
