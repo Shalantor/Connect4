@@ -79,12 +79,20 @@ answer = clientSocket.recv(512)
 print 'GOT ANSWER client ' + answer
 clientSocket.send('5')
 
-secondSocket.send('0 1 SuperPenkito Penka penkastreet@gmail.com elpuentos')
+secondSocket.send('0 0 0 PenkaVegito penkamanstreet@gmail.com elpuentos')
 answer = secondSocket.recv(512)
 print 'GOT ANSWER second ' + answer
 secondSocket.send('5')
 time.sleep(1)
-
+#look for answer
+answer = clientSocket.recv(512)
+print 'Answer for clientSocket ' + str(answer)
+answer = clientSocket.recv(512)
+print 'Answer for clientSocket ' + str(answer)
+answer = secondSocket.recv(512)
+print 'Answer for secondSocket ' + str(answer)
+answer = secondSocket.recv(512)
+print 'Answer for secondSocket ' + str(answer)
 #Kills threads
 #userThread
 time.sleep(1)

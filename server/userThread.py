@@ -19,7 +19,7 @@
 # 5         5
 import socket,Queue
 from threading import *
-PORT = 3009
+PORT = 3023
 
 #TODO:also send back result to user for operations
 #This function-thread listens on a port for connections

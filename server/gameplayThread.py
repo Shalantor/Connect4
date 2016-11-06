@@ -13,7 +13,7 @@
 # GET PLAYER MOVE                        move
 # NOTIFY FOR TIMEOUT (LOSER)             4
 # NOTIFY FOR TIMEOUT (WINNER)            5
-import Queue,time
+import Queue,time,socket
 MAX_FINDS = 5
 MAX_WAIT = 5
 
@@ -49,6 +49,8 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                 #Send info to players
                 firstSocket.send('0 ' + str(turn))
                 secondSocket.send('0 ' + str(turn))
+                matchList.append(newMatch)
+                print '\n---- GAMEPLAY THREAD ----\n'
             except Queue.Empty:
                 break
 
@@ -63,7 +65,7 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
         for match in matchList[:]:
             turn = match.get('turn')
             readSocket = match.get('players')[turn].get('socket')
-            readSocket.settimeout(0)
+            readSocket.settimeout(0.0001)
             try:
                 move = int(readSocket.recv(512))
                 #TODO:MAKE MOVE AND CHECK FOR WIN
