@@ -15,7 +15,7 @@
 # NOTIFY FOR TIMEOUT (WINNER)            5
 import Queue,time
 MAX_FINDS = 5
-MAX_WAIT = 20
+MAX_WAIT = 5
 
 def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
     matchList=[]
@@ -38,11 +38,11 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                 firstPlayer['chip'] = 1
                 secondPlayer['chip'] = 2
                 #Create a grid
-                newMatch['grid'] = [[0,0,0,0,0,0,0]
-                                    [0,0,0,0,0,0,0]
-                                    [0,0,0,0,0,0,0]
-                                    [0,0,0,0,0,0,0]
-                                    [0,0,0,0,0,0,0]
+                newMatch['grid'] = [[0,0,0,0,0,0,0],
+                                    [0,0,0,0,0,0,0],
+                                    [0,0,0,0,0,0,0],
+                                    [0,0,0,0,0,0,0],
+                                    [0,0,0,0,0,0,0],
                                     [0,0,0,0,0,0,0]]
                 #Time stamp because each player has limited time for a move
                 newMatch['time'] = time.time()
@@ -51,6 +51,14 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                 secondSocket.send('0 ' + str(turn))
             except Queue.Empty:
                 break
+
+        #Check for exit signal
+        try:
+            exit = exitQueue.get(False)
+            break
+        except Queue.Empty:
+            pass
+
         #Update matches
         for match in matchList[:]:
             turn = match.get('turn')

@@ -7,6 +7,7 @@ from threading import *
 from matchMakingThread import *
 import socket
 from userThread import *
+from gameplayThread import *
 
 """#this code tests the database thread
 requestQueue = Queue.Queue()
@@ -51,6 +52,7 @@ exitQueue.put(True)
 print 'exit main'"""
 
 #This code tests the whole server code
+#Setup threads and queues
 queueToDatabase = Queue.Queue()
 queueToMatchMaking = Queue.Queue()
 listenerThread = Thread(target=listener,args=(queueToDatabase,queueToMatchMaking))
@@ -61,22 +63,30 @@ exitQueue = Queue.Queue()
 outputQueue = Queue.Queue()
 matchMakingThread = Thread(target=mmThread,args=(queueToMatchMaking,exitQueue,outputQueue))
 matchMakingThread.start()
+exitQueue2 = Queue.Queue()
+gThread = Thread(target=gameThread,args=(outputQueue,queueToDatabase,exitQueue2))
+gThread.start()
+
 time.sleep(1)
 clientSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM,0)
 clientSocket.connect(('localhost',PORT))
+secondSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM,0)
+secondSocket.connect(('localhost',PORT))
 time.sleep(1)
+
 clientSocket.send('0 0 0 Lestrade bakerstreet@gmail.com olaole2')
 answer = clientSocket.recv(512)
-print 'GOT ANSWER ' + answer
-clientSocket.send('3')
-answer = clientSocket.recv(512)
-print 'GOT ANSWER ' + answer
+print 'GOT ANSWER client ' + answer
+clientSocket.send('5')
+
+secondSocket.send('0 1 Superduper1 Penka penkastreet@gmail.com elpuentos')
+answer = secondSocket.recv(512)
+print 'GOT ANSWER second ' + answer
+secondSocket.send('5')
 time.sleep(1)
+
 #Kills threads
 #userThread
-clientSocket.send('5')
-clientSocket.shutdown(socket.SHUT_RDWR)
-clientSocket.close()
 time.sleep(1)
 #databaseThread
 answerQueue = Queue.Queue()
@@ -84,3 +94,5 @@ queueToDatabase.put({'operation':11,'answer':answerQueue})
 time.sleep(1)
 #matchMakingThread
 exitQueue.put(True)
+exitQueue2.put(True)
+time.sleep(1)

@@ -19,14 +19,14 @@
 # 5         5
 import socket,Queue
 from threading import *
-PORT = 5501
+PORT = 1089
 
 #TODO:also send back result to user for operations
 #This function-thread listens on a port for connections
 def listener(queueToDatabase,queueToMatchMaking):
     setupSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM,0)
     setupSocket.bind(('localhost',PORT))
-    setupSocket.settimeout(5)
+    setupSocket.settimeout(10)
     setupSocket.listen(1)
     while True:
         try:
