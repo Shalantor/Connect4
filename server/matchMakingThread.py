@@ -78,7 +78,8 @@ def mmThread(inputQueue,exitQueue,outputQueue):
                     firstPlayer = category.pop(0)
                     secondPlayer = category.pop(0)
                     bothPlayers = [firstPlayer,secondPlayer]
-                    data = {'turn':0,'players':bothPlayers}
+                    turn = random.randint(0,1)
+                    data = {'turn':turn,'players':bothPlayers}
                     print'Add new Player token'
                     outputQueue.put(data)
                 except:

@@ -50,7 +50,7 @@ while True:
 exitQueue.put(True)
 print 'exit main'"""
 
-#This code tests the listener thread and the user threads
+#This code tests the whole server code
 queueToDatabase = Queue.Queue()
 queueToMatchMaking = Queue.Queue()
 listenerThread = Thread(target=listener,args=(queueToDatabase,queueToMatchMaking))

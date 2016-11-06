@@ -90,6 +90,8 @@ def userThread(replySocket,address,dbQueue,matchQueue):
             #get user data
             dbQueue.put(data)
             playerToken = answerQueue.get()
+            playerToken['type'] = userType
+            playerToken['socket'] = replySocket
             #now send to matchmaking thread
             matchQueue.put(playerToken)
             print 'Send data to match making thread'
