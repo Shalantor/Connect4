@@ -79,7 +79,7 @@ answer = clientSocket.recv(512)
 print 'GOT ANSWER client ' + answer
 clientSocket.send('5')
 
-secondSocket.send('0 1 Superduper1 Penka penkastreet@gmail.com elpuentos')
+secondSocket.send('0 1 SuperPenkito Penka penkastreet@gmail.com elpuentos')
 answer = secondSocket.recv(512)
 print 'GOT ANSWER second ' + answer
 secondSocket.send('5')
