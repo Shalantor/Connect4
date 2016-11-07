@@ -8,6 +8,7 @@ from matchMakingThread import *
 import socket
 from userThread import *
 from gameplayThread import *
+from gameUtils import *
 
 """#this code tests the database thread
 requestQueue = Queue.Queue()
@@ -51,7 +52,7 @@ while True:
 exitQueue.put(True)
 print 'exit main'"""
 
-#This code tests the whole server code
+"""#This code tests the whole server code
 #Setup threads and queues
 queueToDatabase = Queue.Queue()
 queueToMatchMaking = Queue.Queue()
@@ -103,4 +104,19 @@ time.sleep(1)
 #matchMakingThread
 exitQueue.put(True)
 exitQueue2.put(True)
-time.sleep(1)
+time.sleep(1)"""
+
+
+#This code tests the utilities for the gameplay thread
+board = [[0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0]]
+
+result = hasWon(board,1)
+if result:
+    print 'success'
+else:
+    print 'fail'
