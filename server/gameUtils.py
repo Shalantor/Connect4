@@ -33,3 +33,11 @@ def makeMove(board,position,chip):
             board[i][position] = chip
             return True
     return False
+
+#Function to check for tie
+def isTie(board):
+    for row in range(0,6):
+        for col in range(0,7):
+            if board[row][col] != 0:
+                return False
+    return True

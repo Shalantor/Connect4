@@ -52,7 +52,7 @@ while True:
 exitQueue.put(True)
 print 'exit main'"""
 
-"""#This code tests the whole server code
+#This code tests the whole server code
 #Setup threads and queues
 queueToDatabase = Queue.Queue()
 queueToMatchMaking = Queue.Queue()
@@ -104,10 +104,10 @@ time.sleep(1)
 #matchMakingThread
 exitQueue.put(True)
 exitQueue2.put(True)
-time.sleep(1)"""
+time.sleep(1)
 
 
-#This code tests the utilities for the gameplay thread
+"""#This code tests the utilities for the gameplay thread
 board = [[0,0,0,0,0,0,0],
          [0,0,0,0,0,0,1],
          [0,0,0,0,0,0,1],
@@ -120,4 +120,4 @@ if result:
     print 'move was ok'
 else:
     print 'Invalid move'
-print board
+print board"""

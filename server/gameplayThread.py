@@ -7,13 +7,15 @@
 #them that the game started.Again individual messages will be separated with a
 #space between them
 #                   COMMUNICATION PROTOCOL
-# GAME START :                           0 turn rank wins losses TODO: Add data to user token
-# SEND OTHER PLAYER MOVE AND NOTIFY :    1 move state(0 = neutral,1=win,2=lose,3=tie)
-# CONFIRM MOVE                           3 -
+# GAME START :                           0 turn rank wins losses TODO:send other users data
+# SEND PLAYER MOVE AND NOTIFY :          1 move/validity state(0 = neutral,1=win,2=lose,3=tie)
+#(The player whose turn it is gets a notification to see if his move was valid or not, the other player gets the move)
+#Where 0 is valid, 1 is invalid
 # GET PLAYER MOVE                        move
-# NOTIFY FOR TIMEOUT (LOSER)             4
-# NOTIFY FOR TIMEOUT (WINNER)            5
+# NOTIFY FOR TIMEOUT (LOSER)             2
+# NOTIFY FOR TIMEOUT (WINNER)            3
 import Queue,time,socket
+from gameUtils import *
 MAX_FINDS = 5
 MAX_WAIT = 5
 
@@ -68,21 +70,38 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
             readSocket.settimeout(0.0001)
             try:
                 move = int(readSocket.recv(512))
-                #TODO:MAKE MOVE AND CHECK FOR WIN
-                print ' Got move %d ' % move
-                match['time'] = time.time()
-                match['turn'] = (match['turn'] + 1 ) % 2
-                turn = match['turn']
-                sendSocket = match.get('players')[turn].get('socket')
-                dataToSend = '1 ' + str(move) + ' 0'
-                sendSocket.send(dataToSend)
+
+                #Make move and check for win
+                result =  makeMove(grid,move,match.get('players')[turn].get('chip'))
+
+                #Invalid move
+                if not result :
+                    readSocket.send('1 1')
+                #Valid move
+                else:
+                    win = hasWon(grid,match.get('players')[turn].get('chip'))
+                    if win:
+                        state1 = '1'
+                        state2 = '2'
+                    elif isTie(grid):
+                        state1 = state2 = '3'
+                    else:
+                        state1 = state2 = '0'
+                        readSocket.send('1 0 state1')
+                    match['time'] = time.time()
+                    match['turn'] = (match['turn'] + 1 ) % 2
+                    turn = match['turn']
+                    sendSocket = match.get('players')[turn].get('socket')
+                    dataToSend = '1 ' + str(move) + ' state2'
+                    sendSocket.send(dataToSend)
+
             except socket.timeout:
                 startTime = match['time']
                 if time.time() - startTime > MAX_WAIT:
                     #player lost because no move
-                    readSocket.send('4')
+                    readSocket.send('2')
                     turn = (turn + 1) % 2
                     winSocket = match.get('players')[turn].get('socket')
-                    winSocket.send('5')
+                    winSocket.send('3')
                     #TODO:update player stats
                     matchList.remove(match)
