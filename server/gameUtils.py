@@ -1,4 +1,5 @@
 #This file contains utility functions for the game play thread
+import Queue
 
 #Check if given user has won
 def hasWon(board,chip):
@@ -41,3 +42,31 @@ def isTie(board):
             if board[row][col] != 0:
                 return False
     return True
+
+#Function to update player stats
+def updateStats(winner,loser,queueToDatabase):
+
+    answerQueue = Queue.Queue()
+    winnerType = winner.get('type')
+
+    #Normal user
+    if winnerType == '0':
+        queueToDatabase.put({'operation':4,'answer':answerQueue,'name':winner.get('name'),'win':1,'loss':0})
+    #Fb user
+    else:
+        queueToDatabase.put({'operation':5,'answer':answerQueue,'id':winner.get('id'),'win':1,'loss':0})
+
+    #read answer
+    answer = answerQueue.get()
+
+    loserType = loser.get('type')
+
+    #Normal user
+    if loserType == '0':
+        queueToDatabase.put({'operation':4,'answer':answerQueue,'name':loser.get('name'),'win':1,'loss':0})
+    #Fb user
+    else:
+        queueToDatabase.put({'operation':5,'answer':answerQueue,'id':loser.get('id'),'win':1,'loss':0})
+
+    #read answer
+    answer = answerQueue.get()

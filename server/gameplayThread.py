@@ -98,10 +98,15 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
             except socket.timeout:
                 startTime = match['time']
                 if time.time() - startTime > MAX_WAIT:
+
                     #player lost because no move
                     readSocket.send('2')
+                    loser = match.get('players')[turn]
                     turn = (turn + 1) % 2
                     winSocket = match.get('players')[turn].get('socket')
                     winSocket.send('3')
-                    #TODO:update player stats
+
+                    #update player stats
+                    winner = match.get('players')[turn]
+                    
                     matchList.remove(match)
