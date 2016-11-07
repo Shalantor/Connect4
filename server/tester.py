@@ -108,15 +108,16 @@ time.sleep(1)"""
 
 
 #This code tests the utilities for the gameplay thread
-board = [[0,0,0,0,0,0,1],
+board = [[0,0,0,0,0,0,0],
          [0,0,0,0,0,0,1],
          [0,0,0,0,0,0,1],
          [0,0,0,0,0,0,1],
-         [0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0]]
+         [0,0,0,0,0,0,1],
+         [0,0,0,0,0,0,1]]
 
-result = hasWon(board,1)
+result = makeMove(board,6,1)
 if result:
-    print 'success'
+    print 'move was ok'
 else:
-    print 'fail'
+    print 'Invalid move'
+print board

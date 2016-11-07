@@ -23,3 +23,13 @@ def hasWon(board,chip):
             if board[row][col] == chip and board[row+1][col+1] == chip and board[row+2][col+2] == chip and board[row+3][col+3] == chip:
                 return True
     return False
+
+
+#Function to add chip to board
+def makeMove(board,position,chip):
+    #loop rows upwards
+    for i in range(5,-1,-1):
+        if board[i][position] == 0:
+            board[i][position] = chip
+            return True
+    return False
