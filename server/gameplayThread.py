@@ -83,6 +83,9 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                     if win:
                         state1 = '1'
                         state2 = '2'
+                        winner = match.get('players')[turn]
+                        loser = match.get('players')[(turn + 1) % 2]
+                        updateStats(winner,loser,queueToDatabase)
                     elif isTie(grid):
                         state1 = state2 = '3'
                     else:
@@ -108,5 +111,5 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
 
                     #update player stats
                     winner = match.get('players')[turn]
-                    
+                    updateStats(winner,loser,queueToDatabase)
                     matchList.remove(match)
