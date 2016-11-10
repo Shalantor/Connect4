@@ -6,4 +6,5 @@
     <string name="options">Options</string>
     <string name="exit">Exit</string>
     <string name="play">Play Game</string>
+    <string name="hint_ip">Server address</string>
 </resources>
