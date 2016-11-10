@@ -22,7 +22,9 @@
             android:name=".GameActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait"></activity>
+
     </application>
 
 </manifest>
