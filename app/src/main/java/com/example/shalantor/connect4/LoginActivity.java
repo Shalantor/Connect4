@@ -11,13 +11,21 @@ import android.widget.EditText;
 public class LoginActivity extends AppCompatActivity {
 
     public static final int SCREEN_TO_TEXT_SIZE_RATIO = 20;
+    private AccountFragment accFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        accFragment = new AccountFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.container, accFragment).commit();
+
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
         adjustTextSize();
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     /*Method to adjust text size*/
