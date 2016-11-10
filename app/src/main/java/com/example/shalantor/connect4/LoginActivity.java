@@ -1,10 +1,10 @@
 package com.example.shalantor.connect4;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -19,7 +19,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         accFragment = new AccountFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.container, accFragment).commit();
-
     }
 
     @Override
