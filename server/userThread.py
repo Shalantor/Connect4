@@ -19,7 +19,7 @@
 # 5         5
 import socket,Queue
 from threading import *
-PORT = 3111
+PORT = 1337
 
 #TODO:also send back result to user for operations
 #This function-thread listens on a port for connections
@@ -108,3 +108,5 @@ def userThread(replySocket,address,dbQueue,matchQueue):
 
     #Terminate thread
     print 'User Thread out'
+
+listener(None,None)

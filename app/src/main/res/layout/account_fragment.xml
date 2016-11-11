@@ -39,7 +39,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/login_normal"
-        android:id="@+id/login_button"/>
+        android:id="@+id/login_button"
+        android:onClick="login"/>
 
     <Button
         android:layout_width="match_parent"
@@ -52,6 +53,12 @@
         android:layout_height="wrap_content"
         android:text="@string/login_fb"
         android:id="@+id/login_fb_button"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:id="@+id/error_messages"/>
 
 
 </LinearLayout>
