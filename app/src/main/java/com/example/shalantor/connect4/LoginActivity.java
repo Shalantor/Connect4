@@ -111,9 +111,6 @@ public class LoginActivity extends AppCompatActivity {
             Log.d("INTERRUPT","Interrupted exception occured");
         }
 
-        TextView textView = (TextView) findViewById(R.id.error_messages);
-        textView.setText(result, TextView.BufferType.EDITABLE);
-
         /*Return result value*/
         return result.equals("success");
 
@@ -159,19 +156,19 @@ public class LoginActivity extends AppCompatActivity {
                     response = inputStream.readLine();
                     Log.wtf("RESPONSE","Response is " + response);
                     if (response.equals("0")){
-                        return "success " + response;
+                        return "success";
                     }
                 }
                 catch(SocketTimeoutException ex){
-                    return "error " + response;
+                    return "error";
                 }
 
             }
             catch(IOException ex){
-                return "error " + response;
+                return "error" ;
             }
 
-            return "success " + response;
+            return "success";
 
         }
 
@@ -191,13 +188,13 @@ public class LoginActivity extends AppCompatActivity {
         boolean result = isAddressCorrect();
 
         TextView textView = (TextView) findViewById(R.id.error_messages);
-        /*if(result){
-            String showText = "Connected successfully";
+        if(result){
+            String showText = "Connected successfully to server";
             textView.setText(showText, TextView.BufferType.NORMAL);
         }
         else{
             String showText = "Error connecting to server";
             textView.setText(showText, TextView.BufferType.NORMAL);
-        }*/
+        }
     }
 }

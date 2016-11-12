@@ -9,7 +9,7 @@
 # 3 --- Forgot password             | email,name
 # 4 --- Confirm password change code| email,name,code
 # 5 --- Start game                  | -
-#The separator in the messages can be a space, and an empty field can be a \n
+#The separator in the messages can be a space and messages are terminated with \n
 #so the final form of the messages is:
 # 0         0 userType id name email password
 # 1         1 userType id name email password
@@ -51,7 +51,7 @@ def userThread(replySocket,address,dbQueue,matchQueue):
     email = None
     while True:
         message = replySocket.recv(512)
-        print message
+        print "MESSAGE IS " + message
         args = message.split()
         #Now check operation type
         if args[0] == '0':
