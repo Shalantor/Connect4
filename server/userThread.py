@@ -34,6 +34,7 @@ def listener(queueToDatabase,queueToMatchMaking):
             #now create a new userThread
             uThread = Thread(target=userThread,args=(replySocket,address,queueToDatabase,queueToMatchMaking))
             uThread.start()
+            replySocket.send('0\n')
             print 'Created new user thread'
         except socket.timeout:
             break
@@ -108,5 +109,3 @@ def userThread(replySocket,address,dbQueue,matchQueue):
 
     #Terminate thread
     print 'User Thread out'
-
-listener(None,None)
