@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private LoginFragment logFragment = null;
     private Socket connectSocket;
     public String address;
+    private int displayHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,14 +68,14 @@ public class LoginActivity extends AppCompatActivity {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        int height = size.y;
+        displayHeight = size.y;
 
         /*set dimensions of components according to screen size*/
-        continueButton.setTextSize(height / SCREEN_TO_TEXT_SIZE_RATIO);
-        loginButton.setTextSize(height / SCREEN_TO_TEXT_SIZE_RATIO);
-        registerButton.setTextSize(height / SCREEN_TO_TEXT_SIZE_RATIO);
-        fbButton.setTextSize(height / SCREEN_TO_TEXT_SIZE_RATIO);
-        address.setTextSize(height / SCREEN_TO_TEXT_SIZE_RATIO);
+        continueButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
+        loginButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
+        registerButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
+        fbButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
+        address.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
         address.setSelected(false);
         address.clearFocus();
 
@@ -215,6 +216,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         /*TODO:UNTIL HERE*/
 
+        /*TODO:ONLY REPLACE FRAGMENT WHEN LOGGED IN SUCCESSFULLY*/
         logFragment = new LoginFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container,logFragment).commit();
 
