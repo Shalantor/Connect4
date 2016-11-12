@@ -21,14 +21,10 @@ import android.os.AsyncTask;
 import android.app.ProgressDialog;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.util.concurrent.ExecutionException;
 
 public class LoginActivity extends AppCompatActivity {
@@ -36,7 +32,8 @@ public class LoginActivity extends AppCompatActivity {
     public static final int SCREEN_TO_TEXT_SIZE_RATIO = 20;
     public static final String USER_TYPE = "USER_TYPE";
     public static final int PORT = 1337;
-    private AccountFragment accFragment;
+    private AccountFragment accFragment = null;
+    private LoginFragment logFragment = null;
     private Socket connectSocket;
     public String address;
 
@@ -51,7 +48,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
-        setupButtons();
+        if (accFragment != null) {
+            setupButtons();
+        }
     }
 
     /*Method to adjust text size*/
@@ -216,6 +215,8 @@ public class LoginActivity extends AppCompatActivity {
         }
         /*TODO:UNTIL HERE*/
 
+        logFragment = new LoginFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,logFragment).commit();
 
     }
 }
