@@ -1,6 +1,7 @@
 package com.example.shalantor.connect4;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -11,6 +12,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -180,14 +182,30 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /*Override on back button pressed method to start menu activity*/
+    @Override
+    public boolean onKeyDown(int keycode, KeyEvent event){
+        if(keycode == KeyEvent.KEYCODE_BACK){
+            finish();
+            Intent intent = new Intent(this,MainActivity.class);
+            this.startActivity(intent);
+            return true;
+        }
+        return false;
+    }
 
     /*On click functions for all buttons*/
 
     /*Login button*/
     public void login(View view){
-        boolean result = isAddressCorrect();
+
+        boolean result = false;
+        if (connectSocket == null){
+            result = isAddressCorrect();
+        }
 
         TextView textView = (TextView) findViewById(R.id.error_messages);
+        /*TODO:REMOVE AFTER TESTING*/
         if(result){
             String showText = "Connected successfully to server";
             textView.setText(showText, TextView.BufferType.NORMAL);
@@ -196,5 +214,8 @@ public class LoginActivity extends AppCompatActivity {
             String showText = "Error connecting to server";
             textView.setText(showText, TextView.BufferType.NORMAL);
         }
+        /*TODO:UNTIL HERE*/
+
+
     }
 }
