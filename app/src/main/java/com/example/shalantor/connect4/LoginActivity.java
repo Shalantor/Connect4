@@ -1,20 +1,15 @@
 package com.example.shalantor.connect4;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.os.AsyncTask;
@@ -29,7 +24,6 @@ import java.util.concurrent.ExecutionException;
 
 public class LoginActivity extends AppCompatActivity {
 
-    public static final int SCREEN_TO_TEXT_SIZE_RATIO = 20;
     public static final String USER_TYPE = "USER_TYPE";
     public static final int PORT = 1337;
     private AccountFragment accFragment = null;
@@ -50,47 +44,10 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart(){
         super.onStart();
         if (accFragment != null) {
-            setupButtons();
+            accFragment.adjustButtons();
         }
     }
 
-    /*Method to adjust text size*/
-    private void setupButtons(){
-
-        /*Get references to buttons and editText*/
-        Button continueButton = (Button) findViewById(R.id.continue_button);
-        Button loginButton = (Button) findViewById(R.id.login_button);
-        Button registerButton = (Button) findViewById(R.id.register_button);
-        Button fbButton = (Button) findViewById(R.id.login_fb_button);
-        EditText address = (EditText) findViewById(R.id.ip_address);
-
-        /*Get screen dimensions*/
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        displayHeight = size.y;
-
-        /*set dimensions of components according to screen size*/
-        continueButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        loginButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        registerButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        fbButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        address.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        address.setSelected(false);
-        address.clearFocus();
-
-        /*If user is new , disable the current account button*/
-        /*This will be checked with the sharedPreferences*/
-        SharedPreferences preferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-
-        int userType = preferences.getInt(USER_TYPE,-1);
-
-        /*No user*/
-        if (userType == -1){
-            continueButton.setEnabled(false);
-        }
-
-    }
 
 
     /*Method to check if server is listening*/
