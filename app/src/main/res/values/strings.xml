@@ -13,4 +13,6 @@
     <string name="login_fb">Login with facebook</string>
     <string name="username_hint">Enter username or email</string>
     <string name="password_hint">Enter password</string>
+    <string name="remember_me">Remember Me</string>
+    <string name="login">Login</string>
 </resources>

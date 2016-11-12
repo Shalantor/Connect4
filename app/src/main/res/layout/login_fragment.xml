@@ -40,4 +40,16 @@
 
     </android.support.design.widget.TextInputLayout>
 
+    <CheckBox android:id="@+id/remember_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/remember_me" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/login"
+        android:id="@+id/login"/>
+
+
 </LinearLayout>
