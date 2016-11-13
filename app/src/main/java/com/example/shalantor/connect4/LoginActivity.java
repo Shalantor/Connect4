@@ -150,6 +150,8 @@ public class LoginActivity extends AppCompatActivity {
             else{
                 accFragment = new AccountFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.container,accFragment).commit();
+                getSupportFragmentManager().executePendingTransactions();
+                accFragment.adjustButtons();
                 logFragment = null;
             }
         }
@@ -181,6 +183,8 @@ public class LoginActivity extends AppCompatActivity {
         /*TODO:ONLY REPLACE FRAGMENT WHEN LOGGED IN SUCCESSFULLY*/
         logFragment = new LoginFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container,logFragment).commit();
+        getSupportFragmentManager().executePendingTransactions();
+        logFragment.adjustButtons();
         accFragment = null;
 
     }
