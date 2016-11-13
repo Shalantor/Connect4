@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -47,6 +48,7 @@ public class RegisterFragment extends Fragment{
         final EditText passwordVerify = (EditText) activity.findViewById(R.id.register_password_verify);
         Button registerButton = (Button) activity.findViewById(R.id.register_button_final);
         final TextView textView = (TextView) activity.findViewById(R.id.error_messages_register);
+        CheckBox remember = (CheckBox) activity.findViewById(R.id.remember_me_register);
 
         /*Set text sizes*/
         usernamePrompt.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
@@ -54,6 +56,7 @@ public class RegisterFragment extends Fragment{
         passwordPrompt.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
         passwordVerify.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
         registerButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
+        remember.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
 
         /*Add listener to register button*/
         registerButton.setOnClickListener(new View.OnClickListener() {
