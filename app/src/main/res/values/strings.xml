@@ -18,6 +18,6 @@
     <string name="forgot_password"><u>Forgot password?</u></string>
     <string name="register_username">Enter username</string>
     <string name="register_email">Enter email</string>
-    <string name="verify_password">Enter password again</string>
+    <string name="verify_password">Verify password</string>
     <string name="register">Register</string>
 </resources>
