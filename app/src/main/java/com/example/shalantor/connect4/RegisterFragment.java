@@ -43,8 +43,8 @@ public class RegisterFragment extends Fragment{
         /*Get references to components*/
         EditText usernamePrompt = (EditText) activity.findViewById(R.id.register_username);
         final EditText emailPrompt = (EditText) activity.findViewById(R.id.register_email);
-        EditText passwordPrompt = (EditText) activity.findViewById(R.id.register_password);
-        EditText passwordVerify = (EditText) activity.findViewById(R.id.register_password_verify);
+        final EditText passwordPrompt = (EditText) activity.findViewById(R.id.register_password);
+        final EditText passwordVerify = (EditText) activity.findViewById(R.id.register_password_verify);
         Button registerButton = (Button) activity.findViewById(R.id.register_button_final);
         final TextView textView = (TextView) activity.findViewById(R.id.error_messages_register);
 
@@ -69,6 +69,13 @@ public class RegisterFragment extends Fragment{
                 }
 
                 /*Check if password prompts have the same password*/
+                String password = passwordPrompt.getText().toString();
+                String verifyPassword = passwordVerify.getText().toString();
+
+                if (!password.equals(verifyPassword)){
+                    String errorMessage = "Passwords don't match";
+                    textView.setText(errorMessage, TextView.BufferType.NORMAL);
+                }
 
             }
         });
