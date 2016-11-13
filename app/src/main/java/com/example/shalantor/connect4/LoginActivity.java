@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.os.AsyncTask;
 import android.app.ProgressDialog;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,7 +29,6 @@ public class LoginActivity extends AppCompatActivity {
     private LoginFragment logFragment = null;
     private Socket connectSocket;
     public String address;
-    private int displayHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,10 +141,17 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keycode, KeyEvent event){
         if(keycode == KeyEvent.KEYCODE_BACK){
-            finish();
-            Intent intent = new Intent(this,MainActivity.class);
-            this.startActivity(intent);
-            return true;
+            if (accFragment != null) {
+                finish();
+                Intent intent = new Intent(this, MainActivity.class);
+                this.startActivity(intent);
+                return true;
+            }
+            else{
+                accFragment = new AccountFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container,accFragment).commit();
+                logFragment = null;
+            }
         }
         return false;
     }
@@ -176,6 +181,7 @@ public class LoginActivity extends AppCompatActivity {
         /*TODO:ONLY REPLACE FRAGMENT WHEN LOGGED IN SUCCESSFULLY*/
         logFragment = new LoginFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container,logFragment).commit();
+        accFragment = null;
 
     }
 }
