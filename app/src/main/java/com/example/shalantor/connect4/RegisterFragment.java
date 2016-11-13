@@ -1,6 +1,8 @@
 package com.example.shalantor.connect4;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -23,7 +25,10 @@ public class RegisterFragment extends Fragment{
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
     public static final int PASSWORD_MIN_LENGTH = 8;
-
+    public static final String USER_TYPE = "USER_TYPE";
+    public static final String USERNAME = "USERNAME";
+    public static final String EMAIL = "EMAIL";
+    public static final String PASSWORD = "PASSWORD";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -34,7 +39,7 @@ public class RegisterFragment extends Fragment{
 
     public void adjustButtons(){
 
-        Activity activity = getActivity();
+        final Activity activity = getActivity();
 
         /*Get screen dimensions*/
         Display display = activity.getWindowManager().getDefaultDisplay();
@@ -85,6 +90,7 @@ public class RegisterFragment extends Fragment{
                 String password = passwordPrompt.getText().toString().trim();
                 String verifyPassword = passwordVerify.getText().toString().trim();
 
+                /*Check password length first*/
                 if (password.length() < PASSWORD_MIN_LENGTH){
                     String errorMessage = "Password must contain at least 8 characters";
                     textView.setText(errorMessage, TextView.BufferType.NORMAL);
@@ -96,6 +102,17 @@ public class RegisterFragment extends Fragment{
                     textView.setText(errorMessage, TextView.BufferType.NORMAL);
                     return;
                 }
+
+                /*If user clicked remember me then save his credentials*/
+                SharedPreferences preferences = activity.getSharedPreferences(activity.getPackageName(), Context.MODE_PRIVATE);
+
+                /*Store user data*/
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putInt(USER_TYPE,0);
+                editor.putString(USERNAME,usernameInput);
+                editor.putString(EMAIL,emailInput);
+                editor.putString(PASSWORD,password);
+                editor.apply();
 
             }
         });
