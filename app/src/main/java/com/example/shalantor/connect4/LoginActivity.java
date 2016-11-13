@@ -27,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     public static final int PORT = 1337;
     private AccountFragment accFragment = null;
     private LoginFragment logFragment = null;
+    private RegisterFragment regFragment = null;
     private Socket connectSocket;
     public String address;
 
@@ -153,6 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                 getSupportFragmentManager().executePendingTransactions();
                 accFragment.adjustButtons();
                 logFragment = null;
+                regFragment = null;
             }
         }
         return false;
@@ -160,8 +162,8 @@ public class LoginActivity extends AppCompatActivity {
 
     /*On click functions for all buttons*/
 
-    /*Login button*/
-    public void login(View view){
+    /*Go to login fragment button*/
+    public void goToLogin(View view){
 
         boolean result = false;
         if (connectSocket == null){
@@ -186,6 +188,24 @@ public class LoginActivity extends AppCompatActivity {
         getSupportFragmentManager().executePendingTransactions();
         logFragment.adjustButtons();
         accFragment = null;
+        regFragment = null;
 
+    }
+
+    /*Go to registry fragment button*/
+    public void goToRegister(View view){
+
+        boolean result = false;
+        if(connectSocket == null){
+            result = isAddressCorrect();
+        }
+
+        /*Replace fragments*/
+        regFragment = new RegisterFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,regFragment).commit();
+        getSupportFragmentManager().executePendingTransactions();
+        regFragment.adjustButtons();
+        accFragment = null;
+        logFragment = null;
     }
 }

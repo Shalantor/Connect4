@@ -40,13 +40,14 @@
         android:layout_height="wrap_content"
         android:text="@string/login_normal"
         android:id="@+id/login_button"
-        android:onClick="login"/>
+        android:onClick="goToLogin"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/register_normal"
-        android:id="@+id/register_button"/>
+        android:id="@+id/register_button"
+        android:onClick="goToRegister"/>
 
     <Button
         android:layout_width="match_parent"
