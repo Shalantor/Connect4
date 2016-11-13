@@ -22,6 +22,7 @@ public class RegisterFragment extends Fragment{
     public static final int SCREEN_TO_TEXT_SIZE_RATIO = 20;
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+    public static final int PASSWORD_MIN_LENGTH = 8;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,7 +43,7 @@ public class RegisterFragment extends Fragment{
         int displayHeight = size.y;
 
         /*Get references to components*/
-        EditText usernamePrompt = (EditText) activity.findViewById(R.id.register_username);
+        final EditText usernamePrompt = (EditText) activity.findViewById(R.id.register_username);
         final EditText emailPrompt = (EditText) activity.findViewById(R.id.register_email);
         final EditText passwordPrompt = (EditText) activity.findViewById(R.id.register_password);
         final EditText passwordVerify = (EditText) activity.findViewById(R.id.register_password_verify);
@@ -63,21 +64,37 @@ public class RegisterFragment extends Fragment{
             @Override
             public void onClick(View view) {
 
+                /*Check if user entered anything in username prompt*/
+                String usernameInput = usernamePrompt.getText().toString().trim();
+                if (usernameInput.length() == 0){
+                    String errorMessage = "Please enter a username";
+                    textView.setText(errorMessage, TextView.BufferType.NORMAL);
+                    return;
+                }
+
                 /*Check if email is in right format */
                 String emailInput = emailPrompt.getText().toString();
                 Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailInput);
                 if (!matcher.find()){
                     String errorMessage = "Please enter a valid email address format";
                     textView.setText(errorMessage, TextView.BufferType.NORMAL);
+                    return;
                 }
 
                 /*Check if password prompts have the same password*/
-                String password = passwordPrompt.getText().toString();
-                String verifyPassword = passwordVerify.getText().toString();
+                String password = passwordPrompt.getText().toString().trim();
+                String verifyPassword = passwordVerify.getText().toString().trim();
+
+                if (password.length() < PASSWORD_MIN_LENGTH){
+                    String errorMessage = "Password must contain at least 8 characters";
+                    textView.setText(errorMessage, TextView.BufferType.NORMAL);
+                    return;
+                }
 
                 if (!password.equals(verifyPassword)){
                     String errorMessage = "Passwords don't match";
                     textView.setText(errorMessage, TextView.BufferType.NORMAL);
+                    return;
                 }
 
             }
