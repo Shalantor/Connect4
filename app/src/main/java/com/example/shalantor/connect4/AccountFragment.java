@@ -34,7 +34,6 @@ public class AccountFragment extends Fragment{
         Activity activity = getActivity();
 
         /*Get references to buttons and editText*/
-        Button continueButton = (Button) activity.findViewById(R.id.continue_button);
         Button loginButton = (Button) activity.findViewById(R.id.login_button);
         Button registerButton = (Button) activity.findViewById(R.id.register_button);
         Button fbButton = (Button) activity.findViewById(R.id.login_fb_button);
@@ -47,24 +46,12 @@ public class AccountFragment extends Fragment{
         int displayHeight = size.y;
 
         /*set dimensions of components according to screen size*/
-        continueButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
         loginButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
         registerButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
         fbButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
         address.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
         address.setSelected(false);
         address.clearFocus();
-
-        /*If user is new , disable the current account button*/
-        /*This will be checked with the sharedPreferences*/
-        SharedPreferences preferences = activity.getSharedPreferences(activity.getPackageName(), Context.MODE_PRIVATE);
-
-        int userType = preferences.getInt(USER_TYPE,-1);
-
-        /*No user*/
-        if (userType == -1){
-            continueButton.setEnabled(false);
-        }
 
     }
 

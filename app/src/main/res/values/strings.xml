@@ -7,8 +7,6 @@
     <string name="exit">Exit</string>
     <string name="play">Play Game</string>
     <string name="hint_ip">Enter server address</string>
-    <string name="current_account">Continue with current account</string>
-    <string name="login_normal">Login with other account</string>
     <string name="register_normal">Register</string>
     <string name="login_fb">Login with facebook</string>
     <string name="username_hint">Enter username or email</string>
