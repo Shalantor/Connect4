@@ -48,7 +48,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
     /*Method to check if server is listening*/
     private boolean isAddressCorrect(){
 
@@ -107,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
                 connectSocket = new Socket(address,PORT);
 
                 /*Now read from socket to validate connection*/
-                connectSocket.setSoTimeout(2);
+                connectSocket.setSoTimeout(5000);
                 BufferedReader inputStream = new BufferedReader( new InputStreamReader(connectSocket.getInputStream()));
 
                 try {
@@ -207,5 +206,7 @@ public class LoginActivity extends AppCompatActivity {
         regFragment.adjustButtons();
         accFragment = null;
         logFragment = null;
+
+        regFragment.setConnectSocket(connectSocket);
     }
 }
