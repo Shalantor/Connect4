@@ -28,7 +28,6 @@ public class RegisterFragment extends Fragment{
     public static final String USER_TYPE = "USER_TYPE";
     public static final String USERNAME = "USERNAME";
     public static final String EMAIL = "EMAIL";
-    public static final String PASSWORD = "PASSWORD";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -111,7 +110,6 @@ public class RegisterFragment extends Fragment{
                 editor.putInt(USER_TYPE,0);
                 editor.putString(USERNAME,usernameInput);
                 editor.putString(EMAIL,emailInput);
-                editor.putString(PASSWORD,password);
                 editor.apply();
 
             }
