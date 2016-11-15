@@ -53,7 +53,7 @@ public class RegisterFragment extends Fragment{
         final EditText passwordVerify = (EditText) activity.findViewById(R.id.register_password_verify);
         Button registerButton = (Button) activity.findViewById(R.id.register_button_final);
         final TextView textView = (TextView) activity.findViewById(R.id.error_messages_register);
-        CheckBox remember = (CheckBox) activity.findViewById(R.id.remember_me_register);
+        final CheckBox remember = (CheckBox) activity.findViewById(R.id.remember_me_register);
 
         /*Set text sizes*/
         usernamePrompt.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
@@ -103,14 +103,18 @@ public class RegisterFragment extends Fragment{
                 }
 
                 /*If user clicked remember me then save his credentials*/
-                SharedPreferences preferences = activity.getSharedPreferences(activity.getPackageName(), Context.MODE_PRIVATE);
+                if (remember.isEnabled()) {
 
-                /*Store user data*/
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putInt(USER_TYPE,0);
-                editor.putString(USERNAME,usernameInput);
-                editor.putString(EMAIL,emailInput);
-                editor.apply();
+                    SharedPreferences preferences = activity.getSharedPreferences(activity.getPackageName(), Context.MODE_PRIVATE);
+
+                    /*Store user data*/
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putInt(USER_TYPE, 0);
+                    editor.putString(USERNAME, usernameInput);
+                    editor.putString(EMAIL, emailInput);
+                    editor.apply();
+
+                }
 
             }
         });
