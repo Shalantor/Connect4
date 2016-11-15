@@ -68,7 +68,7 @@ exitQueue2 = Queue.Queue()
 gThread = Thread(target=gameThread,args=(outputQueue,queueToDatabase,exitQueue2))
 gThread.start()
 
-time.sleep(10)
+example = raw_input('Press enter when you want to stop simulation')
 #Kills threads
 #databaseThread
 answerQueue = Queue.Queue()
