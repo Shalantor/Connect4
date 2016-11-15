@@ -68,8 +68,8 @@ def userThread(replySocket,address,dbQueue,matchQueue):
         elif args[0] == '1':
             userType = args[1]
             userId = args[2]
-            name = None if args[3] == '\n' else args[3]
-            email = None if args[4] == '\n' else args[4]
+            name = None if args[3] == '0' else args[3]
+            email = None if args[4] == '0' else args[4]
             password = args[5]
             if userType == '0':#normal user
                 data = {'operation':2,'answer':answerQueue,'name':name,'email':email,'password':password}

@@ -186,6 +186,7 @@ public class LoginActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.container,logFragment).commit();
         getSupportFragmentManager().executePendingTransactions();
         logFragment.adjustButtons();
+        logFragment.setConnectSocket(connectSocket);
         accFragment = null;
         regFragment = null;
 
