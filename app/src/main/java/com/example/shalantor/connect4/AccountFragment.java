@@ -2,6 +2,7 @@ package com.example.shalantor.connect4;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -12,9 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -26,19 +30,33 @@ public class AccountFragment extends Fragment{
     public static final int SCREEN_TO_TEXT_SIZE_RATIO = 20;
     public static final String USER_TYPE = "USER_TYPE";
     private CallbackManager callbackManager;
+    private Activity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        activity = getActivity();
+        FacebookSdk.sdkInitialize(activity.getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         return inflater.inflate(R.layout.account_fragment, container, false);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+
+
     /*Method to adjust button/text size*/
     public void adjustButtons(){
 
-        Activity activity = getActivity();
+        final Activity activity = getActivity();
 
         /*Get references to buttons and editText*/
         Button loginButton = (Button) activity.findViewById(R.id.login_button);
@@ -63,6 +81,31 @@ public class AccountFragment extends Fragment{
         /*Set permissions of login button for facebook*/
         fbButton.setReadPermissions(Arrays.asList("public_profile","email"));
         fbButton.setFragment(this);
+
+        /*Register callback for fb button*/
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        TextView textView = (TextView) activity.findViewById(R.id.error_messages);
+                        String message = "LOGIN OK";
+                        textView.setText(message, TextView.BufferType.NORMAL);
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        TextView textView = (TextView) activity.findViewById(R.id.error_messages);
+                        String message = "LOGIN NOT OK";
+                        textView.setText(message, TextView.BufferType.NORMAL);
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        TextView textView = (TextView) activity.findViewById(R.id.error_messages);
+                        String message = "LOGIN ERROR";
+                        textView.setText(message, TextView.BufferType.NORMAL);
+                    }
+                });
 
     }
 

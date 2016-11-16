@@ -55,6 +55,13 @@ def insertUserFacebook(database,facebookID,name,email):
     #now store in database
     connection = sqlite3.connect(database)
     cursor = connection.cursor()
+
+    #Check for existing userId
+    cursor.execute('SELECT facebookid FROM UsersFacebook')
+    for a in cursor:
+        if a == facebookID:
+            return False
+
     cursor.execute('INSERT INTO UsersFacebook VALUES (?,?,?,?,?,?)',data)
     connection.commit()
     connection.close()
