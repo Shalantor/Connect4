@@ -2,11 +2,18 @@ package com.example.shalantor.connect4;
 
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -30,6 +37,12 @@ import com.facebook.login.widget.LoginButton;
 
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
@@ -42,6 +55,13 @@ public class AccountFragment extends Fragment{
     private String facebookId;
     private String username;
     private String email;
+    private Socket connectSocket;
+    public AccountFragment.setSocket mCallback;
+
+    /*Interface to communicate with fragment*/
+    public interface setSocket{
+        Socket getSocketReference();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,6 +81,20 @@ public class AccountFragment extends Fragment{
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
 
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (AccountFragment.setSocket) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement SetSocket interface");
+        }
     }
 
 
@@ -122,8 +156,11 @@ public class AccountFragment extends Fragment{
                             Log.d("EX2","Execute exception");
                         }
 
-                        String message = "LOGIN OK " + facebookId + username + email;
+                        String message = "LOGIN OK "  + email;
                         textView.setText(message, TextView.BufferType.NORMAL);
+
+                        /*Now connect to server */
+
                     }
 
                     @Override
@@ -142,5 +179,71 @@ public class AccountFragment extends Fragment{
                 });
 
     }
+
+    /*Async task for connecting to server*/
+    private class Login extends AsyncTask<String, Void, String> {
+        ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pDialog = new ProgressDialog(activity);
+            pDialog.setMessage("Connecting to server");
+
+
+            String message = "Connecting to server";
+
+            SpannableString ss2 = new SpannableString(message);
+            ss2.setSpan(new RelativeSizeSpan(2f), 0, ss2.length(), 0);
+            ss2.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ss2.length(), 0);
+
+            pDialog.setMessage(ss2);
+
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String response = "";
+            try {
+
+                /*Set up tools for sending and reading from socket*/
+                connectSocket.setSoTimeout(5000);
+                BufferedReader inputStream = new BufferedReader(new InputStreamReader(connectSocket.getInputStream()));
+                PrintWriter outputStream = new PrintWriter(connectSocket.getOutputStream());
+
+                String messageToSend = "";
+                /*Construct message to send*/
+                for (int i = 0; i < params.length; i++) {
+                    messageToSend += params[i] + " ";
+                }
+
+                /*Now send message*/
+                outputStream.print(messageToSend);
+                outputStream.flush();
+
+                /*Now read answer from socket*/
+
+                try {
+                    response = inputStream.readLine();
+                    if (response.equals("0")) {
+                        return "success";
+                    }
+                } catch (SocketTimeoutException ex) {
+                    return "error";
+                }
+
+            } catch (IOException ex) {
+                return "error";
+            }
+
+            return "success";
+
+        }
+    }
+
 
 }

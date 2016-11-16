@@ -22,13 +22,8 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutionException;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements AccountFragment.setSocket {
 
     public static final String USER_TYPE = "USER_TYPE";
     public static final int PORT = 1337;
@@ -48,6 +43,12 @@ public class LoginActivity extends AppCompatActivity {
         accFragment = new AccountFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.container, accFragment).commit();
 
+    }
+
+    /*Implement interface*/
+    @Override
+    public Socket getSocketReference(){
+        return connectSocket;
     }
 
 

@@ -51,6 +51,8 @@ public class LoginFragment extends Fragment{
         return inflater.inflate(R.layout.login_fragment, container, false);
     }
 
+
+
     /*Get socket from activity*/
     public void setConnectSocket(Socket socket){
         connectSocket = socket;
