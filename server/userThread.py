@@ -26,7 +26,7 @@ PORT = 1337
 def listener(queueToDatabase,queueToMatchMaking):
     setupSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM,0)
     setupSocket.bind(('localhost',PORT))
-    setupSocket.settimeout(10)
+    setupSocket.settimeout(20)
     setupSocket.listen(1)
     while True:
         try:

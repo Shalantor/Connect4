@@ -61,6 +61,7 @@ public class AccountFragment extends Fragment{
     /*Interface to communicate with fragment*/
     public interface setSocket{
         Socket getSocketReference();
+        void setSocketReference();
     }
 
     @Override
@@ -90,7 +91,7 @@ public class AccountFragment extends Fragment{
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = (AccountFragment.setSocket) activity;
+            mCallback = (AccountFragment.setSocket) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement SetSocket interface");
@@ -160,6 +161,22 @@ public class AccountFragment extends Fragment{
                         textView.setText(message, TextView.BufferType.NORMAL);
 
                         /*Now connect to server */
+                        mCallback.setSocketReference();
+                        connectSocket = mCallback.getSocketReference();
+
+                        /*Create async task*/
+                        LoginFB loginfb = new LoginFB();
+                        String result = "";
+                        try {
+                            result = loginfb.execute("0","1",facebookId,username,"0","0").get();
+                        }
+                        catch(ExecutionException ex){
+                            Log.d("EXECUTION","Executionexception occured");
+                        }
+                        catch(InterruptedException ex){
+                            Log.d("INTERRUPT","Interrupted exception occured");
+                        }
+
 
                     }
 
@@ -180,15 +197,16 @@ public class AccountFragment extends Fragment{
 
     }
 
+
     /*Async task for connecting to server*/
-    private class Login extends AsyncTask<String, Void, String> {
+    private class LoginFB extends AsyncTask<String, Void, String> {
         ProgressDialog pDialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
-            pDialog = new ProgressDialog(activity);
+            /*pDialog = new ProgressDialog(activity);
             pDialog.setMessage("Connecting to server");
 
 
@@ -201,7 +219,7 @@ public class AccountFragment extends Fragment{
             pDialog.setMessage(ss2);
 
             pDialog.setCancelable(false);
-            pDialog.show();
+            pDialog.show();*/
         }
 
         @Override
@@ -241,6 +259,13 @@ public class AccountFragment extends Fragment{
             }
 
             return "success";
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            /*pDialog.dismiss();*/
 
         }
     }

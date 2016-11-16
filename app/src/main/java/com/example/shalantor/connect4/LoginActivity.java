@@ -51,6 +51,14 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         return connectSocket;
     }
 
+    @Override
+    public void setSocketReference(){
+        boolean result = false;
+        if (connectSocket == null){
+            result = isAddressCorrect();
+        }
+    }
+
 
     @Override
     protected void onStart(){
