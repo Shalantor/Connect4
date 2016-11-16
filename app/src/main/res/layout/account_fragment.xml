@@ -44,7 +44,7 @@
         android:id="@+id/register_button"
         android:onClick="goToRegister"/>
 
-    <Button
+    <com.facebook.login.widget.LoginButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/login_fb"

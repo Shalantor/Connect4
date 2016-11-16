@@ -2,8 +2,6 @@ package com.example.shalantor.connect4;
 
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -14,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.facebook.login.widget.LoginButton;
 
 public class AccountFragment extends Fragment{
 
@@ -36,7 +36,7 @@ public class AccountFragment extends Fragment{
         /*Get references to buttons and editText*/
         Button loginButton = (Button) activity.findViewById(R.id.login_button);
         Button registerButton = (Button) activity.findViewById(R.id.register_button);
-        Button fbButton = (Button) activity.findViewById(R.id.login_fb_button);
+        LoginButton fbButton = (LoginButton) activity.findViewById(R.id.login_fb_button);
         EditText address = (EditText) activity.findViewById(R.id.ip_address);
 
         /*Get screen dimensions*/
