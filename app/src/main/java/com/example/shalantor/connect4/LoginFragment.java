@@ -50,8 +50,7 @@ public class LoginFragment extends Fragment{
         activity = getActivity();
         return inflater.inflate(R.layout.login_fragment, container, false);
     }
-
-
+    
 
     /*Get socket from activity*/
     public void setConnectSocket(Socket socket){
@@ -215,6 +214,15 @@ public class LoginFragment extends Fragment{
                     String message = "Problem reaching server ";
                     textView.setText(message, TextView.BufferType.NORMAL);
                 }
+            }
+        });
+
+
+        /*On click listener for forget password textview*/
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
 

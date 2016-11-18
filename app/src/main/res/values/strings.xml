@@ -20,4 +20,8 @@
     <string name="register">Register</string>
     <string name="facebook_app_id">1749419555384450</string>
     <string name="continue_fb">Continue with fb account</string>
+    <string name="reset_code">Enter reset code</string>
+    <string name="enter_email">Enter email address</string>
+    <string name="get_code">Get reset code</string>
+    <string name="submit_code">Submit</string>
 </resources>
