@@ -2,7 +2,6 @@ package com.example.shalantor.connect4;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.hardware.camera2.params.Face;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -231,4 +230,6 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
 
         regFragment.setConnectSocket(connectSocket);
     }
+
+    /*Continue with facebookButton*/
 }

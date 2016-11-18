@@ -22,8 +22,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -31,12 +31,11 @@ import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphRequestAsyncTask;
 import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -160,14 +159,14 @@ public class AccountFragment extends Fragment{
                             Log.d("EX2","Execute exception");
                         }
 
-                        String message = "LOGIN OK "  + email;
+                        String message = "LOGIN OK "  + email + username + facebookId;
                         textView.setText(message, TextView.BufferType.NORMAL);
 
                         /*Now connect to server */
-                        mCallback.setSocketReference();
+                        /*mCallback.setSocketReference();
                         connectSocket = mCallback.getSocketReference();
 
-                        /*Create async task*/
+                        /*Create async task
                         LoginFB loginfb = new LoginFB();
                         String result = "";
                         try {
@@ -178,7 +177,7 @@ public class AccountFragment extends Fragment{
                         }
                         catch(InterruptedException ex){
                             Log.d("INTERRUPT","Interrupted exception occured");
-                        }
+                        }*/
 
 
                     }
@@ -270,6 +269,13 @@ public class AccountFragment extends Fragment{
             super.onPostExecute(result);
             pDialog.dismiss();
 
+        }
+    }
+
+    /*Method to get facebook token*/
+    private void getFbToken(AccessToken token){
+        if (token != null){
+            facebookId = token.getUserId();
         }
     }
 
