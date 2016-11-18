@@ -50,11 +50,20 @@
         android:text="@string/login_fb"
         android:id="@+id/login_fb_button"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/continue_button"
+        android:text="@string/continue_fb"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:layout_marginTop="30sp"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="30sp"
-        android:id="@+id/error_messages"/>
+        android:id="@+id/error_messages" />
 
 
 </LinearLayout>

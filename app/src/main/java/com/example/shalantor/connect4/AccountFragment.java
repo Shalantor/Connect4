@@ -110,6 +110,7 @@ public class AccountFragment extends Fragment{
         Button registerButton = (Button) activity.findViewById(R.id.register_button);
         LoginButton fbButton = (LoginButton) activity.findViewById(R.id.login_fb_button);
         EditText address = (EditText) activity.findViewById(R.id.ip_address);
+        Button continueButton = (Button) activity.findViewById(R.id.continue_button);
 
         /*Get screen dimensions*/
         Display display = activity.getWindowManager().getDefaultDisplay();
@@ -122,6 +123,8 @@ public class AccountFragment extends Fragment{
         registerButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
         fbButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
         address.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
+        continueButton.setTextSize( displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
+
         address.setSelected(false);
         address.clearFocus();
 
@@ -206,7 +209,7 @@ public class AccountFragment extends Fragment{
         protected void onPreExecute() {
             super.onPreExecute();
 
-            /*pDialog = new ProgressDialog(activity);
+            pDialog = new ProgressDialog(activity);
             pDialog.setMessage("Connecting to server");
 
 
@@ -219,7 +222,7 @@ public class AccountFragment extends Fragment{
             pDialog.setMessage(ss2);
 
             pDialog.setCancelable(false);
-            pDialog.show();*/
+            pDialog.show();
         }
 
         @Override
@@ -265,7 +268,7 @@ public class AccountFragment extends Fragment{
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            /*pDialog.dismiss();*/
+            pDialog.dismiss();
 
         }
     }
