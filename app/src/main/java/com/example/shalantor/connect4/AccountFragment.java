@@ -173,30 +173,29 @@ public class AccountFragment extends Fragment{
                                 editor.putString(FACEBOOK_ID,facebookId);
 
                                 editor.apply();
-                                /*TODO:add connect code here*/
+
+                                /*Now connect to server */
+                                mCallback.setSocketReference();
+                                connectSocket = mCallback.getSocketReference();
+
+                                /*Create async task*/
+                                LoginFB loginfb = new LoginFB();
+                                String result = "";
+                                try {
+                                    result = loginfb.execute("0","1",facebookId,username,"0","0").get();
+                                }
+                                catch(ExecutionException ex){
+                                    Log.d("EXECUTION","Executionexception occured");
+                                }
+                                catch(InterruptedException ex){
+                                    Log.d("INTERRUPT","Interrupted exception occured");
+                                }
                             }
                         }).executeAsync();
 
 
                         String message = "LOGIN OK ";
                         textView.setText(message, TextView.BufferType.NORMAL);
-
-                        /*Now connect to server */
-                        /*mCallback.setSocketReference();
-                        connectSocket = mCallback.getSocketReference();
-
-                        /*Create async task
-                        LoginFB loginfb = new LoginFB();
-                        String result = "";
-                        try {
-                            result = loginfb.execute("0","1",facebookId,username,"0","0").get();
-                        }
-                        catch(ExecutionException ex){
-                            Log.d("EXECUTION","Executionexception occured");
-                        }
-                        catch(InterruptedException ex){
-                            Log.d("INTERRUPT","Interrupted exception occured");
-                        }*/
 
 
                     }
