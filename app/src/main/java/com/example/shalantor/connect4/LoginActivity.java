@@ -1,6 +1,7 @@
 package com.example.shalantor.connect4;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.facebook.CallbackManager;
 public class LoginActivity extends AppCompatActivity implements AccountFragment.setSocket {
 
     public static final String USER_TYPE = "USER_TYPE";
+    public static final String SERVER_ADDRESS = "SERVER";
     public static final int PORT = 1337;
     private AccountFragment accFragment = null;
     private LoginFragment logFragment = null;
@@ -74,6 +76,12 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         /*First get text of edittext*/
         EditText addressText = (EditText) findViewById(R.id.ip_address);
         address = addressText.getText().toString();
+
+        /*Store address in preferences*/
+        SharedPreferences preferences = getSharedPreferences(getPackageName(),MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(SERVER_ADDRESS,address);
+        editor.apply();
 
         /*Try connecting to server*/
         Connect connect = new Connect();

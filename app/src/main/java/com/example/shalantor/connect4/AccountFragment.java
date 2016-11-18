@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -49,6 +50,7 @@ public class AccountFragment extends Fragment{
 
     public static final int SCREEN_TO_TEXT_SIZE_RATIO = 20;
     public static final String USER_TYPE = "USER_TYPE";
+    public static final String FB_USERNAME = "FB_USERNAME";
     private CallbackManager callbackManager;
     private Activity activity;
     private String facebookId;
@@ -56,6 +58,8 @@ public class AccountFragment extends Fragment{
     private String email;
     private Socket connectSocket;
     public AccountFragment.setSocket mCallback;
+    public static final String SERVER_ADDRESS = "SERVER";
+
 
     /*Interface to communicate with fragment*/
     public interface setSocket{
@@ -69,7 +73,6 @@ public class AccountFragment extends Fragment{
         // Inflate the layout for this fragment
         activity = getActivity();
         FacebookSdk.sdkInitialize(activity.getApplicationContext());
-        LoginManager.getInstance().logOut();
         callbackManager = CallbackManager.Factory.create();
 
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -130,6 +133,13 @@ public class AccountFragment extends Fragment{
         /*Set permissions of login button for facebook*/
         fbButton.setReadPermissions(Arrays.asList("public_profile","email"));
         fbButton.setFragment(this);
+
+        /*Set text of server field*/
+        SharedPreferences preferences = activity.getSharedPreferences(activity.getPackageName(),Context.MODE_PRIVATE);
+        String serverAddress = preferences.getString(SERVER_ADDRESS,null);
+        if(serverAddress != null){
+            address.setText(serverAddress, TextView.BufferType.NORMAL);
+        }
 
         /*Register callback for fb button*/
         LoginManager.getInstance().registerCallback(callbackManager,
