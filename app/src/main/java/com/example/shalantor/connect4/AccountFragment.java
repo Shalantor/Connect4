@@ -51,6 +51,7 @@ public class AccountFragment extends Fragment{
     public static final int SCREEN_TO_TEXT_SIZE_RATIO = 20;
     public static final String USER_TYPE = "USER_TYPE";
     public static final String FB_USERNAME = "FB_USERNAME";
+    public static final String FACEBOOK_ID = "FB_ID";
     private CallbackManager callbackManager;
     private Activity activity;
     private String facebookId;
@@ -136,11 +137,18 @@ public class AccountFragment extends Fragment{
         fbButton.setFragment(this);
 
         /*Set text of server field*/
-        SharedPreferences preferences = activity.getSharedPreferences(activity.getPackageName(),Context.MODE_PRIVATE);
+        final SharedPreferences preferences = activity.getSharedPreferences(activity.getPackageName(),Context.MODE_PRIVATE);
         String serverAddress = preferences.getString(SERVER_ADDRESS,null);
         if(serverAddress != null){
             address.setText(serverAddress, TextView.BufferType.NORMAL);
         }
+
+        /*Set visibility of facebook continue button*/
+        String oldUsername = preferences.getString(FB_USERNAME,null);
+        if(oldUsername != null){
+            continueButton.setVisibility(View.VISIBLE);
+        }
+
 
         /*Register callback for fb button*/
         LoginManager.getInstance().registerCallback(callbackManager,
@@ -157,6 +165,14 @@ public class AccountFragment extends Fragment{
                                 facebookId = user.optString("id");
                                 username = user.optString("name");
                                 email = user.optString("email");
+
+                                /*Store data in shared preferences*/
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putInt(USER_TYPE,1);
+                                editor.putString(FB_USERNAME,username);
+                                editor.putString(FACEBOOK_ID,facebookId);
+
+                                editor.apply();
                                 /*TODO:add connect code here*/
                             }
                         }).executeAsync();
