@@ -76,6 +76,7 @@ public class AccountFragment extends Fragment{
         callbackManager = CallbackManager.Factory.create();
 
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         return inflater.inflate(R.layout.account_fragment, container, false);
     }
 
@@ -146,30 +147,22 @@ public class AccountFragment extends Fragment{
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        TextView textView = (TextView) activity.findViewById(R.id.error_messages);
-                        AccessToken token = loginResult.getAccessToken();
+                        final TextView textView = (TextView) activity.findViewById(R.id.error_messages);
+                        AccessToken resultToken = loginResult.getAccessToken();
 
                         /*Asynchronous request task to get user data*/
-                        GraphRequestAsyncTask request = GraphRequest.newMeRequest(token,new GraphRequest.GraphJSONObjectCallback() {
+                        GraphRequestAsyncTask request = GraphRequest.newMeRequest(resultToken,new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject user,GraphResponse graphResponse){
                                 facebookId = user.optString("id");
                                 username = user.optString("name");
                                 email = user.optString("email");
+                                /*TODO:add connect code here*/
                             }
                         }).executeAsync();
 
-                        try{
-                            request.get();
-                        }
-                        catch (InterruptedException ex){
-                            Log.d("EX","Interrupted");
-                        }
-                        catch (ExecutionException ex){
-                            Log.d("EX2","Execute exception");
-                        }
 
-                        String message = "LOGIN OK "  + email + username + facebookId;
+                        String message = "LOGIN OK ";
                         textView.setText(message, TextView.BufferType.NORMAL);
 
                         /*Now connect to server */
@@ -281,13 +274,5 @@ public class AccountFragment extends Fragment{
 
         }
     }
-
-    /*Method to get facebook token*/
-    private void getFbToken(AccessToken token){
-        if (token != null){
-            facebookId = token.getUserId();
-        }
-    }
-
 
 }
