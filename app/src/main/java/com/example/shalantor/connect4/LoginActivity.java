@@ -18,6 +18,7 @@ import android.app.ProgressDialog;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutionException;
@@ -26,6 +27,8 @@ import com.facebook.CallbackManager;
 public class LoginActivity extends AppCompatActivity implements AccountFragment.setSocket {
 
     public static final String USER_TYPE = "USER_TYPE";
+    public static final String FB_USERNAME = "FB_USERNAME";
+    public static final String FACEBOOK_ID = "FB_ID";
     public static final String SERVER_ADDRESS = "SERVER";
     public static final int PORT = 1337;
     private AccountFragment accFragment = null;
@@ -240,4 +243,103 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     }
 
     /*Continue with facebookButton*/
+    public void continueFacebook(View view){
+
+        boolean result = false;
+        if(connectSocket == null){
+            result = isAddressCorrect();
+        }
+
+        /*Read send data from preferences*/
+        SharedPreferences preferences = getSharedPreferences(getPackageName(),MODE_PRIVATE);
+        String username = preferences.getString(FB_USERNAME,null);
+        String facebookID = preferences.getString(FACEBOOK_ID,null);
+
+        ContinueFB continueFB = new ContinueFB();
+        String OpResult = "";
+        try {
+            OpResult = continueFB.execute("1","1",facebookID,username,"0","0").get();
+        }
+        catch(ExecutionException ex){
+            Log.d("EXECUTION","Executionexception occured");
+        }
+        catch(InterruptedException ex){
+            Log.d("INTERRUPT","Interrupted exception occured");
+        }
+
+
+
+    }
+
+    /*Async task for connecting to server*/
+    private class ContinueFB extends AsyncTask<String, Void, String> {
+        ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pDialog = new ProgressDialog(LoginActivity.this);
+            pDialog.setMessage("Connecting to server");
+
+
+            String message = "Connecting to server";
+
+            SpannableString ss2 = new SpannableString(message);
+            ss2.setSpan(new RelativeSizeSpan(2f), 0, ss2.length(), 0);
+            ss2.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ss2.length(), 0);
+
+            pDialog.setMessage(ss2);
+
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String response = "";
+            try {
+
+                /*Set up tools for sending and reading from socket*/
+                connectSocket.setSoTimeout(5000);
+                BufferedReader inputStream = new BufferedReader(new InputStreamReader(connectSocket.getInputStream()));
+                PrintWriter outputStream = new PrintWriter(connectSocket.getOutputStream());
+
+                String messageToSend = "";
+                /*Construct message to send*/
+                for (int i = 0; i < params.length; i++) {
+                    messageToSend += params[i] + " ";
+                }
+
+                /*Now send message*/
+                outputStream.print(messageToSend);
+                outputStream.flush();
+
+                /*Now read answer from socket*/
+
+                try {
+                    response = inputStream.readLine();
+                    if (response.equals("0")) {
+                        return "success";
+                    }
+                } catch (SocketTimeoutException ex) {
+                    return "error";
+                }
+
+            } catch (IOException ex) {
+                return "error";
+            }
+
+            return "success";
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            pDialog.dismiss();
+
+        }
+    }
 }
