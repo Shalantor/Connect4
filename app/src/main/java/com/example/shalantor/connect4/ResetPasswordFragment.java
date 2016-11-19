@@ -28,12 +28,16 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ResetPasswordFragment extends Fragment{
 
     private Activity activity;
     public static final int SCREEN_TO_TEXT_SIZE_RATIO = 20;
     private Socket connectSocket;
+    public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
+            Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,12 +77,20 @@ public class ResetPasswordFragment extends Fragment{
             public void onClick(View view) {
 
                 /*get text from emailPrompt*/
-                String email = emailPrompt.getText().toString().trim();
+                String input = emailPrompt.getText().toString().trim();
+                String name = "0";
 
-                if(email.length() == 0){
+                if(input.length() == 0){
                     String message = "Please enter your email or name";
                     textView.setText(message, TextView.BufferType.NORMAL);
                     return;
+                }
+
+                /*Check format of input */
+                Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(input);
+                if (!matcher.find()){
+                    name = input;
+                    input = "0";
                 }
 
                 /*create async task for getting password*/
@@ -86,8 +98,7 @@ public class ResetPasswordFragment extends Fragment{
 
                 String result = "";
                 try {
-                    /*TODO:Check if input is email or not*/
-                    result = netTask.execute("3",email,"0").get();
+                    result = netTask.execute("3",input,name).get();
                 }
                 catch(ExecutionException ex){
                     Log.d("EXECUTION","Executionexception occured");
