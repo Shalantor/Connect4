@@ -26,10 +26,18 @@ import com.facebook.CallbackManager;
 
 public class LoginActivity extends AppCompatActivity implements AccountFragment.setSocket {
 
+    /*String tags for sharedpreferences that store user data*/
     public static final String USER_TYPE = "USER_TYPE";
     public static final String FB_USERNAME = "FB_USERNAME";
     public static final String FACEBOOK_ID = "FB_ID";
     public static final String SERVER_ADDRESS = "SERVER";
+
+    /*String tags for fragment identification*/
+    public static final String ACCOUNT_FRAGMENT = "ACCOUNT_FRAGMENT";
+    public static final String LOGIN_FRAGMENT = "LOGIN_FRAGMENT";
+    public static final String REGISTER_FRAGMENT = "REGISTER_FRAGMENT";
+    public static final String RESET_PASSWORD_FRAGMENT = "RESET_PASSWORD_FRAGMENT";
+
     public static final int PORT = 1337;
     private AccountFragment accFragment = null;
     private LoginFragment logFragment = null;
@@ -45,7 +53,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
 
         setContentView(R.layout.activity_login);
         accFragment = new AccountFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.container, accFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.container, accFragment,ACCOUNT_FRAGMENT).commit();
 
     }
 
@@ -172,6 +180,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     @Override
     public boolean onKeyDown(int keycode, KeyEvent event){
         if(keycode == KeyEvent.KEYCODE_BACK){
+            accFragment = (AccountFragment) getSupportFragmentManager().findFragmentByTag(ACCOUNT_FRAGMENT);
             if (accFragment != null) {
                 finish();
                 Intent intent = new Intent(this, MainActivity.class);
@@ -180,7 +189,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
             }
             else{
                 accFragment = new AccountFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.container,accFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container,accFragment,ACCOUNT_FRAGMENT).commit();
                 getSupportFragmentManager().executePendingTransactions();
                 accFragment.adjustButtons();
                 logFragment = null;
@@ -214,7 +223,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
 
         /*TODO:ONLY REPLACE FRAGMENT WHEN LOGGED IN SUCCESSFULLY*/
         logFragment = new LoginFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.container,logFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,logFragment,LOGIN_FRAGMENT).commit();
         getSupportFragmentManager().executePendingTransactions();
         logFragment.adjustButtons();
         logFragment.setConnectSocket(connectSocket);
@@ -233,7 +242,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
 
         /*Replace fragments*/
         regFragment = new RegisterFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.container,regFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,regFragment,REGISTER_FRAGMENT).commit();
         getSupportFragmentManager().executePendingTransactions();
         regFragment.adjustButtons();
         accFragment = null;
