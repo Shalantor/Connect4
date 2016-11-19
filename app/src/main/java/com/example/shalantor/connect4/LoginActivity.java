@@ -369,5 +369,6 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         getSupportFragmentManager().beginTransaction().replace(R.id.container,resetFragment,RESET_PASSWORD_FRAGMENT).commit();
         getSupportFragmentManager().executePendingTransactions();
         resetFragment.adjustButtons();
+        resetFragment.setSocket(connectSocket);
     }
 }
