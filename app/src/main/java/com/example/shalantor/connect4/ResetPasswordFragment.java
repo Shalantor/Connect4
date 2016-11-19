@@ -53,7 +53,7 @@ public class ResetPasswordFragment extends Fragment{
 
         /*Get references*/
         final EditText emailPrompt = (EditText) activity.findViewById(R.id.reset_mail);
-        EditText resetCodePrompt = (EditText) activity.findViewById(R.id.reset_code);
+        final EditText resetCodePrompt = (EditText) activity.findViewById(R.id.reset_code);
         Button sendCode = (Button) activity.findViewById(R.id.send_code);
         Button submitCode = (Button) activity.findViewById(R.id.submit_code);
         final TextView textView = (TextView) activity.findViewById(R.id.error_messages_reset);
@@ -109,6 +109,50 @@ public class ResetPasswordFragment extends Fragment{
             }
 
         });
+
+
+        /*Listener for submit button.Submit button sends 2 messages to server, one
+        * to confirm the reset code , and the other one to actually change it.*/
+        submitCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                /*get text from emailPrompt*/
+                String input = emailPrompt.getText().toString().trim();
+                String name = "0";
+
+                if(input.length() == 0){
+                    String message = "Please enter your email or name";
+                    textView.setText(message, TextView.BufferType.NORMAL);
+                    return;
+                }
+
+                /*Check format of input */
+                Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(input);
+                if (!matcher.find()){
+                    name = input;
+                    input = "0";
+                }
+
+                /*Read code*/
+                String code = resetCodePrompt.getText().toString().trim();
+
+                /*create async task for network operation*/
+                NetworkOps netTask = new NetworkOps();
+
+                String result = "";
+                try {
+                    result = netTask.execute("4",input,name,code).get();
+                }
+                catch(ExecutionException ex){
+                    Log.d("EXECUTION","Executionexception occured");
+                }
+                catch(InterruptedException ex){
+                    Log.d("INTERRUPT","Interrupted exception occured");
+                }
+            }
+        });
+
 
     }
 
