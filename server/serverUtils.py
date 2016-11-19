@@ -218,10 +218,14 @@ def confirmPasswordChangeCode(database,email,name,code):
     if name == None:
         data = (email,)
         cursor.execute('SELECT resetCode FROM Users WHERE email=?',data)
+        if cursor.fetchone() == None:
+            return False
         resetCode = cursor.fetchone()[0]
     elif email == None or (name != None and email!=None):
         data = (name,)
         cursor.execute('SELECT resetCode FROM Users WHERE username=?',data)
+        if cursor.fetchone() == None:
+            return False
         resetCode = cursor.fetchone()[0]
     connection.close()
     return resetCode == code
