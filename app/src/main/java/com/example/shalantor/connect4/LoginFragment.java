@@ -218,15 +218,6 @@ public class LoginFragment extends Fragment{
         });
 
 
-        /*On click listener for forget password textview*/
-        forgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-
     }
 
 }

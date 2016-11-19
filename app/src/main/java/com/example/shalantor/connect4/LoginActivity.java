@@ -42,6 +42,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     private AccountFragment accFragment = null;
     private LoginFragment logFragment = null;
     private RegisterFragment regFragment = null;
+    private ResetPasswordFragment resetFragment = null;
     private Socket connectSocket;
     public String address;
     private CallbackManager callbackManager;
@@ -187,6 +188,15 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
                 this.startActivity(intent);
                 return true;
             }
+            else if (getSupportFragmentManager().findFragmentByTag(RESET_PASSWORD_FRAGMENT) != null){
+                logFragment = new LoginFragment();
+                accFragment = null;
+                regFragment = null;
+                resetFragment = null;
+                getSupportFragmentManager().beginTransaction().replace(R.id.container,logFragment,LOGIN_FRAGMENT).commit();
+                getSupportFragmentManager().executePendingTransactions();
+                logFragment.adjustButtons();
+            }
             else{
                 accFragment = new AccountFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.container,accFragment,ACCOUNT_FRAGMENT).commit();
@@ -194,6 +204,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
                 accFragment.adjustButtons();
                 logFragment = null;
                 regFragment = null;
+                resetFragment = null;
             }
         }
         return false;
@@ -350,5 +361,13 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
             pDialog.dismiss();
 
         }
+    }
+
+    /*Listener for the reset password textview*/
+    public void goToResetFragment(View view){
+        resetFragment = new ResetPasswordFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,resetFragment,RESET_PASSWORD_FRAGMENT).commit();
+        getSupportFragmentManager().executePendingTransactions();
+        resetFragment.adjustButtons();
     }
 }

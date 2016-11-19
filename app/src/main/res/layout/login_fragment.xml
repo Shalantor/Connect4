@@ -46,7 +46,8 @@
         android:id="@+id/forgot_password"
         android:text="@string/forgot_password"
         android:textColor="@color/colorCyan"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:onClick="goToResetFragment"/>
 
     <CheckBox android:id="@+id/remember_me"
         android:layout_width="wrap_content"
