@@ -15,7 +15,7 @@
 # 1         1 userType id name email password
 # 2         2 newPassword
 # 3         3 email,name
-# 4         4 code
+# 4         4 email,name,code
 # 5         5
 import socket,Queue
 from threading import *
@@ -83,7 +83,9 @@ def userThread(replySocket,address,dbQueue,matchQueue):
             name = None if args[2] == '0' else args[2]
             data = {'operation':7,'answer':answerQueue,'name':name,'email':email}
         elif args[0] == '4':
-            code = args[1]
+            email = None if args[1] == '0' else args[1]
+            name = None if args[2] == '0' else args[2]
+            code = args[3]
             data = {'operation':8,'answer':answerQueue,'name':name,'email':email,'code':code}
         elif args[0] == '5':
             if userType == '0':
