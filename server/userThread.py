@@ -5,7 +5,7 @@
 #               ID                  |           ARGUMENTS
 # 0 --- User signup                 | userType(fb or normal),id,name,email,password
 # 1 --- User login                  | userType,id,name,email,password
-# 2 --- Change password             | email,name,newPassword
+# 2 --- Change password             | newPassword
 # 3 --- Forgot password             | email,name
 # 4 --- Confirm password change code| email,name,code
 # 5 --- Start game                  | -
