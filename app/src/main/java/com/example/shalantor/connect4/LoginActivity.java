@@ -83,6 +83,10 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         getSupportFragmentManager().beginTransaction().replace(R.id.container,newPassFragment,NEW_PASSWORD_FRAGMENT).commit();
         getSupportFragmentManager().executePendingTransactions();
         newPassFragment.adjustButtons();
+        accFragment = null;
+        regFragment = null;
+        resetFragment = null;
+        logFragment = null;
 
     }
 
@@ -207,9 +211,22 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
                 accFragment = null;
                 regFragment = null;
                 resetFragment = null;
+                newPassFragment = null;
                 getSupportFragmentManager().beginTransaction().replace(R.id.container,logFragment,LOGIN_FRAGMENT).commit();
                 getSupportFragmentManager().executePendingTransactions();
                 logFragment.adjustButtons();
+                logFragment.setConnectSocket(connectSocket);
+            }
+            else if (getSupportFragmentManager().findFragmentByTag(NEW_PASSWORD_FRAGMENT) != null){
+                resetFragment = new ResetPasswordFragment();
+                accFragment = null;
+                regFragment = null;
+                logFragment = null;
+                newPassFragment = null;
+                getSupportFragmentManager().beginTransaction().replace(R.id.container,resetFragment,RESET_PASSWORD_FRAGMENT).commit();
+                getSupportFragmentManager().executePendingTransactions();
+                resetFragment.adjustButtons();
+                resetFragment.setSocket(connectSocket);
             }
             else{
                 accFragment = new AccountFragment();
@@ -219,6 +236,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
                 logFragment = null;
                 regFragment = null;
                 resetFragment = null;
+                newPassFragment = null;
             }
         }
         return false;
