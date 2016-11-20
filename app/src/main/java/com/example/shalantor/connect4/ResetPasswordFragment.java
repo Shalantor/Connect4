@@ -138,9 +138,8 @@ public class ResetPasswordFragment extends Fragment{
             @Override
             public void onClick(View view) {
 
-                /*TODO:After finishing with testing uncomment below code*/
                 /*get text from emailPrompt*/
-                /*String input = emailPrompt.getText().toString().trim();
+                String input = emailPrompt.getText().toString().trim();
                 String name = "0";
 
                 if(input.length() == 0){
@@ -149,17 +148,18 @@ public class ResetPasswordFragment extends Fragment{
                     return;
                 }
 
-                /*Check format of input
+                /*Check format of input*/
                 Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(input);
                 if (!matcher.find()){
                     name = input;
                     input = "0";
                 }
 
-                /*Read code
+                /*Read code*/
                 String code = resetCodePrompt.getText().toString().trim();
 
-                /*create async task for network operation
+
+                /*create async task for network operation*/
                 NetworkOps netTask = new NetworkOps();
 
                 String result = "";
@@ -171,8 +171,7 @@ public class ResetPasswordFragment extends Fragment{
                 }
                 catch(InterruptedException ex){
                     Log.d("INTERRUPT","Interrupted exception occured");
-                }*/
-
+                }
                 mCallback.setNewPasswordFragment();
             }
         });

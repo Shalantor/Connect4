@@ -95,6 +95,11 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     /*Implement interface for new password fragment*/
     @Override
     public void replaceNewPasswordFragment(){
+        logFragment = new LoginFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,logFragment,LOGIN_FRAGMENT).commit();
+        getSupportFragmentManager().executePendingTransactions();
+        logFragment.adjustButtons();
+        logFragment.setConnectSocket(connectSocket);
 
     }
 
