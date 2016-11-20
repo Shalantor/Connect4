@@ -82,6 +82,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         newPassFragment = new NewPasswordFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container,newPassFragment,NEW_PASSWORD_FRAGMENT).commit();
         getSupportFragmentManager().executePendingTransactions();
+        newPassFragment.adjustButtons();
 
     }
 
