@@ -3,6 +3,7 @@ package com.example.shalantor.connect4;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -38,6 +39,7 @@ public class ResetPasswordFragment extends Fragment{
     private Socket connectSocket;
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+    public ResetPasswordFragment.resetFragmentCallback mCallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,6 +48,25 @@ public class ResetPasswordFragment extends Fragment{
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         activity = getActivity();
         return inflater.inflate(R.layout.reset_password_fragment, container, false);
+    }
+
+    /*Interface to communicate with login activity*/
+    public interface resetFragmentCallback{
+        void setNewPasswordFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (ResetPasswordFragment.resetFragmentCallback) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement reset fragment call back interface");
+        }
     }
 
     /*Adjust size of components*/
@@ -117,8 +138,9 @@ public class ResetPasswordFragment extends Fragment{
             @Override
             public void onClick(View view) {
 
+                /*TODO:After finishing with testing uncomment below code*/
                 /*get text from emailPrompt*/
-                String input = emailPrompt.getText().toString().trim();
+                /*String input = emailPrompt.getText().toString().trim();
                 String name = "0";
 
                 if(input.length() == 0){
@@ -127,17 +149,17 @@ public class ResetPasswordFragment extends Fragment{
                     return;
                 }
 
-                /*Check format of input */
+                /*Check format of input
                 Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(input);
                 if (!matcher.find()){
                     name = input;
                     input = "0";
                 }
 
-                /*Read code*/
+                /*Read code
                 String code = resetCodePrompt.getText().toString().trim();
 
-                /*create async task for network operation*/
+                /*create async task for network operation
                 NetworkOps netTask = new NetworkOps();
 
                 String result = "";
@@ -149,7 +171,9 @@ public class ResetPasswordFragment extends Fragment{
                 }
                 catch(InterruptedException ex){
                     Log.d("INTERRUPT","Interrupted exception occured");
-                }
+                }*/
+
+                mCallback.setNewPasswordFragment();
             }
         });
 

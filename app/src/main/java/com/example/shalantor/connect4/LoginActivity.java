@@ -24,7 +24,8 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutionException;
 import com.facebook.CallbackManager;
 
-public class LoginActivity extends AppCompatActivity implements AccountFragment.setSocket {
+public class LoginActivity extends AppCompatActivity implements AccountFragment.setSocket,
+                                                                ResetPasswordFragment.resetFragmentCallback {
 
     /*String tags for sharedpreferences that store user data*/
     public static final String USER_TYPE = "USER_TYPE";
@@ -61,7 +62,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
 
     }
 
-    /*Implement interface*/
+    /*Implement interface for account fragment*/
     @Override
     public Socket getSocketReference(){
         return connectSocket;
@@ -73,6 +74,15 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         if (connectSocket == null){
             result = isAddressCorrect();
         }
+    }
+
+    /*Implement interface for reset password fragment*/
+    @Override
+    public void setNewPasswordFragment(){
+        newPassFragment = new NewPasswordFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,newPassFragment,NEW_PASSWORD_FRAGMENT).commit();
+        getSupportFragmentManager().executePendingTransactions();
+
     }
 
 
