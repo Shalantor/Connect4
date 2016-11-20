@@ -37,12 +37,15 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     public static final String LOGIN_FRAGMENT = "LOGIN_FRAGMENT";
     public static final String REGISTER_FRAGMENT = "REGISTER_FRAGMENT";
     public static final String RESET_PASSWORD_FRAGMENT = "RESET_PASSWORD_FRAGMENT";
+    public static final String NEW_PASSWORD_FRAGMENT = "NEW_PASSWORD_FRAGMENT";
 
     public static final int PORT = 1337;
     private AccountFragment accFragment = null;
     private LoginFragment logFragment = null;
     private RegisterFragment regFragment = null;
     private ResetPasswordFragment resetFragment = null;
+    private NewPasswordFragment newPassFragment = null;
+
     private Socket connectSocket;
     public String address;
     private CallbackManager callbackManager;
@@ -371,4 +374,5 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         resetFragment.adjustButtons();
         resetFragment.setSocket(connectSocket);
     }
+
 }
