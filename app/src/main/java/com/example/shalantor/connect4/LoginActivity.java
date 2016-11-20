@@ -25,7 +25,8 @@ import java.util.concurrent.ExecutionException;
 import com.facebook.CallbackManager;
 
 public class LoginActivity extends AppCompatActivity implements AccountFragment.setSocket,
-                                                                ResetPasswordFragment.resetFragmentCallback {
+                                                                ResetPasswordFragment.resetFragmentCallback,
+                                                                NewPasswordFragment.newPasswordFragmentCallback{
 
     /*String tags for sharedpreferences that store user data*/
     public static final String USER_TYPE = "USER_TYPE";
@@ -83,10 +84,17 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         getSupportFragmentManager().beginTransaction().replace(R.id.container,newPassFragment,NEW_PASSWORD_FRAGMENT).commit();
         getSupportFragmentManager().executePendingTransactions();
         newPassFragment.adjustButtons();
+        newPassFragment.setSocket(connectSocket);
         accFragment = null;
         regFragment = null;
         resetFragment = null;
         logFragment = null;
+
+    }
+
+    /*Implement interface for new password fragment*/
+    @Override
+    public void replaceNewPasswordFragment(){
 
     }
 
