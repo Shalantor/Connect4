@@ -26,7 +26,8 @@ import com.facebook.CallbackManager;
 
 public class LoginActivity extends AppCompatActivity implements AccountFragment.setSocket,
                                                                 ResetPasswordFragment.resetFragmentCallback,
-                                                                NewPasswordFragment.newPasswordFragmentCallback{
+                                                                NewPasswordFragment.newPasswordFragmentCallback,
+                                                                LoginFragment.loginCallback{
 
     /*String tags for sharedpreferences that store user data*/
     public static final String USER_TYPE = "USER_TYPE";
@@ -40,6 +41,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     public static final String REGISTER_FRAGMENT = "REGISTER_FRAGMENT";
     public static final String RESET_PASSWORD_FRAGMENT = "RESET_PASSWORD_FRAGMENT";
     public static final String NEW_PASSWORD_FRAGMENT = "NEW_PASSWORD_FRAGMENT";
+    public static final String PLAY_BUTTON_FRAGMENT = "PLAY_BUTTON_FRAGMENT";
 
     public static final int PORT = 1337;
     private AccountFragment accFragment = null;
@@ -47,6 +49,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     private RegisterFragment regFragment = null;
     private ResetPasswordFragment resetFragment = null;
     private NewPasswordFragment newPassFragment = null;
+    private PlayButtonFragment playButtonFragment = null;
 
     private Socket connectSocket;
     public String address;
@@ -101,6 +104,16 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         logFragment.adjustButtons();
         logFragment.setConnectSocket(connectSocket);
 
+    }
+
+    /*Implements interface for login fragment*/
+    @Override
+    public void replaceLoginWithPlayFragment(){
+        playButtonFragment = new PlayButtonFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,playButtonFragment,PLAY_BUTTON_FRAGMENT).commit();
+        getSupportFragmentManager().executePendingTransactions();
+        playButtonFragment.setSocket(connectSocket);
+        playButtonFragment.adjustButtons();
     }
 
 
@@ -332,7 +345,13 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
             Log.d("INTERRUPT","Interrupted exception occured");
         }
 
+        /*Now replace this with play fragment*/
 
+        playButtonFragment = new PlayButtonFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,playButtonFragment,PLAY_BUTTON_FRAGMENT).commit();
+        getSupportFragmentManager().executePendingTransactions();
+        playButtonFragment.setSocket(connectSocket);
+        playButtonFragment.adjustButtons();
 
     }
 

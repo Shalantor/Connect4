@@ -41,6 +41,7 @@ public class LoginFragment extends Fragment{
     public static final String EMAIL = "EMAIL";
     public Activity activity;
     public Socket connectSocket;
+    private LoginFragment.loginCallback mCallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,6 +50,25 @@ public class LoginFragment extends Fragment{
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         activity = getActivity();
         return inflater.inflate(R.layout.login_fragment, container, false);
+    }
+
+    /*Interface for callback*/
+    public interface loginCallback{
+        void replaceLoginWithPlayFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (LoginFragment.loginCallback) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement SetSocket interface");
+        }
     }
     
 
@@ -235,6 +255,9 @@ public class LoginFragment extends Fragment{
                     String message = "Problem reaching server ";
                     textView.setText(message, TextView.BufferType.NORMAL);
                 }
+
+                /*Now replace fragment*/
+                mCallback.replaceLoginWithPlayFragment();
             }
         });
 
