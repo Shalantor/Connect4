@@ -103,6 +103,13 @@ public class NewPasswordFragment extends Fragment{
                     return;
                 }
 
+                /*Check for password length*/
+                if (password.length() < 8){
+                    String message = "Password must contain at least 8 characters";
+                    textView.setText(message, TextView.BufferType.NORMAL);
+                    return;
+                }
+
                 /*Check for matching passwords*/
                 if ( !password.equals(verifyPassword)){
                     String message = "Passwords don't match";
