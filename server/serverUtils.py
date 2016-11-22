@@ -174,6 +174,7 @@ def forgotPassword(database,email,name):
     cursor = connection.cursor()
     #Generate random 10 digit integer as a reset code and store it
     code = random.randint(1000000000,9999999999)
+    print 'Code is %d \n' % code
 
     if name == None:
         data = (email,)
@@ -218,15 +219,20 @@ def confirmPasswordChangeCode(database,email,name,code):
     if name == None:
         data = (email,)
         cursor.execute('SELECT resetCode FROM Users WHERE email=?',data)
-        if cursor.fetchone() == None:
+        result = cursor.fetchone()
+        if result == None:
+            print 'Result was none 1'
             return False
-        resetCode = cursor.fetchone()[0]
+        else:
+            resetCode = result[0]
     elif email == None or (name != None and email!=None):
         data = (name,)
         cursor.execute('SELECT resetCode FROM Users WHERE username=?',data)
-        if cursor.fetchone() == None:
+        result = cursor.fetchone()
+        if result == None:
             return False
-        resetCode = cursor.fetchone()[0]
+        else:
+            resetCode = result[0]
     connection.close()
     return resetCode == code
 

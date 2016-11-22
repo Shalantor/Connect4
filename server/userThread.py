@@ -85,7 +85,7 @@ def userThread(replySocket,address,dbQueue,matchQueue):
         elif args[0] == '4':
             email = None if args[1] == '0' else args[1]
             name = None if args[2] == '0' else args[2]
-            code = args[3]
+            code = int(args[3])
             data = {'operation':8,'answer':answerQueue,'name':name,'email':email,'code':code}
         elif args[0] == '5':
             if userType == '0':
