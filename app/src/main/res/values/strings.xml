@@ -24,4 +24,5 @@
     <string name="enter_email">Enter email address</string>
     <string name="get_code">Get reset code</string>
     <string name="submit_code">Submit</string>
+    <string name="play_button_text">PLAY</string>
 </resources>
