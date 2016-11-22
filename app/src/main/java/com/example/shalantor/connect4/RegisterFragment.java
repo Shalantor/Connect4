@@ -195,7 +195,7 @@ public class RegisterFragment extends Fragment{
                 }
 
                 /*If user clicked remember me then save his credentials*/
-                if (remember.isEnabled()) {
+                if (remember.isChecked()) {
 
                     SharedPreferences preferences = activity.getSharedPreferences(activity.getPackageName(), Context.MODE_PRIVATE);
 

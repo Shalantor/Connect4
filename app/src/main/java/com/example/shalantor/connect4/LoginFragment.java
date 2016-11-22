@@ -140,7 +140,7 @@ public class LoginFragment extends Fragment{
         final EditText usernamePrompt = (EditText) activity.findViewById(R.id.username);
         final EditText passwordPrompt = (EditText) activity.findViewById(R.id.password);
         TextView forgotPassword = (TextView) activity.findViewById(R.id.forgot_password);
-        CheckBox rememberMe = (CheckBox) activity.findViewById(R.id.remember_me);
+        final CheckBox rememberMe = (CheckBox) activity.findViewById(R.id.remember_me);
         Button loginButton = (Button) activity.findViewById(R.id.login);
         final TextView textView = (TextView) activity.findViewById(R.id.login_error_messages);
 
@@ -182,13 +182,34 @@ public class LoginFragment extends Fragment{
                 }
 
                 /*Find out if username is an email or not*/
+                boolean isEmail;
                 /*TODO:Do not allow @ character in name*/
                 if (username.contains("@")){
                     email = username;
                     username = "0";
+                    isEmail = true;
                 }
                 else{
                     email = "0";
+                    isEmail = false;
+                }
+
+
+                /*Check value of checkbox*/
+                if(rememberMe.isChecked()){
+                    SharedPreferences preferences = activity.getSharedPreferences(activity.getPackageName(), Context.MODE_PRIVATE);
+
+                    /*Store user data*/
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putInt(USER_TYPE, 0);
+                    if (!isEmail) {
+                        editor.putString(USERNAME, username);
+                    }
+                    else{
+                        editor.putString(EMAIL, email);
+                    }
+                    editor.apply();
+
                 }
 
                 /*Now send message to server and wait for answer*/
