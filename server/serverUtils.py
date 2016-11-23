@@ -79,13 +79,12 @@ def userLogin(database,name,email,password):
         nameTuple = (email,)
         cursor.execute('SELECT salt,password FROM Users WHERE email =?',nameTuple)
 
-    if cursor == None:#no such user
-        return False
-    else:
-        for a,b in cursor:
-            if hashlib.sha512(password + a).hexdigest() == b:
-                return True
+    for a,b in cursor:
+        if hashlib.sha512(password + a).hexdigest() == b:
+            return True
+
     connection.close()
+    return False
 
 
 #Validate user that logged in with facebook
