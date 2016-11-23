@@ -203,7 +203,9 @@ public class LoginFragment extends Fragment{
 
                 /*Find out if username is an email or not*/
                 boolean isEmail;
-                /*TODO:Do not allow @ character in name*/
+                /*Remove @ character from username*/
+                username = username.replaceAll("@","");
+
                 if (username.contains("@")){
                     email = username;
                     username = "0";
