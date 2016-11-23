@@ -105,6 +105,12 @@ public class LoginFragment extends Fragment{
         protected String doInBackground(String... params) {
 
             String response = "";
+
+            /*Check socket for null pointer*/
+            if (connectSocket == null){
+                return "Null";
+            }
+
             try{
 
                 /*Set up tools for sending and reading from socket*/
@@ -129,17 +135,18 @@ public class LoginFragment extends Fragment{
                     if (response.equals("0")){
                         return "success";
                     }
+                    else{
+                        return "Wrong credentials";
+                    }
                 }
                 catch(SocketTimeoutException ex){
-                    return "error";
+                    return "Out of range";
                 }
 
             }
             catch(IOException ex){
                 return "error";
             }
-
-            return "success";
 
         }
 
@@ -249,17 +256,27 @@ public class LoginFragment extends Fragment{
 
                 /*Check result*/
 
+                String message = "";
                 if(result.equals("success")) {
-                    String message = "Registered succesfully";
+                    message = "Registered succesfully";
                     textView.setText(message, TextView.BufferType.NORMAL);
-                }
-                else{
-                    String message = "Problem reaching server ";
-                    textView.setText(message, TextView.BufferType.NORMAL);
-                }
+                    /*Now replace fragment*/
+                    mCallback.replaceLoginWithPlayFragment();
 
-                /*Now replace fragment*/
-                mCallback.replaceLoginWithPlayFragment();
+                }
+                else if (result.equals("Wrong credentials")){
+                    message = "Wrong username or password";
+                }
+                else if(result.equals("Out of range")){
+                    message = "Couldn't reach server. Please check your connection and try again.";
+                }
+                else if(result.equals("Null")){
+                    message = "Socket wasn't initiated properly";
+                }
+                else {
+                    message = "problem reaching server.";
+                }
+                textView.setText(message, TextView.BufferType.NORMAL);
             }
         });
 
