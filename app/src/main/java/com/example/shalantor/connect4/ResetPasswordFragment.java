@@ -115,7 +115,7 @@ public class ResetPasswordFragment extends Fragment{
                 }
 
                 /*create async task for getting password*/
-                NetworkOps netTask = new NetworkOps();
+                NetworkOperationsTask netTask = new NetworkOperationsTask(connectSocket,activity);
 
                 String result = "";
                 try {
@@ -160,7 +160,7 @@ public class ResetPasswordFragment extends Fragment{
 
 
                 /*create async task for network operation*/
-                NetworkOps netTask = new NetworkOps();
+                NetworkOperationsTask netTask = new NetworkOperationsTask(connectSocket,activity);
 
                 String result = "";
                 try {
@@ -182,80 +182,6 @@ public class ResetPasswordFragment extends Fragment{
     /*Get socket reference from main activity*/
     public void setSocket(Socket socket){
         connectSocket = socket;
-    }
-
-    /*AsyncTask for network operations*/
-    private class NetworkOps extends AsyncTask<String, Void, String> {
-        ProgressDialog pDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            pDialog = new ProgressDialog(activity);
-            pDialog.setMessage("Connecting to server");
-
-
-            String message= "Connecting to server";
-
-            SpannableString ss2 =  new SpannableString(message);
-            ss2.setSpan(new RelativeSizeSpan(2f), 0, ss2.length(), 0);
-            ss2.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ss2.length(), 0);
-
-            pDialog.setMessage(ss2);
-
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String response = "";
-            try{
-
-                /*Set up tools for sending and reading from socket*/
-                connectSocket.setSoTimeout(5000);
-                BufferedReader inputStream = new BufferedReader( new InputStreamReader(connectSocket.getInputStream()));
-                PrintWriter outputStream = new PrintWriter(connectSocket.getOutputStream());
-
-                String messageToSend = "";
-                /*Construct message to send*/
-                for(int i =0; i < params.length; i++ ){
-                    messageToSend += params[i] + " ";
-                }
-
-                /*Now send message*/
-                outputStream.print(messageToSend);
-                outputStream.flush();
-
-                /*Now read answer from socket*/
-
-                try {
-                    response = inputStream.readLine();
-                    if (response.equals("0")){
-                        return "success";
-                    }
-                }
-                catch(SocketTimeoutException ex){
-                    return "error";
-                }
-
-            }
-            catch(IOException ex){
-                return "error";
-            }
-
-            return "success";
-
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            pDialog.dismiss();
-
-        }
     }
 
 }
