@@ -407,6 +407,9 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
                     if (response.equals("0")) {
                         return "success";
                     }
+                    else{
+                        return "No user";
+                    }
                 } catch (SocketTimeoutException ex) {
                     return "error";
                 }
@@ -414,8 +417,6 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
             } catch (IOException ex) {
                 return "error";
             }
-
-            return "success";
 
         }
 

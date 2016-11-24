@@ -1,4 +1,5 @@
 <resources>
+    <!--Strings for gui components -->
     <string name="app_name">Connect4</string>
     <string name="single">Singleplayer</string>
     <string name="multi">Multiplayer</string>
