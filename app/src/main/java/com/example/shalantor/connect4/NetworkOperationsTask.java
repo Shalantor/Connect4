@@ -51,6 +51,9 @@ public class NetworkOperationsTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params) {
 
         String response = "";
+        if (socket == null){
+            return "No socket";
+        }
         try {
 
             /*Set up tools for sending and reading from socket*/

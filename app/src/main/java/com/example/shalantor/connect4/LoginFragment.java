@@ -42,6 +42,7 @@ public class LoginFragment extends Fragment{
     public Activity activity;
     public Socket connectSocket;
     private LoginFragment.loginCallback mCallback;
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,7 +50,8 @@ public class LoginFragment extends Fragment{
         // Inflate the layout for this fragment
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         activity = getActivity();
-        return inflater.inflate(R.layout.login_fragment, container, false);
+        view = inflater.inflate(R.layout.login_fragment, container, false);
+        return view;
     }
 
     /*Interface for callback*/
@@ -82,27 +84,15 @@ public class LoginFragment extends Fragment{
     public void adjustButtons(){
         final Activity activity = getActivity();
 
+        /*Adjust size of components*/
+        AccountManagementUtils.adjustComponentsSize((ViewGroup) view,activity);
+
         /*Get references to GUI objects*/
         final EditText usernamePrompt = (EditText) activity.findViewById(R.id.username);
         final EditText passwordPrompt = (EditText) activity.findViewById(R.id.password);
-        TextView forgotPassword = (TextView) activity.findViewById(R.id.forgot_password);
         final CheckBox rememberMe = (CheckBox) activity.findViewById(R.id.remember_me);
         Button loginButton = (Button) activity.findViewById(R.id.login);
         final TextView textView = (TextView) activity.findViewById(R.id.login_error_messages);
-
-        /*Get screen dimensions*/
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int displayHeight = size.y;
-
-        /*SET SIZES*/
-        usernamePrompt.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        passwordPrompt.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        forgotPassword.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        rememberMe.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        loginButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        textView.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
 
         /*Set texts if there are saved credentials*/
         SharedPreferences preferences = activity.getSharedPreferences(activity.getPackageName(), Context.MODE_PRIVATE);

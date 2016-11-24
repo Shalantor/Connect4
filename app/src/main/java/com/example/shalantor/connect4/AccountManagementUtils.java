@@ -4,6 +4,17 @@ package com.example.shalantor.connect4;
   for the account management of the user. It provides everything from constants
   about screen ratios for text, to network services for connecting to the server*/
 
+import android.app.Activity;
+import android.graphics.Point;
+import android.view.Display;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+
 public class AccountManagementUtils {
 
     /*Return values for the async tasks used for connecting to server*/
@@ -41,4 +52,56 @@ public class AccountManagementUtils {
     public static final String CODE_NOT_VALID_MESSAGE = "Wrong code, please enter again";
     public static final String NEW_PASSWORD_ERROR_MESSAGE = "Couldn't reset password, please try again";
     public static final String ALREADY_IN_USE_MESSAGE = "Username or email already in use";
+
+    /*Constant for text to screen height ratio*/
+    public static final int SCREEN_TO_TEXT_SIZE_RATIO = 20;
+
+    /*ArrayList for components*/
+    private static ArrayList<Integer> componentsIds;
+
+    /*Method to adjust components size*/
+    public static void adjustComponentsSize(ViewGroup view, Activity activity){
+
+        /*List to store ids of components*/
+        componentsIds = new ArrayList<>();
+
+        /*Get screen dimensions*/
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int displayHeight = size.y;
+
+        /*Get IDs of components*/
+        getAllComponents(view);
+
+        /*Adjust size*/
+        for ( Integer id : componentsIds){
+            View v = activity.findViewById(id);
+            if ( v instanceof Button){
+                Button button = (Button) v;
+                button.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
+            }
+            else if(v instanceof EditText){
+                EditText editText = (EditText) v;
+                editText.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
+            }
+            else if(v instanceof TextView){
+                TextView textView =  (TextView) v;
+                textView.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
+            }
+        }
+
+    }
+
+    /*Find all components in a view*/
+    private static void getAllComponents(ViewGroup v) {
+        for (int i = 0; i < v.getChildCount(); i++) {
+            View child = v.getChildAt(i);
+            if(child instanceof ViewGroup)
+                getAllComponents((ViewGroup)child);
+            else
+                componentsIds.add(child.getId());
+        }
+    }
+
 }
