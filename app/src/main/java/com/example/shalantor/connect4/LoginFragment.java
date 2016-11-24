@@ -35,7 +35,6 @@ import java.util.concurrent.ExecutionException;
 
 public class LoginFragment extends Fragment{
 
-    public static final int SCREEN_TO_TEXT_SIZE_RATIO = 20;
     public static final String USER_TYPE = "USER_TYPE";
     public static final String USERNAME = "USERNAME";
     public static final String EMAIL = "EMAIL";

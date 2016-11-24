@@ -32,9 +32,9 @@ import java.util.concurrent.ExecutionException;
 public class NewPasswordFragment extends Fragment{
 
     private Activity activity;
-    public static final int SCREEN_TO_TEXT_SIZE_RATIO = 20;
     private Socket connectSocket;
     private NewPasswordFragment.newPasswordFragmentCallback mCallback;
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,7 +42,8 @@ public class NewPasswordFragment extends Fragment{
         // Inflate the layout for this fragment
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         activity = getActivity();
-        return inflater.inflate(R.layout.new_password_fragment, container, false);
+        view =  inflater.inflate(R.layout.new_password_fragment, container, false);
+        return view;
     }
 
     /*Interface for communication with activity*/
@@ -75,17 +76,8 @@ public class NewPasswordFragment extends Fragment{
         Button submitButton = (Button) activity.findViewById(R.id.reset_submit_button);
         final TextView textView = (TextView) activity.findViewById(R.id.reset_error_messages);
 
-        /*Get screen dimensions*/
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int displayHeight = size.y;
-
-        /*Set sizes*/
-        newPassword.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        newPasswordConfirm.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        submitButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        textView.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
+        /*Size of components adjustment*/
+        AccountManagementUtils.adjustComponentsSize((ViewGroup) view,activity);
 
         /*Set listener for button*/
         submitButton.setOnClickListener(new View.OnClickListener() {

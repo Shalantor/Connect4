@@ -40,6 +40,7 @@ public class ResetPasswordFragment extends Fragment{
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
     public ResetPasswordFragment.resetFragmentCallback mCallback;
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,7 +48,8 @@ public class ResetPasswordFragment extends Fragment{
         // Inflate the layout for this fragment
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         activity = getActivity();
-        return inflater.inflate(R.layout.reset_password_fragment, container, false);
+        view = inflater.inflate(R.layout.reset_password_fragment, container, false);
+        return view;
     }
 
     /*Interface to communicate with login activity*/
@@ -79,18 +81,8 @@ public class ResetPasswordFragment extends Fragment{
         Button submitCode = (Button) activity.findViewById(R.id.submit_code);
         final TextView textView = (TextView) activity.findViewById(R.id.error_messages_reset);
 
-        /*Get screen dimensions*/
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int displayHeight = size.y;
-
-        /*Change size of embedded text*/
-        emailPrompt.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        resetCodePrompt.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        sendCode.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        submitCode.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        textView.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
+        /*Adjust size of components*/
+        AccountManagementUtils.adjustComponentsSize((ViewGroup) view,activity);
 
         /*on click listener for send code button*/
         sendCode.setOnClickListener(new View.OnClickListener() {

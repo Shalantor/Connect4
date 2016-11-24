@@ -60,6 +60,7 @@ public class AccountFragment extends Fragment{
     private Socket connectSocket;
     public AccountFragment.setSocket mCallback;
     public static final String SERVER_ADDRESS = "SERVER";
+    private View view;
 
 
     /*Interface to communicate with fragment*/
@@ -78,7 +79,9 @@ public class AccountFragment extends Fragment{
 
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        return inflater.inflate(R.layout.account_fragment, container, false);
+        view = inflater.inflate(R.layout.account_fragment, container, false);
+
+        return view;
     }
 
     @Override
@@ -110,24 +113,12 @@ public class AccountFragment extends Fragment{
         final Activity activity = getActivity();
 
         /*Get references to buttons and editText*/
-        final Button loginButton = (Button) activity.findViewById(R.id.login_button);
-        Button registerButton = (Button) activity.findViewById(R.id.register_button);
         LoginButton fbButton = (LoginButton) activity.findViewById(R.id.login_fb_button);
         EditText address = (EditText) activity.findViewById(R.id.ip_address);
         Button continueButton = (Button) activity.findViewById(R.id.continue_button);
 
-        /*Get screen dimensions*/
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int displayHeight = size.y;
-
-        /*set dimensions of components according to screen size*/
-        loginButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        registerButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        fbButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        address.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        continueButton.setTextSize( displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
+        /*Adjust components size*/
+        AccountManagementUtils.adjustComponentsSize((ViewGroup) view,activity);
 
         address.setSelected(false);
         address.clearFocus();

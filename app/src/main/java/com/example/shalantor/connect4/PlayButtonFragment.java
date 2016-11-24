@@ -32,7 +32,7 @@ public class PlayButtonFragment extends Fragment{
 
     private Activity activity;
     private Socket connectSocket;
-    public static final int SCREEN_TO_TEXT_SIZE_RATIO = 20;
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,7 +40,8 @@ public class PlayButtonFragment extends Fragment{
         // Inflate the layout for this fragment
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         activity = getActivity();
-        return inflater.inflate(R.layout.play_fragment, container, false);
+        view =  inflater.inflate(R.layout.play_fragment, container, false);
+        return view;
     }
 
     /*Get socket reference*/
@@ -55,15 +56,8 @@ public class PlayButtonFragment extends Fragment{
         Button playButton = (Button) activity.findViewById(R.id.play_button);
         final TextView textView = (TextView) activity.findViewById(R.id.play_error_messages);
 
-        /*Get screen size*/
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int displayHeight = size.y;
-
-        /*Adjust text size*/
-        playButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        textView.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
+        /*Adjust size of components*/
+        AccountManagementUtils.adjustComponentsSize((ViewGroup) view,activity);
 
         /*Add listener to button*/
         playButton.setOnClickListener(new View.OnClickListener() {

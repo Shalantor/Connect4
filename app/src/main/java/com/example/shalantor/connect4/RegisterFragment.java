@@ -44,6 +44,7 @@ public class RegisterFragment extends Fragment{
     public static final String EMAIL = "EMAIL";
     public Activity activity;
     private Socket connectSocket;
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,17 +53,12 @@ public class RegisterFragment extends Fragment{
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         activity = getActivity();
 
-        return inflater.inflate(R.layout.register_fragment, container, false);
+        view = inflater.inflate(R.layout.register_fragment, container, false);
+        return view;
     }
 
 
     public void adjustButtons(){
-
-        /*Get screen dimensions*/
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int displayHeight = size.y;
 
         /*Get references to components*/
         final EditText usernamePrompt = (EditText) activity.findViewById(R.id.register_username);
@@ -74,12 +70,7 @@ public class RegisterFragment extends Fragment{
         final CheckBox remember = (CheckBox) activity.findViewById(R.id.remember_me_register);
 
         /*Set text sizes*/
-        usernamePrompt.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        emailPrompt.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        passwordPrompt.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        passwordVerify.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        registerButton.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
-        remember.setTextSize(displayHeight / SCREEN_TO_TEXT_SIZE_RATIO);
+        AccountManagementUtils.adjustComponentsSize((ViewGroup) view,activity);
 
         /*Add listener to register button*/
         registerButton.setOnClickListener(new View.OnClickListener() {
