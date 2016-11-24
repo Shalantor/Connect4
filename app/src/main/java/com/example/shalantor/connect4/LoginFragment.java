@@ -164,27 +164,23 @@ public class LoginFragment extends Fragment{
 
                 /*Check result*/
 
-                String message = "";
-                if(result.equals("success")) {
-                    message = "Registered succesfully";
-                    textView.setText(message, TextView.BufferType.NORMAL);
+                if(result.equals(AccountManagementUtils.OK)) {
                     /*Now replace fragment*/
                     mCallback.replaceLoginWithPlayFragment();
 
                 }
-                else if (result.equals("Wrong credentials")){
-                    message = "Wrong username or password";
+                else if (result.equals(AccountManagementUtils.ERROR)){
+                    textView.setText(AccountManagementUtils.NO_SUCH_USER_MESSAGE, TextView.BufferType.NORMAL);
                 }
-                else if(result.equals("Out of range")){
-                    message = "Couldn't reach server. Please check your connection and try again.";
+                else if(result.equals(AccountManagementUtils.SOCKET_TIMEOUT)){
+                    textView.setText(AccountManagementUtils.SOCKET_TIMEOUT_MESSAGE, TextView.BufferType.NORMAL);
                 }
-                else if(result.equals("Null")){
-                    message = "Socket wasn't initiated properly";
+                else if(result.equals(AccountManagementUtils.NO_BIND)){
+                    textView.setText(AccountManagementUtils.NO_BIND_MESSAGE, TextView.BufferType.NORMAL);
                 }
                 else {
-                    message = "problem reaching server.";
+                    textView.setText(AccountManagementUtils.IOEXCEPTION_MESSAGE, TextView.BufferType.NORMAL);
                 }
-                textView.setText(message, TextView.BufferType.NORMAL);
             }
         });
 
