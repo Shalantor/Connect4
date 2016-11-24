@@ -18,6 +18,8 @@ import java.util.ArrayList;
 public class AccountManagementUtils {
 
     /*Return values for the async tasks used for connecting to server*/
+    public static final String OK = "Success";
+    public static final String ERROR = "Error";
     public static final String OK_LOGIN = "Login successful";               //Successful login
     public static final String OK_REGISTER = "Register successful";         //Successful register
     public static final String OK_CODE_GENERATION = "Code available";       //Code generated successfully on server

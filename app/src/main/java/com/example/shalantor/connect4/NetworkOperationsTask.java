@@ -52,7 +52,7 @@ public class NetworkOperationsTask extends AsyncTask<String, Void, String> {
 
         String response = "";
         if (socket == null){
-            return "No socket";
+            return AccountManagementUtils.NO_BIND;
         }
         try {
 
@@ -76,17 +76,17 @@ public class NetworkOperationsTask extends AsyncTask<String, Void, String> {
             try {
                 response = inputStream.readLine();
                 if (response.equals("0")) {
-                    return "success";
+                    return AccountManagementUtils.OK;
                 }
                 else{
-                    return "No user";
+                    return AccountManagementUtils.ERROR;
                 }
             } catch (SocketTimeoutException ex) {
-                return "error";
+                return AccountManagementUtils.SOCKET_TIMEOUT;
             }
 
         } catch (IOException ex) {
-            return "error";
+            return AccountManagementUtils.IOEXCEPTION;
         }
 
     }

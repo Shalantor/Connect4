@@ -180,13 +180,24 @@ public class AccountFragment extends Fragment{
                                 catch(InterruptedException ex){
                                     Log.d("INTERRUPT","Interrupted exception occured");
                                 }
+
+                                if (result.equals(AccountManagementUtils.OK)){
+                                    textView.setText(AccountManagementUtils.OK_FB_REGISTER, TextView.BufferType.NORMAL);
+                                }
+                                else if (result.equals(AccountManagementUtils.ERROR)){
+                                    textView.setText(AccountManagementUtils.NO_SUCH_FB_USER_MESSAGE, TextView.BufferType.NORMAL);
+                                }
+                                else if (result.equals(AccountManagementUtils.SOCKET_TIMEOUT)){
+                                    textView.setText(AccountManagementUtils.SOCKET_TIMEOUT_MESSAGE);
+                                }
+                                else if (result.equals(AccountManagementUtils.IOEXCEPTION)){
+                                    textView.setText(AccountManagementUtils.IOEXCEPTION_MESSAGE);
+                                }
+                                else{
+                                    textView.setText(AccountManagementUtils.NO_BIND_MESSAGE, TextView.BufferType.NORMAL);
+                                }
                             }
                         }).executeAsync();
-
-
-                        String message = "LOGIN OK ";
-                        textView.setText(message, TextView.BufferType.NORMAL);
-
 
                     }
 
