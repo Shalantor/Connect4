@@ -118,6 +118,23 @@ public class ResetPasswordFragment extends Fragment{
                 catch(InterruptedException ex){
                     Log.d("INTERRUPT","Interrupted exception occured");
                 }
+
+                if(result.equals(AccountManagementUtils.OK)) {
+                    /*Now replace fragment*/
+                    textView.setText(AccountManagementUtils.OK_CODE_GENERATION_MESSAGE, TextView.BufferType.NORMAL);
+                }
+                else if (result.equals(AccountManagementUtils.ERROR)){
+                    textView.setText(AccountManagementUtils.CODE_NOT_GENERATED_MESSAGE, TextView.BufferType.NORMAL);
+                }
+                else if(result.equals(AccountManagementUtils.SOCKET_TIMEOUT)){
+                    textView.setText(AccountManagementUtils.SOCKET_TIMEOUT_MESSAGE, TextView.BufferType.NORMAL);
+                }
+                else if(result.equals(AccountManagementUtils.NO_BIND)){
+                    textView.setText(AccountManagementUtils.NO_BIND_MESSAGE, TextView.BufferType.NORMAL);
+                }
+                else {
+                    textView.setText(AccountManagementUtils.IOEXCEPTION_MESSAGE, TextView.BufferType.NORMAL);
+                }
             }
 
         });
@@ -163,7 +180,23 @@ public class ResetPasswordFragment extends Fragment{
                 catch(InterruptedException ex){
                     Log.d("INTERRUPT","Interrupted exception occured");
                 }
-                mCallback.setNewPasswordFragment();
+
+                if(result.equals(AccountManagementUtils.OK)) {
+                    /*Now replace fragment*/
+                    mCallback.setNewPasswordFragment();
+                }
+                else if (result.equals(AccountManagementUtils.ERROR)){
+                    textView.setText(AccountManagementUtils.CODE_NOT_VALID_MESSAGE, TextView.BufferType.NORMAL);
+                }
+                else if(result.equals(AccountManagementUtils.SOCKET_TIMEOUT)){
+                    textView.setText(AccountManagementUtils.SOCKET_TIMEOUT_MESSAGE, TextView.BufferType.NORMAL);
+                }
+                else if(result.equals(AccountManagementUtils.NO_BIND)){
+                    textView.setText(AccountManagementUtils.NO_BIND_MESSAGE, TextView.BufferType.NORMAL);
+                }
+                else {
+                    textView.setText(AccountManagementUtils.IOEXCEPTION_MESSAGE, TextView.BufferType.NORMAL);
+                }
             }
         });
 

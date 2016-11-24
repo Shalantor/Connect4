@@ -77,14 +77,19 @@ public class PlayButtonFragment extends Fragment{
                     Log.d("INTERRUPT","Interrupted exception occured");
                 }
 
-                String message ="";
-                if (result.equals("success")){
-                    message = "Connection ok";
+
+                if(result.equals(AccountManagementUtils.OK)) {
+                    textView.setText(AccountManagementUtils.OK_CONNECTION, TextView.BufferType.NORMAL);
                 }
-                else{
-                    message = "Connection error";
+                else if(result.equals(AccountManagementUtils.SOCKET_TIMEOUT)){
+                    textView.setText(AccountManagementUtils.SOCKET_TIMEOUT_MESSAGE, TextView.BufferType.NORMAL);
                 }
-                textView.setText(message, TextView.BufferType.NORMAL);
+                else if(result.equals(AccountManagementUtils.NO_BIND)){
+                    textView.setText(AccountManagementUtils.NO_BIND_MESSAGE, TextView.BufferType.NORMAL);
+                }
+                else {
+                    textView.setText(AccountManagementUtils.IOEXCEPTION_MESSAGE, TextView.BufferType.NORMAL);
+                }
             }
         });
 

@@ -126,23 +126,22 @@ public class NewPasswordFragment extends Fragment{
                 /*Check result*/
                 String message = "";
 
-                if (result.equals("success")){
+                if(result.equals(AccountManagementUtils.OK)) {
+                    /*Now replace fragment*/
                     mCallback.replaceNewPasswordFragment();
                 }
-                else if (result.equals("Invalid password")){
-                    message = "An unexpected error occurred, please try again";
+                else if (result.equals(AccountManagementUtils.NEW_PASSWORD_ERROR_MESSAGE)){
+                    textView.setText(AccountManagementUtils.ALREADY_IN_USE_MESSAGE, TextView.BufferType.NORMAL);
                 }
-                else if (result.equals("Out of range")){
-                    message = "Couldn't reach server, please check your connection";
+                else if(result.equals(AccountManagementUtils.SOCKET_TIMEOUT)){
+                    textView.setText(AccountManagementUtils.SOCKET_TIMEOUT_MESSAGE, TextView.BufferType.NORMAL);
                 }
-                else if(result.equals("Socket fail")){
-                    message = "Couldn't instantiate connection, please try again";
+                else if(result.equals(AccountManagementUtils.NO_BIND)){
+                    textView.setText(AccountManagementUtils.NO_BIND_MESSAGE, TextView.BufferType.NORMAL);
                 }
-                else{
-                    message = "No socket, please follow the on screen instructions";
+                else {
+                    textView.setText(AccountManagementUtils.IOEXCEPTION_MESSAGE, TextView.BufferType.NORMAL);
                 }
-
-                textView.setText(message, TextView.BufferType.NORMAL);
 
             }
         });
