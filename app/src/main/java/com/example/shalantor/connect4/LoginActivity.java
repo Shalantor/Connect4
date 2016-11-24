@@ -140,7 +140,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         editor.apply();
 
         /*Try connecting to server*/
-        Connect connect = new Connect();
+        ConnectToServerTask connect = new ConnectToServerTask(address,PORT,this);
         String result="";
         try {
             result = connect.execute("").get();
@@ -152,73 +152,12 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
             Log.d("INTERRUPT","Interrupted exception occured");
         }
 
+        /*Get socket reference*/
+        connectSocket = connect.getSocket();
+
         /*Return result value*/
         return result.equals("success");
 
-    }
-
-
-    /*AsyncTask for connecting to server*/
-    private class Connect extends AsyncTask<String, Void, String> {
-        ProgressDialog pDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            pDialog = new ProgressDialog(LoginActivity.this);
-            pDialog.setMessage("Connecting to server");
-
-
-            String message= "Connecting to server";
-
-            SpannableString ss2 =  new SpannableString(message);
-            ss2.setSpan(new RelativeSizeSpan(2f), 0, ss2.length(), 0);
-            ss2.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ss2.length(), 0);
-
-            pDialog.setMessage(ss2);
-
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String response = "";
-            try{
-                connectSocket = new Socket(address,PORT);
-
-                /*Now read from socket to validate connection*/
-                connectSocket.setSoTimeout(5000);
-                BufferedReader inputStream = new BufferedReader( new InputStreamReader(connectSocket.getInputStream()));
-
-                try {
-                    response = inputStream.readLine();
-                    Log.wtf("RESPONSE","Response is " + response);
-                    if (response.equals("0")){
-                        return "success";
-                    }
-                }
-                catch(SocketTimeoutException ex){
-                    return "error";
-                }
-
-            }
-            catch(IOException ex){
-                return "error" ;
-            }
-
-            return "success";
-
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            pDialog.dismiss();
-
-        }
     }
 
     /*Override on back button pressed method to start menu activity*/
