@@ -16,7 +16,8 @@ import com.facebook.CallbackManager;
 public class LoginActivity extends AppCompatActivity implements AccountFragment.setSocket,
                                                                 ResetPasswordFragment.resetFragmentCallback,
                                                                 NewPasswordFragment.newPasswordFragmentCallback,
-                                                                LoginFragment.loginCallback{
+                                                                LoginFragment.loginCallback,
+                                                                RegisterFragment.registerFragmentCallback{
 
     /*String tags for sharedpreferences that store user data*/
     public static final String USER_TYPE = "USER_TYPE";
@@ -103,6 +104,16 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         getSupportFragmentManager().executePendingTransactions();
         playButtonFragment.setSocket(connectSocket);
         playButtonFragment.adjustButtons();
+    }
+
+    /*Implements interface for register fragment*/
+    @Override
+    public void replaceRegisterFragment(){
+        logFragment = new LoginFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,logFragment,LOGIN_FRAGMENT).commit();
+        getSupportFragmentManager().executePendingTransactions();
+        logFragment.setConnectSocket(connectSocket);
+        logFragment.adjustButtons();
     }
 
 

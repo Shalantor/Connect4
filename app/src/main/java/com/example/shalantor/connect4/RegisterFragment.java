@@ -44,6 +44,7 @@ public class RegisterFragment extends Fragment{
     public Activity activity;
     private Socket connectSocket;
     private View view;
+    private RegisterFragment.registerFragmentCallback mCallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,6 +57,23 @@ public class RegisterFragment extends Fragment{
         return view;
     }
 
+    public interface registerFragmentCallback{
+        void replaceRegisterFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (RegisterFragment.registerFragmentCallback) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement SetSocket interface");
+        }
+    }
 
     public void adjustButtons(){
 
@@ -139,13 +157,21 @@ public class RegisterFragment extends Fragment{
 
                 /*Check result*/
 
-                if(result.equals("success")) {
-                    String message = "Registered succesfully";
-                    textView.setText(message, TextView.BufferType.NORMAL);
+                if(result.equals(AccountManagementUtils.OK)) {
+                    /*Now replace fragment*/
+                    mCallback.replaceRegisterFragment();
                 }
-                else{
-                    String message = "Problem reaching server ";
-                    textView.setText(message, TextView.BufferType.NORMAL);
+                else if (result.equals(AccountManagementUtils.ERROR)){
+                    textView.setText(AccountManagementUtils.ALREADY_IN_USE_MESSAGE, TextView.BufferType.NORMAL);
+                }
+                else if(result.equals(AccountManagementUtils.SOCKET_TIMEOUT)){
+                    textView.setText(AccountManagementUtils.SOCKET_TIMEOUT_MESSAGE, TextView.BufferType.NORMAL);
+                }
+                else if(result.equals(AccountManagementUtils.NO_BIND)){
+                    textView.setText(AccountManagementUtils.NO_BIND_MESSAGE, TextView.BufferType.NORMAL);
+                }
+                else {
+                    textView.setText(AccountManagementUtils.IOEXCEPTION_MESSAGE, TextView.BufferType.NORMAL);
                 }
 
             }
