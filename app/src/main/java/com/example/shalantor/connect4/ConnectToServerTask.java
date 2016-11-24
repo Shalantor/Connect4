@@ -69,19 +69,20 @@ public class ConnectToServerTask extends AsyncTask<String, Void, String>{
                 response = inputStream.readLine();
                 Log.wtf("RESPONSE","Response is " + response);
                 if (response.equals("0")){
-                    return "success";
+                    return AccountManagementUtils.OK_CONNECTION;
+                }
+                else{
+                    return AccountManagementUtils.NO_BIND;
                 }
             }
             catch(SocketTimeoutException ex){
-                return "error";
+                return AccountManagementUtils.SOCKET_TIMEOUT;
             }
 
         }
         catch(IOException ex){
-            return "error" ;
+            return AccountManagementUtils.IOEXCEPTION ;
         }
-
-        return "success";
 
     }
 

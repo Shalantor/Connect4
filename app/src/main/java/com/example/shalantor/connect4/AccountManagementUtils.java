@@ -45,13 +45,15 @@ public class AccountManagementUtils {
     public static final String OK_FB_LOGIN_MESSAGE = "Login successful";
     public static final String NO_BIND_MESSAGE = "Couldn't connect to server, please check your connection";
     public static final String SOCKET_TIMEOUT_MESSAGE = "Couldn't reach server, please try again";
-    public static final String IOEXCPTION_MESSAGE = "Couldn't create socket, please try again";
+    public static final String IOEXCEPTION_MESSAGE = "Couldn't connect to server, please check your connection";
     public static final String NO_SUCH_USER_MESSAGE = "Wrong email or username";
     public static final String NO_SUCH_FB_USER_MESSAGE = "Wrong name, please login again with facebook";
     public static final String CODE_NOT_GENERATED_MESSAGE = "An unexpected error occurred, please try again";
     public static final String CODE_NOT_VALID_MESSAGE = "Wrong code, please enter again";
     public static final String NEW_PASSWORD_ERROR_MESSAGE = "Couldn't reset password, please try again";
     public static final String ALREADY_IN_USE_MESSAGE = "Username or email already in use";
+    public static final String OK_CONNECTION = "Connected successfully to server";
+
 
     /*Constant for text to screen height ratio*/
     public static final int SCREEN_TO_TEXT_SIZE_RATIO = 20;

@@ -144,8 +144,24 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         /*Get socket reference*/
         connectSocket = connect.getSocket();
 
+        /*Set text of textview*/
+        TextView textView = (TextView) findViewById(R.id.error_messages);
+
+        if (result.equals(AccountManagementUtils.OK_CONNECTION)){
+            textView.setText(AccountManagementUtils.OK_CONNECTION, TextView.BufferType.NORMAL);
+        }
+        else if (result.equals(AccountManagementUtils.NO_BIND)){
+            textView.setText(AccountManagementUtils.NO_BIND_MESSAGE, TextView.BufferType.NORMAL);
+        }
+        else if (result.equals(AccountManagementUtils.SOCKET_TIMEOUT)){
+            textView.setText(AccountManagementUtils.SOCKET_TIMEOUT_MESSAGE, TextView.BufferType.NORMAL);
+        }
+        else{
+            textView.setText(AccountManagementUtils.IOEXCEPTION_MESSAGE, TextView.BufferType.NORMAL);
+        }
+
         /*Return result value*/
-        return result.equals("success");
+        return result.equals(AccountManagementUtils.OK_CONNECTION);
 
     }
 
@@ -201,96 +217,98 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     /*Go to login fragment button*/
     public void goToLogin(View view){
 
-        boolean result = false;
+        boolean result = true;
         if (connectSocket == null){
             result = isAddressCorrect();
         }
 
-        TextView textView = (TextView) findViewById(R.id.error_messages);
-        /*TODO:REMOVE AFTER TESTING*/
         if(result){
-            String showText = "Connected successfully to server";
-            textView.setText(showText, TextView.BufferType.NORMAL);
+            logFragment = new LoginFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,logFragment,LOGIN_FRAGMENT).commit();
+            getSupportFragmentManager().executePendingTransactions();
+            logFragment.adjustButtons();
+            logFragment.setConnectSocket(connectSocket);
+            accFragment = null;
+            regFragment = null;
         }
-        else{
-            String showText = "Error connecting to server";
-            textView.setText(showText, TextView.BufferType.NORMAL);
-        }
-        /*TODO:UNTIL HERE*/
-
-        /*TODO:ONLY REPLACE FRAGMENT WHEN LOGGED IN SUCCESSFULLY*/
-        logFragment = new LoginFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.container,logFragment,LOGIN_FRAGMENT).commit();
-        getSupportFragmentManager().executePendingTransactions();
-        logFragment.adjustButtons();
-        logFragment.setConnectSocket(connectSocket);
-        accFragment = null;
-        regFragment = null;
 
     }
 
     /*Go to registry fragment button*/
     public void goToRegister(View view){
 
-        boolean result = false;
+        boolean result = true;
         if(connectSocket == null){
             result = isAddressCorrect();
         }
 
-        /*Replace fragments*/
-        regFragment = new RegisterFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.container,regFragment,REGISTER_FRAGMENT).commit();
-        getSupportFragmentManager().executePendingTransactions();
-        regFragment.adjustButtons();
-        accFragment = null;
-        logFragment = null;
+        if(result){
+            /*Replace fragments*/
+            regFragment = new RegisterFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,regFragment,REGISTER_FRAGMENT).commit();
+            getSupportFragmentManager().executePendingTransactions();
+            regFragment.adjustButtons();
+            accFragment = null;
+            logFragment = null;
+            regFragment.setConnectSocket(connectSocket);
+        }
 
-        regFragment.setConnectSocket(connectSocket);
     }
 
     /*Continue with facebookButton*/
     public void continueFacebook(View view){
 
-        boolean result = false;
+        boolean result = true;
         if(connectSocket == null){
             result = isAddressCorrect();
         }
 
-        /*Read send data from preferences*/
-        SharedPreferences preferences = getSharedPreferences(getPackageName(),MODE_PRIVATE);
-        String username = preferences.getString(FB_USERNAME,null);
-        String facebookID = preferences.getString(FACEBOOK_ID,null);
+        if(result){
+                    /*Read send data from preferences*/
+            SharedPreferences preferences = getSharedPreferences(getPackageName(),MODE_PRIVATE);
+            String username = preferences.getString(FB_USERNAME,null);
+            String facebookID = preferences.getString(FACEBOOK_ID,null);
 
-        NetworkOperationsTask continueFB = new NetworkOperationsTask(connectSocket,this);
-        String OpResult = "";
-        try {
-            OpResult = continueFB.execute("1","1",facebookID,username,"0","0").get();
-        }
-        catch(ExecutionException ex){
-            Log.d("EXECUTION","Executionexception occured");
-        }
-        catch(InterruptedException ex){
-            Log.d("INTERRUPT","Interrupted exception occured");
-        }
+            NetworkOperationsTask continueFB = new NetworkOperationsTask(connectSocket,this);
+            String OpResult = "";
+            try {
+                OpResult = continueFB.execute("1","1",facebookID,username,"0","0").get();
+            }
+            catch(ExecutionException ex){
+                Log.d("EXECUTION","Executionexception occured");
+            }
+            catch(InterruptedException ex){
+                Log.d("INTERRUPT","Interrupted exception occured");
+            }
 
-        /*Now replace this with play fragment*/
+            /*Now replace this with play fragment*/
 
-        playButtonFragment = new PlayButtonFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.container,playButtonFragment,PLAY_BUTTON_FRAGMENT).commit();
-        getSupportFragmentManager().executePendingTransactions();
-        playButtonFragment.setSocket(connectSocket);
-        playButtonFragment.adjustButtons();
+            playButtonFragment = new PlayButtonFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,playButtonFragment,PLAY_BUTTON_FRAGMENT).commit();
+            getSupportFragmentManager().executePendingTransactions();
+            playButtonFragment.setSocket(connectSocket);
+            playButtonFragment.adjustButtons();
+        }
 
     }
 
 
     /*Listener for the reset password textview*/
     public void goToResetFragment(View view){
-        resetFragment = new ResetPasswordFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.container,resetFragment,RESET_PASSWORD_FRAGMENT).commit();
-        getSupportFragmentManager().executePendingTransactions();
-        resetFragment.adjustButtons();
-        resetFragment.setSocket(connectSocket);
+
+        boolean result = true;
+        if(connectSocket == null){
+            result = isAddressCorrect();
+        }
+
+        if (result){
+            resetFragment = new ResetPasswordFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,resetFragment,RESET_PASSWORD_FRAGMENT).commit();
+            getSupportFragmentManager().executePendingTransactions();
+            resetFragment.adjustButtons();
+            resetFragment.setSocket(connectSocket);
+        }
+
     }
 
 }

@@ -48,7 +48,6 @@ import java.util.concurrent.ExecutionException;
 
 public class AccountFragment extends Fragment{
 
-    public static final int SCREEN_TO_TEXT_SIZE_RATIO = 20;
     public static final String USER_TYPE = "USER_TYPE";
     public static final String FB_USERNAME = "FB_USERNAME";
     public static final String FACEBOOK_ID = "FB_ID";

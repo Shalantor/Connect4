@@ -35,7 +35,6 @@ import java.util.regex.Pattern;
 
 public class RegisterFragment extends Fragment{
 
-    public static final int SCREEN_TO_TEXT_SIZE_RATIO = 20;
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
     public static final int PASSWORD_MIN_LENGTH = 8;
