@@ -131,8 +131,27 @@ public class NewPasswordFragment extends Fragment{
                     Log.d("INTERRUPT","Interrupted exception occured");
                 }
 
-                /*Now if successfull go back to login*/
-                mCallback.replaceNewPasswordFragment();
+                /*Check result*/
+                String message = "";
+
+                if (result.equals("success")){
+                    mCallback.replaceNewPasswordFragment();
+                }
+                else if (result.equals("Invalid password")){
+                    message = "An unexpected error occurred, please try again";
+                }
+                else if (result.equals("Out of range")){
+                    message = "Couldn't reach server, please check your connection";
+                }
+                else if(result.equals("Socket fail")){
+                    message = "Couldn't instantiate connection, please try again";
+                }
+                else{
+                    message = "No socket, please follow the on screen instructions";
+                }
+
+                textView.setText(message, TextView.BufferType.NORMAL);
+
             }
         });
 
@@ -171,6 +190,11 @@ public class NewPasswordFragment extends Fragment{
         protected String doInBackground(String... params) {
 
             String response = "";
+
+            if (connectSocket == null){
+                return "No socket";
+            }
+
             try{
 
                 /*Set up tools for sending and reading from socket*/
@@ -195,17 +219,18 @@ public class NewPasswordFragment extends Fragment{
                     if (response.equals("0")){
                         return "success";
                     }
+                    else{
+                        return "Invalid password";
+                    }
                 }
                 catch(SocketTimeoutException ex){
-                    return "error";
+                    return "Out of range";
                 }
 
             }
             catch(IOException ex){
-                return "error";
+                return "Socket fail";
             }
-
-            return "success";
 
         }
 

@@ -100,6 +100,7 @@ def userThread(replySocket,address,dbQueue,matchQueue):
             #now send to matchmaking thread
             matchQueue.put(playerToken)
             print 'Send data to match making thread'
+            replySocket.send('0\n')
             break
 
         #now send data
