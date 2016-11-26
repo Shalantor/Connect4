@@ -492,6 +492,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 pause();
                 intent.putExtra("MODE",1);
+                intent.putExtra(MUTE,isPlayerMuted);
                 associatedActiviry.startActivity(intent);
             }
             return true;

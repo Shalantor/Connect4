@@ -34,6 +34,7 @@ public class PlayButtonFragment extends Fragment{
     private Activity activity;
     private Socket connectSocket;
     private View view;
+    private static final String MUTE = "MUTE";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,6 +86,7 @@ public class PlayButtonFragment extends Fragment{
                     Intent intent = new Intent(activity,GameActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("MODE",1);
+                    intent.putExtra(MUTE,activity.getIntent().getBooleanExtra(MUTE,false));
                     activity.startActivity(intent);
                     activity.finish();
                 }
