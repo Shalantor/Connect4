@@ -3,6 +3,7 @@ package com.example.shalantor.connect4;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -80,6 +81,12 @@ public class PlayButtonFragment extends Fragment{
 
                 if(result.equals(AccountManagementUtils.OK)) {
                     textView.setText(AccountManagementUtils.OK_CONNECTION, TextView.BufferType.NORMAL);
+                    /*Start new game*/
+                    Intent intent = new Intent(activity,GameActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("MODE",1);
+                    activity.startActivity(intent);
+                    activity.finish();
                 }
                 else if(result.equals(AccountManagementUtils.SOCKET_TIMEOUT)){
                     textView.setText(AccountManagementUtils.SOCKET_TIMEOUT_MESSAGE, TextView.BufferType.NORMAL);

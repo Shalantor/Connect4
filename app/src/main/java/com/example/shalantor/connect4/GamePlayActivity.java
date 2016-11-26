@@ -251,10 +251,12 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             fallingChip.bottom += cellHeight/8;
             if(fallingChip.bottom >= finalChipHeight){
                 fallingChip = null;                         //remove
+
                 if(!isPlayersTurn)
                     gameGrid[5 - howManyChips[fallingChipPosition]][fallingChipPosition] = playerChipColorInt;
                 else
                     gameGrid[5 - howManyChips[fallingChipPosition]][fallingChipPosition] = enemyChipColorInt;
+
                 howManyChips[fallingChipPosition] += 1;
                 isChipFalling = false;
                 if(GameUtils.hasWon(fallingChipPosition,fallingChipColor,howManyChips,gameGrid)){

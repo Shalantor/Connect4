@@ -11,9 +11,12 @@
 # SEND PLAYER MOVE AND NOTIFY :          1 move/validity state(0 = neutral,1=win,2=lose,3=tie)
 #(The player whose turn it is gets a notification to see if his move was valid or not, the other player gets the move)
 #Where 0 is valid, 1 is invalid
-# GET PLAYER MOVE                        move
 # NOTIFY FOR TIMEOUT (LOSER)             2
 # NOTIFY FOR TIMEOUT (WINNER)            3
+
+#MESSAGE FOR SERVER
+# GET PLAYER MOVE                        move
+
 import Queue,time,socket
 from gameUtils import *
 MAX_FINDS = 5
