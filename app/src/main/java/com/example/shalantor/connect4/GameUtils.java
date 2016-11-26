@@ -334,4 +334,189 @@ public class GameUtils {
         return chips[columnNumber] < 6;
     }
 
+    /*Check if player has won*/
+    public static boolean hasWon(int column,int color,int[] howManyChips, int[][]gameGrid){
+        int row = 6 - howManyChips[column];
+
+        /*Check same line*/
+        int sameColor = 0;
+        for(int i =0; i < 7 ; i++){
+            if(gameGrid[row][i] == color){
+                sameColor += 1;
+                if (sameColor == 4)
+                    return true;
+            }
+            else
+                sameColor = 0;
+        }
+
+        /*check same column*/
+        sameColor = 0;
+        for(int i =0;i < 6; i++){
+            if(gameGrid[i][column] == color){
+                sameColor += 1;
+                if(sameColor == 4)
+                    return true;
+            }
+            else
+                sameColor = 0;
+        }
+
+        /*check same diagonal*/
+        sameColor = 0;
+        int rowStart = row;
+        int columnStart = column;
+
+        /*find the start of diagonal which goes from left up to right down*/
+        while(rowStart >= 0 && columnStart >= 0){
+            rowStart -= 1;
+            columnStart -= 1;
+        }
+
+        /*Fix negative values*/
+        rowStart += 1;
+        columnStart += 1;
+
+        /*Now check the color*/
+        while(rowStart <= 5 && columnStart <= 6){
+            if(gameGrid[rowStart][columnStart] == color){
+                sameColor += 1;
+                if(sameColor == 4)
+                    return true;
+            }
+            else
+                sameColor = 0;
+            rowStart += 1;
+            columnStart += 1;
+        }
+
+
+        /*Now check the diagonal going from left down to right up*/
+        sameColor = 0;
+        rowStart = row;
+        columnStart = column;
+
+        /*Again find the start*/
+        while(rowStart <= 5 && columnStart >= 0){
+            rowStart += 1;
+            columnStart -= 1;
+        }
+        /*Fix values*/
+        columnStart += 1;
+        rowStart -= 1;
+        /*Now check the color*/
+        while(rowStart >= 0 && columnStart <= 6){
+            if(gameGrid[rowStart][columnStart] == color){
+                sameColor += 1;
+                if(sameColor == 4)
+                    return true;
+            }
+            else
+                sameColor = 0;
+            rowStart -= 1;
+            columnStart += 1;
+        }
+
+        return false;
+    }
+
+    /*minimax returns the best move the computer should choose*/
+    public static int minimax(int[][] grid,int[]chips,int startValue,int depth,int color,int column,
+                       int enemyChipColorInt, int playerChipColorInt, int maxDepth){
+
+        int[][] newGrid = new int[6][7];
+        int[] newChips = new int[7];
+        int bestMove = 0;
+        int bestValue = startValue;
+
+        /*first copy both grids*/
+
+        /*copyGrid*/
+        for(int i = 0; i < 6; i++){
+            for(int j =0; j < 7; j++){
+                newGrid[i][j] = grid[i][j];
+            }
+        }
+
+        /*Copy counter array*/
+        for(int j =0; j < 7; j++){
+            newChips[j] = chips[j];
+        }
+
+        /*Now if called recursively check if computer can win or if player can win and
+        * store the value of those situations from the view of the computer*/
+        if(column != -1){
+            if(GameUtils.hasWon(column,enemyChipColorInt,newChips,newGrid)){
+                bestValue = 1000000;
+            }
+            else if(GameUtils.hasWon(column,playerChipColorInt,newChips,newGrid)){
+                bestValue = -1000000;
+            }
+        }
+
+        /*Now check if game is a tie, second condition is for case where someone won*/
+        if(GameUtils.isGridFull(newGrid) && Math.abs(bestValue) < 1000000) {
+            bestValue = 0;
+        }
+        else if(depth == maxDepth){
+            int evaluation = GameUtils.getGridValue(newGrid,enemyChipColorInt);
+            if(evaluation != 0){
+                bestValue = evaluation;
+            }
+            else{
+                bestValue = 0;
+            }
+        }
+        else if(depth < maxDepth){
+            /*now generate moves for each column and test their values*/
+            for(int i =0; i < 7; i++){
+
+                /*Add chip to grid if there is space*/
+                if(GameUtils.hasSpace(i,newChips)) {
+                    newGrid[5 - newChips[i]][i] = color;
+                    newChips[i] += 1;
+
+                    int[][] nextGrid = new int[6][7];
+                    int[] nextChips = new int[7];
+
+                    /*copyGrid*/
+                    for(int k = 0; k < 6; k++){
+                        for(int j =0; j < 7; j++){
+                            nextGrid[k][j] = newGrid[k][j];
+                        }
+                    }
+
+                    /*Copy counter array*/
+                    for(int j =0; j < 7; j++){
+                        nextChips[j] = newChips[j];
+                    }
+
+                    /*Set the right color*/
+                    int nextColor;
+                    if(color == enemyChipColorInt){
+                        nextColor = playerChipColorInt;
+                    }
+                    else{
+                        nextColor = enemyChipColorInt;
+                    }
+                    int nextValue = minimax(nextGrid,nextChips,-1000000,depth+1,nextColor,i,enemyChipColorInt,playerChipColorInt,maxDepth);
+
+                    if(nextValue >= bestValue){
+                        bestValue = nextValue;
+                        bestMove = i;
+                    }
+                    newChips[i] -= 1;
+                    newGrid[5 - newChips[i]][i] = 0;
+                }
+            }
+        }
+
+        if(depth == 0){
+            return bestMove;
+        }
+        else{
+            return bestValue;
+        }
+    }
+
 }

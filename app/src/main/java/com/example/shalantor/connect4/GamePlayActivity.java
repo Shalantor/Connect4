@@ -242,7 +242,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     }
 
 
-    /*Method to update GUI components that will animate the menu*/
+    /*Method to update GUI components that will render a falling chip*/
     public void updateGUIObjects(){
         /*We have a chip*/
         if(fallingChip != null){
@@ -257,7 +257,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     gameGrid[5 - howManyChips[fallingChipPosition]][fallingChipPosition] = enemyChipColorInt;
                 howManyChips[fallingChipPosition] += 1;
                 isChipFalling = false;
-                if(hasWon(fallingChipPosition,fallingChipColor,howManyChips,gameGrid)){
+                if(GameUtils.hasWon(fallingChipPosition,fallingChipColor,howManyChips,gameGrid)){
 
                     /*Now save to stats*/
                     SharedPreferences preferences = associatedActivity.getSharedPreferences(associatedActivity.getPackageName(),Context.MODE_PRIVATE);
@@ -665,92 +665,6 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
     }
 
-    /*Check if player has won*/
-    private boolean hasWon(int column,int color,int[] howManyChips, int[][]gameGrid){
-        int row = 6 - howManyChips[column];
-
-        /*Check same line*/
-        int sameColor = 0;
-        for(int i =0; i < 7 ; i++){
-            if(gameGrid[row][i] == color){
-                sameColor += 1;
-                if (sameColor == 4)
-                        return true;
-            }
-            else
-                sameColor = 0;
-        }
-
-        /*check same column*/
-        sameColor = 0;
-        for(int i =0;i < 6; i++){
-            if(gameGrid[i][column] == color){
-                sameColor += 1;
-                if(sameColor == 4)
-                    return true;
-            }
-            else
-                sameColor = 0;
-        }
-
-        /*check same diagonal*/
-        sameColor = 0;
-        int rowStart = row;
-        int columnStart = column;
-
-        /*find the start of diagonal which goes from left up to right down*/
-        while(rowStart >= 0 && columnStart >= 0){
-            rowStart -= 1;
-            columnStart -= 1;
-        }
-
-        /*Fix negative values*/
-        rowStart += 1;
-        columnStart += 1;
-
-        /*Now check the color*/
-        while(rowStart <= 5 && columnStart <= 6){
-            if(gameGrid[rowStart][columnStart] == color){
-                sameColor += 1;
-                if(sameColor == 4)
-                    return true;
-            }
-            else
-                sameColor = 0;
-            rowStart += 1;
-            columnStart += 1;
-        }
-
-
-        /*Now check the diagonal going from left down to right up*/
-        sameColor = 0;
-        rowStart = row;
-        columnStart = column;
-
-        /*Again find the start*/
-        while(rowStart <= 5 && columnStart >= 0){
-            rowStart += 1;
-            columnStart -= 1;
-        }
-        /*Fix values*/
-        columnStart += 1;
-        rowStart -= 1;
-        /*Now check the color*/
-        while(rowStart >= 0 && columnStart <= 6){
-            if(gameGrid[rowStart][columnStart] == color){
-                sameColor += 1;
-                if(sameColor == 4)
-                    return true;
-            }
-            else
-                sameColor = 0;
-            rowStart -= 1;
-            columnStart += 1;
-        }
-
-        return false;
-    }
-
     /*Gets the next move from AI or other player*/
     private int getMove(){
 
@@ -791,7 +705,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             if(checkGridChipCounter[i] < 6) {
                 checkGrid[5 - checkGridChipCounter[i]][i] = enemyChipColorInt;
                 checkGridChipCounter[i] += 1;
-                if(hasWon(i,enemyChipColorInt,checkGridChipCounter,checkGrid)){
+                if(GameUtils.hasWon(i,enemyChipColorInt,checkGridChipCounter,checkGrid)){
                     return i;
                 }
                 checkGridChipCounter[i] -= 1;
@@ -804,7 +718,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             if(checkGridChipCounter[i] < 6) {
                 checkGrid[5 - checkGridChipCounter[i]][i] = playerChipColorInt;
                 checkGridChipCounter[i] += 1;
-                if(hasWon(i,playerChipColorInt,checkGridChipCounter,checkGrid)){
+                if(GameUtils.hasWon(i,playerChipColorInt,checkGridChipCounter,checkGrid)){
                     return i;
                 }
                 checkGridChipCounter[i] -= 1;
@@ -814,106 +728,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
         /*If none of the above holds, compute move from minimax algorithm*/
 
-        return minimax(checkGrid,checkGridChipCounter,-1000000,0,enemyChipColorInt,-1);
+        return GameUtils.minimax(checkGrid,checkGridChipCounter,-1000000,0,enemyChipColorInt,-1,enemyChipColorInt,playerChipColorInt,maxDepth);
 
     }
 
-    /*minimax returns the best move the computer should choose*/
-    public int minimax(int[][] grid,int[]chips,int startValue,int depth,int color,int column){
-
-        int[][] newGrid = new int[6][7];
-        int[] newChips = new int[7];
-        int bestMove = 0;
-        int bestValue = startValue;
-
-        /*first copy both grids*/
-
-        /*copyGrid*/
-        for(int i = 0; i < 6; i++){
-            for(int j =0; j < 7; j++){
-                newGrid[i][j] = grid[i][j];
-            }
-        }
-
-        /*Copy counter array*/
-        for(int j =0; j < 7; j++){
-            newChips[j] = chips[j];
-        }
-
-        /*Now if called recursively check if computer can win or if player can win and
-        * store the value of those situations from the view of the computer*/
-        if(column != -1){
-            if(hasWon(column,enemyChipColorInt,newChips,newGrid)){
-                bestValue = 1000000;
-            }
-            else if(hasWon(column,playerChipColorInt,newChips,newGrid)){
-                bestValue = -1000000;
-            }
-        }
-
-        /*Now check if game is a tie, second condition is for case where someone won*/
-        if(GameUtils.isGridFull(newGrid) && Math.abs(bestValue) < 1000000) {
-            bestValue = 0;
-        }
-        else if(depth == maxDepth){
-            int evaluation = GameUtils.getGridValue(newGrid,enemyChipColorInt);
-            if(evaluation != 0){
-                bestValue = evaluation;
-            }
-            else{
-                bestValue = 0;
-            }
-        }
-        else if(depth < maxDepth){
-            /*now generate moves for each column and test their values*/
-            for(int i =0; i < 7; i++){
-
-                /*Add chip to grid if there is space*/
-                if(GameUtils.hasSpace(i,newChips)) {
-                    newGrid[5 - newChips[i]][i] = color;
-                    newChips[i] += 1;
-
-                    int[][] nextGrid = new int[6][7];
-                    int[] nextChips = new int[7];
-
-                    /*copyGrid*/
-                    for(int k = 0; k < 6; k++){
-                        for(int j =0; j < 7; j++){
-                            nextGrid[k][j] = newGrid[k][j];
-                        }
-                    }
-
-                    /*Copy counter array*/
-                    for(int j =0; j < 7; j++){
-                        nextChips[j] = newChips[j];
-                    }
-
-                    /*Set the right color*/
-                    int nextColor;
-                    if(color == enemyChipColorInt){
-                        nextColor = playerChipColorInt;
-                    }
-                    else{
-                        nextColor = enemyChipColorInt;
-                    }
-                    int nextValue = minimax(nextGrid,nextChips,-1000000,depth+1,nextColor,i);
-
-                    if(nextValue >= bestValue){
-                        bestValue = nextValue;
-                        bestMove = i;
-                    }
-                    newChips[i] -= 1;
-                    newGrid[5 - newChips[i]][i] = 0;
-                }
-            }
-        }
-
-        if(depth == 0){
-            return bestMove;
-        }
-        else{
-            return bestValue;
-        }
-    }
 
 }
