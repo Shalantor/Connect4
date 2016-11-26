@@ -519,4 +519,71 @@ public class GameUtils {
         }
     }
 
+    /*Gets the next move from AI or other player*/
+    public static int getMove(int[] howManyChips,int[][] gameGrid,int enemyChipColorInt,int playerChipColorInt,int maxDepth){
+
+        int[][] checkGrid = new int[6][7];
+        int[] checkGridChipCounter = new int[7];
+
+        /*if it is computers first move choose column 3
+         *If column 3 is already taken take column 2
+         */
+        int spaceCounter = 0;
+        for(int i =0; i < 7; i++){
+            if(howManyChips[i] > 0){
+                spaceCounter += 1;
+            }
+        }
+
+        if(spaceCounter <= 1){
+            if(gameGrid[5][2] == 0)
+                return 2;
+            else
+                return 1;
+        }
+
+        /*copyGrid*/
+        for(int i = 0; i < 6; i++){
+            for(int j =0; j < 7; j++){
+                checkGrid[i][j] = gameGrid[i][j];
+            }
+        }
+
+        /*Copy counter array*/
+        for(int j =0; j < 7; j++){
+            checkGridChipCounter[j] = howManyChips[j];
+        }
+
+        /*Now check if computer can win with a move*/
+        for(int i = 0; i < 7; i++){
+            if(checkGridChipCounter[i] < 6) {
+                checkGrid[5 - checkGridChipCounter[i]][i] = enemyChipColorInt;
+                checkGridChipCounter[i] += 1;
+                if(GameUtils.hasWon(i,enemyChipColorInt,checkGridChipCounter,checkGrid)){
+                    return i;
+                }
+                checkGridChipCounter[i] -= 1;
+                checkGrid[5 - checkGridChipCounter[i]][i] = 0;
+            }
+        }
+
+        /*Now check if player can win , so that computer will stop him*/
+        for(int i = 0; i < 7; i++){
+            if(checkGridChipCounter[i] < 6) {
+                checkGrid[5 - checkGridChipCounter[i]][i] = playerChipColorInt;
+                checkGridChipCounter[i] += 1;
+                if(GameUtils.hasWon(i,playerChipColorInt,checkGridChipCounter,checkGrid)){
+                    return i;
+                }
+                checkGridChipCounter[i] -= 1;
+                checkGrid[5 - checkGridChipCounter[i]][i] = 0;
+            }
+        }
+
+        /*If none of the above holds, compute move from minimax algorithm*/
+
+        return GameUtils.minimax(checkGrid,checkGridChipCounter,-1000000,0,enemyChipColorInt,-1,enemyChipColorInt,playerChipColorInt,maxDepth);
+
+    }
+
 }
