@@ -42,7 +42,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     private int screenHeight;
     private int screenWidth;
     private int cellWidth;
-    private int cellheight;
+    private int cellHeight;
 
     /*arrays to store game info*/
     private int[][] gameGrid;
@@ -126,7 +126,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             maxDepth = 3;
         }
         else{
-            maxDepth = 5;
+            maxDepth = 4;
         }
 
         /*set sound volume*/
@@ -154,7 +154,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
         /*Set dimensions of field*/
         cellWidth = screenWidth/10;
-        cellheight = screenHeight/6;
+        cellHeight = screenHeight/6;
 
         /*Load images*/
         redChip = BitmapFactory.decodeResource(getResources(),R.mipmap.redchip);
@@ -201,7 +201,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             if(needVolumeChange){
                 changeVolume();
             }
-            if(!isPlayersTurn && !isChipFalling && !isGameOver){   /*wait for chip to fall and then get move of AI*/
+            if(!isPlayersTurn && !isChipFalling && !isGameOver){   /*wait for chip to fall and then get move of opponent*/
                 int move = GameUtils.getMove(howManyChips,gameGrid,enemyChipColorInt,playerChipColorInt,maxDepth);
                 makeMove(move);
             }
@@ -247,8 +247,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         /*We have a chip*/
         if(fallingChip != null){
             /*Move down chip a bit*/
-            fallingChip.top += cellheight/8;
-            fallingChip.bottom += cellheight/8;
+            fallingChip.top += cellHeight/8;
+            fallingChip.bottom += cellHeight/8;
             if(fallingChip.bottom >= finalChipHeight){
                 fallingChip = null;                         //remove
                 if(!isPlayersTurn)
@@ -326,7 +326,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             /*Draw each cell*/
             for( int i = 0; i < 6;i++){
                 for(int j =0; j < 7;j++){
-                    destRect = new Rect(j*cellWidth,i*cellheight,(j+1)*cellWidth,(i+1)*cellheight);
+                    destRect = new Rect(j*cellWidth,i*cellHeight,(j+1)*cellWidth,(i+1)*cellHeight);
                     if(gameGrid[i][j] == 0){
                         imageToDraw = emptyCell;
                     }
@@ -648,11 +648,11 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*Insert chip in specified position*/
     public void makeMove(int columnNumber){
         isChipFalling = true;
-        finalChipHeight = screenHeight - howManyChips[columnNumber]*cellheight;
+        finalChipHeight = screenHeight - howManyChips[columnNumber]*cellHeight;
         fallingChipPosition = columnNumber;
 
         /*Create new chip and add it to list*/
-        fallingChip = new Rect(columnNumber*cellWidth,-cellheight,(columnNumber+1)*cellWidth,0);
+        fallingChip = new Rect(columnNumber*cellWidth,-cellHeight,(columnNumber+1)*cellWidth,0);
 
         if(isPlayersTurn){
             fallingChipColor = playerChipColorInt;
@@ -664,7 +664,5 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         isPlayersTurn = !isPlayersTurn;
 
     }
-
-
 
 }

@@ -64,7 +64,7 @@ public class PlayButtonFragment extends Fragment{
             @Override
             public void onClick(View view) {
                /*create async task for network operation*/
-                startGame netTask = new startGame();
+                NetworkOperationsTask netTask = new NetworkOperationsTask(connectSocket,activity);
 
                 String result = "";
                 try {
@@ -93,87 +93,5 @@ public class PlayButtonFragment extends Fragment{
             }
         });
 
-    }
-
-
-    /*AsyncTask for connecting to server*/
-    private class startGame extends AsyncTask<String, Void, String> {
-        ProgressDialog pDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            pDialog = new ProgressDialog(activity);
-            pDialog.setMessage("Connecting to server");
-
-
-            String message= "Connecting to server";
-
-            SpannableString ss2 =  new SpannableString(message);
-            ss2.setSpan(new RelativeSizeSpan(2f), 0, ss2.length(), 0);
-            ss2.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ss2.length(), 0);
-
-            pDialog.setMessage(ss2);
-
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String response = "";
-
-            /*Check socket for null pointer*/
-            if (connectSocket == null){
-                return "Null";
-            }
-
-            try{
-
-                /*Set up tools for sending and reading from socket*/
-                connectSocket.setSoTimeout(5000);
-                BufferedReader inputStream = new BufferedReader( new InputStreamReader(connectSocket.getInputStream()));
-                PrintWriter outputStream = new PrintWriter(connectSocket.getOutputStream());
-
-                String messageToSend = "";
-                /*Construct message to send*/
-                for(int i =0; i < params.length; i++ ){
-                    messageToSend += params[i] + " ";
-                }
-
-                /*Now send message*/
-                outputStream.print(messageToSend);
-                outputStream.flush();
-
-                /*Now read answer from socket*/
-
-                try {
-                    response = inputStream.readLine();
-                    if (response.equals("0")){
-                        return "success";
-                    }
-                    else{
-                        return "Wrong credentials";
-                    }
-                }
-                catch(SocketTimeoutException ex){
-                    return "Out of range";
-                }
-
-            }
-            catch(IOException ex){
-                return "error";
-            }
-
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            pDialog.dismiss();
-
-        }
     }
 }
