@@ -5,6 +5,8 @@ import string,random,smtplib
 import uuid,hashlib,sqlite3,re
 from email.mime.text import MIMEText
 
+MINIMUM_GAMES = 10
+
 #Insert users in database that decided to log in with game client
 def insertUser(database,name,email,password):
 
@@ -116,7 +118,10 @@ def updateUser(database,name,winDiff,loseDiff):
     for a,b in cursor:
         newWins = a + winDiff
         newLosses = b + loseDiff
-        newElo = int(10*newWins / (newWins + newLosses) )
+        if newLosses + newWins >= MINIMUM_GAMES:
+            newElo = int(10*newWins / (newWins + newLosses) )
+        else:
+            newElo = 0
 
     #now store into database
     data = (newWins,newLosses,newElo,name)
@@ -136,7 +141,10 @@ def updateUserFacebook(database,facebookID,winDiff,loseDiff):
     for a,b in cursor:
         newWins = a + winDiff
         newLosses = b + loseDiff
-        newElo = int(10*newWins / (newWins + newLosses) )
+        if newWins + newLosses >= MINIMUM_GAMES:
+            newElo = int(10*newWins / (newWins + newLosses) )
+        else:
+            newElo = 0
 
     #now store into database
     data = (newWins,newLosses,newElo,facebookID)

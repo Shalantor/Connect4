@@ -10,13 +10,13 @@ from userThread import *
 from gameplayThread import *
 from gameUtils import *
 
-"""#this code tests the database thread
-requestQueue = Queue.Queue()
+#this code tests the database thread
+"""requestQueue = Queue.Queue()
 answerQueue = Queue.Queue()
 myThread = Thread(target=dbThread,args=(requestQueue,))
 myThread.start()
 #First create a user
-data = {'operation':1,'answer':answerQueue,'name':'Watson','email':'fail@gmail.com','password':'elapre','id':'yeper'}
+data = {'operation':1,'answer':answerQueue,'name':'Watsonxcxc','email':'faixcxcl@gmail.com','password':'elapre','id':'yep1212er'}
 requestQueue.put(data)
 print 'waiting for answer'
 result = answerQueue.get()
