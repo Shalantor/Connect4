@@ -19,6 +19,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.net.Socket;
+import java.util.concurrent.ExecutionException;
+
 public class GamePlayActivity extends SurfaceView implements Runnable{
 
     private Thread thread = null;
@@ -101,6 +104,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*Time variable to reset game*/
     private long gameEndTime;
 
+    /*Async task for network operations if in multiplayer mode*/
+    private GameAsyncTask gameNetTask;
+
     public GamePlayActivity(Context context){
         super(context);
         holder = getHolder();
@@ -114,6 +120,12 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         else{
             isMultiPlayer = true;
             isSinglePlayer = false;
+            gameNetTask = new GameAsyncTask(GameUtils.getSocket());
+            gameNetTask.setOperation(0);
+
+            String result = "";
+            gameNetTask.execute("");
+
         }
 
         /*Set difficulty*/

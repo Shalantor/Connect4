@@ -7,7 +7,7 @@
 #them that the game started.Again individual messages will be separated with a
 #space between them
 #                   COMMUNICATION PROTOCOL
-# GAME START :                           0 turn rank wins losses TODO:send other users data
+# GAME START :                           0 turn rank wins losses TODO:Send name of other user
 # SEND PLAYER MOVE AND NOTIFY :          1 move/validity state(0 = neutral,1=win,2=lose,3=tie)
 #(The player whose turn it is gets a notification to see if his move was valid or not, the other player gets the move)
 #Where 0 is valid, 1 is invalid

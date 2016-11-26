@@ -2,7 +2,22 @@ package com.example.shalantor.connect4;
 
 /*This class provides static methods for any utilities the game play activity needs*/
 
+import java.net.Socket;
+
 public class GameUtils {
+
+    /*Variable to pass the socket from the account activity to the game activity*/
+    private static Socket socket;
+
+    /*Getter and setter for socket*/
+    public static synchronized Socket getSocket(){
+        return socket;
+    }
+
+    public static synchronized void setSocket(Socket socket){
+        GameUtils.socket = socket;
+    }
+
 
     /*Method to evaluate value of current grid state for the computer or the player
 * According to the minimax algorithm for a connect 4 game, the value of fields

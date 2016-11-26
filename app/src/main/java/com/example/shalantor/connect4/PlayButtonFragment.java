@@ -87,6 +87,7 @@ public class PlayButtonFragment extends Fragment{
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("MODE",1);
                     intent.putExtra(MUTE,activity.getIntent().getBooleanExtra(MUTE,false));
+                    GameUtils.setSocket(connectSocket);
                     activity.startActivity(intent);
                     activity.finish();
                 }
