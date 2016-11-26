@@ -13,11 +13,12 @@ def insertUser(database,name,email,password):
     #See if username is available
     connection = sqlite3.connect(database)
     cursor = connection.cursor()
-    cursor.execute('SELECT username,email FROM Users')
 
-    for a,b in cursor:
-        if a == name or b == email:
-            return False
+    data = (name,email)
+    cursor.execute('SELECT username,email FROM Users WHERE username =? OR email = ?',data)
+
+    if cursor.fetchone() != None:
+        return False
 
     #now check email validity
     if not re.match('[^@]+@[^@]+\.[^@]+',email):
@@ -51,18 +52,18 @@ def insertUserFacebook(database,facebookID,name,email):
     losses = 0
     elo = 0
 
-    #Organize data
-    data = (facebookID,name,email,wins,losses,elo)
-
     #now store in database
     connection = sqlite3.connect(database)
     cursor = connection.cursor()
 
     #Check for existing userId
-    cursor.execute('SELECT facebookid FROM UsersFacebook')
-    for a in cursor:
-        if a == facebookID:
-            return False
+    data = (facebookID,)
+    cursor.execute('SELECT facebookid FROM UsersFacebook WHERE facebookid =?',data)
+    if cursor.fetchone() != None:
+        return False
+
+    #Organize data
+    data = (facebookID,name,email,wins,losses,elo)
 
     cursor.execute('INSERT INTO UsersFacebook VALUES (?,?,?,?,?,?)',data)
     connection.commit()
