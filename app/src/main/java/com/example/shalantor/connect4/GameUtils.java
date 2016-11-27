@@ -601,4 +601,9 @@ public class GameUtils {
 
     }
 
+    public static String[] splitName(String name){
+
+        return name.split(" ");
+    }
+
 }

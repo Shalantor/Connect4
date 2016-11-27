@@ -107,6 +107,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*Async task for network operations if in multiplayer mode*/
     private GameAsyncTask gameNetTask;
 
+    /*Name of opponent*/
+    String[] opponentsName;
+
     public GamePlayActivity(Context context){
         super(context);
         holder = getHolder();
@@ -121,6 +124,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             isMultiPlayer = true;
             isSinglePlayer = false;
             gameNetTask = new GameAsyncTask(GameUtils.getSocket(),associatedActivity,false);
+            /*TODO:remove hard coded value*/
+            opponentsName = GameUtils.splitName("George Karaolanis");
         }
 
         /*Set difficulty*/
@@ -363,6 +368,14 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 paint.setTextSize(screenHeight/10);
                 canvas.drawText("AI",8*screenWidth/10 + screenWidth/20,screenHeight/4,paint);
                 paint.setTextSize(screenHeight/15);
+            }
+            else{
+                paint.setTextSize(screenHeight / 15);
+                float offsetY = screenHeight / 4;
+                for (String part : opponentsName){
+                    canvas.drawText(part,8*screenWidth/10 + screenWidth/20,offsetY,paint);
+                    offsetY += screenHeight / 15;
+                }
             }
 
             canvas.drawText("TIME:",8*screenWidth/10 + screenWidth/20,screenHeight/2,paint);
