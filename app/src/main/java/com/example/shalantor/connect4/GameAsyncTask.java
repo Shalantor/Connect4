@@ -25,12 +25,9 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
     private static final String MUTE = "MUTE";
     private static final String GAME_INFO = "GAME_INFO";
 
-    public GameAsyncTask(Socket socket,Activity activity){
+    public GameAsyncTask(Socket socket,Activity activity,boolean showDialog){
         this.socket = socket;
         this.activity = activity;
-    }
-
-    public void setShowDialog(boolean showDialog){
         this.showDialog = showDialog;
     }
 
@@ -55,7 +52,7 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
 
             pDialog.setMessage(ss2);
 
-            pDialog.setCancelable(false);
+            pDialog.setCancelable(true);
             pDialog.show();
         }
     }
@@ -98,18 +95,19 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
 
-        if (showDialog)
+        if (showDialog) {
             pDialog.dismiss();
 
-        /*Start new game*/
-        Intent intent = new Intent(activity,GameActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("MODE",1);
-        intent.putExtra(MUTE,activity.getIntent().getBooleanExtra(MUTE,false));
-        intent.putExtra(GAME_INFO,result);
-        GameUtils.setSocket(socket);
-        activity.startActivity(intent);
-        activity.finish();
+            /*Start new game*/
+            Intent intent = new Intent(activity, GameActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("MODE", 1);
+            intent.putExtra(MUTE, activity.getIntent().getBooleanExtra(MUTE, false));
+            intent.putExtra(GAME_INFO, result);
+            GameUtils.setSocket(socket);
+            activity.startActivity(intent);
+            activity.finish();
+        }
     }
 
 }

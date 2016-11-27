@@ -90,9 +90,8 @@ public class PlayButtonFragment extends Fragment{
                     catch (SocketException ex){
                         textView.setText(AccountManagementUtils.SOCKET_TIMEOUT_MESSAGE, TextView.BufferType.NORMAL);
                     }
-                    GameAsyncTask gameNetTask = new GameAsyncTask(connectSocket,activity);
+                    GameAsyncTask gameNetTask = new GameAsyncTask(connectSocket,activity,true);
                     gameNetTask.setOperation(1);
-                    gameNetTask.setShowDialog(true);
 
                     gameNetTask.execute("");
 
