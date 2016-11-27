@@ -2,6 +2,7 @@ package com.example.shalantor.connect4;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class GameAsyncTask extends AsyncTask<String, Void, String> {
 
@@ -24,15 +26,21 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
     private boolean showDialog; /*Should the task show a pdialog?*/
     private static final String MUTE = "MUTE";
     private static final String GAME_INFO = "GAME_INFO";
+    private PlayButtonFragment.goBackToStartFragment mCallback;
 
     public GameAsyncTask(Socket socket,Activity activity,boolean showDialog){
         this.socket = socket;
         this.activity = activity;
         this.showDialog = showDialog;
+
     }
 
     public void setOperation(int operation){
         this.operation = operation;
+    }
+
+    public void setCallback(PlayButtonFragment.goBackToStartFragment mCallback){
+        this.mCallback = mCallback;
     }
 
     @Override
@@ -53,6 +61,14 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
             pDialog.setMessage(ss2);
 
             pDialog.setCancelable(true);
+            pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    mCallback.goBackToAccountFragment();
+                    cancel(true);
+                }
+            });
+
             pDialog.show();
         }
     }
@@ -66,6 +82,8 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
             /*Set up tools for sending and reading from socket*/
             BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter outputStream = new PrintWriter(socket.getOutputStream());
+
+            socket.setSoTimeout(0);
 
             if (operation == 0) {
                 String messageToSend = "";
@@ -107,6 +125,13 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
             GameUtils.setSocket(socket);
             activity.startActivity(intent);
             activity.finish();
+        }
+    }
+
+    @Override
+    protected void onCancelled(){
+        if (this.pDialog != null){
+            this.pDialog.dismiss();
         }
     }
 

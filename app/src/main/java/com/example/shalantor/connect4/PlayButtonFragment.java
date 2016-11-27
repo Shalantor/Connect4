@@ -3,6 +3,7 @@ package com.example.shalantor.connect4;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
@@ -35,6 +36,7 @@ public class PlayButtonFragment extends Fragment{
     private Activity activity;
     private Socket connectSocket;
     private View view;
+    private PlayButtonFragment.goBackToStartFragment mCallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,6 +46,26 @@ public class PlayButtonFragment extends Fragment{
         activity = getActivity();
         view =  inflater.inflate(R.layout.play_fragment, container, false);
         return view;
+    }
+
+    /*Interface to go back if player cancels match making*/
+    public interface goBackToStartFragment{
+        void goBackToAccountFragment();
+
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (PlayButtonFragment.goBackToStartFragment) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement SetSocket interface");
+        }
     }
 
     /*Get socket reference*/
@@ -84,14 +106,10 @@ public class PlayButtonFragment extends Fragment{
                     textView.setText(AccountManagementUtils.OK_CONNECTION, TextView.BufferType.NORMAL);
 
                     /*Wait for match*/
-                    try {
-                        connectSocket.setSoTimeout(0);
-                    }
-                    catch (SocketException ex){
-                        textView.setText(AccountManagementUtils.SOCKET_TIMEOUT_MESSAGE, TextView.BufferType.NORMAL);
-                    }
+
                     GameAsyncTask gameNetTask = new GameAsyncTask(connectSocket,activity,true);
                     gameNetTask.setOperation(1);
+                    gameNetTask.setCallback(mCallback);
 
                     gameNetTask.execute("");
 

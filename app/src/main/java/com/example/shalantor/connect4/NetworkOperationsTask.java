@@ -57,7 +57,7 @@ public class NetworkOperationsTask extends AsyncTask<String, Void, String> {
         try {
 
             /*Set up tools for sending and reading from socket*/
-            socket.setSoTimeout(5000);
+            socket.setSoTimeout(5);
             BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter outputStream = new PrintWriter(socket.getOutputStream());
 

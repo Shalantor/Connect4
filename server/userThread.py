@@ -27,9 +27,10 @@ def listener(queueToDatabase,queueToMatchMaking):
     setupSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM,0)
     setupSocket.bind(('0.0.0.0',PORT))
     setupSocket.settimeout(20)
-    setupSocket.listen(1)
     while True:
+        setupSocket.listen(1)
         try:
+            print 'LISTENING'
             replySocket,address = setupSocket.accept()
             #now create a new userThread
             uThread = Thread(target=userThread,args=(replySocket,address,queueToDatabase,queueToMatchMaking))

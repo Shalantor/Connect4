@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.concurrent.ExecutionException;
 import com.facebook.CallbackManager;
 
@@ -17,7 +18,8 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
                                                                 ResetPasswordFragment.resetFragmentCallback,
                                                                 NewPasswordFragment.newPasswordFragmentCallback,
                                                                 LoginFragment.loginCallback,
-                                                                RegisterFragment.registerFragmentCallback{
+                                                                RegisterFragment.registerFragmentCallback,
+                                                                PlayButtonFragment.goBackToStartFragment{
 
     /*String tags for sharedpreferences that store user data*/
     public static final String USER_TYPE = "USER_TYPE";
@@ -116,6 +118,15 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         logFragment.adjustButtons();
     }
 
+    /*Implements interface for play button fragment*/
+    @Override
+    public void goBackToAccountFragment(){
+        accFragment = new AccountFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,accFragment,ACCOUNT_FRAGMENT).commit();
+        getSupportFragmentManager().executePendingTransactions();
+        accFragment.adjustButtons();
+        connectSocket = null;
+    }
 
     @Override
     protected void onStart(){
