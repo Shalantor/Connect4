@@ -52,8 +52,14 @@ def userThread(replySocket,address,dbQueue,matchQueue):
     email = None
     while True:
         message = replySocket.recv(512)
+        #Connection shut down on other side
+        if len(message) == 0:
+            print 'CLIENT SOCKET SHUT DOWN'
+            break
+
         print "MESSAGE IS " + message
         args = message.split()
+
         #Now check operation type
         if args[0] == '0':
             userType = args[1]
