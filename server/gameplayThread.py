@@ -52,8 +52,8 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                 #Time stamp because each player has limited time for a move
                 newMatch['time'] = time.time()
                 #Send info to players
-                firstSocket.send('0 ' + str(turn))
-                secondSocket.send('0 ' + str(turn))
+                firstSocket.send('0 ' + str(turn) + ' \n')
+                secondSocket.send('0 ' + str(turn) + ' \n')
                 matchList.append(newMatch)
                 print '\n---- GAMEPLAY THREAD ----\n'
             except Queue.Empty:
@@ -79,7 +79,7 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
 
                 #Invalid move
                 if not result :
-                    readSocket.send('1 1')
+                    readSocket.send('1 1 \n')
                 #Valid move
                 else:
                     win = hasWon(grid,match.get('players')[turn].get('chip'))
@@ -93,12 +93,12 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                         state1 = state2 = '3'
                     else:
                         state1 = state2 = '0'
-                        readSocket.send('1 0 state1')
+                        readSocket.send('1 0 state1 \n')
                     match['time'] = time.time()
                     match['turn'] = (match['turn'] + 1 ) % 2
                     turn = match['turn']
                     sendSocket = match.get('players')[turn].get('socket')
-                    dataToSend = '1 ' + str(move) + ' state2'
+                    dataToSend = '1 ' + str(move) + ' state2 \n'
                     sendSocket.send(dataToSend)
 
             except socket.timeout:
@@ -106,11 +106,11 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                 if time.time() - startTime > MAX_WAIT:
 
                     #player lost because no move
-                    readSocket.send('2')
+                    readSocket.send('2 \n')
                     loser = match.get('players')[turn]
                     turn = (turn + 1) % 2
                     winSocket = match.get('players')[turn].get('socket')
-                    winSocket.send('3')
+                    winSocket.send('3 \n')
 
                     #update player stats
                     winner = match.get('players')[turn]
