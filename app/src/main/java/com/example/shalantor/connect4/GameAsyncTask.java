@@ -64,6 +64,12 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
             pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialogInterface) {
+                    try {
+                        socket.close();
+                    }
+                    catch(IOException ex){
+
+                    }
                     mCallback.goBackToAccountFragment();
                     cancel(true);
                 }
