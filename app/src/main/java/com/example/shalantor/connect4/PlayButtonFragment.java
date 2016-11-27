@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutionException;
 
@@ -34,7 +35,6 @@ public class PlayButtonFragment extends Fragment{
     private Activity activity;
     private Socket connectSocket;
     private View view;
-    private static final String MUTE = "MUTE";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,14 +82,20 @@ public class PlayButtonFragment extends Fragment{
 
                 if(result.equals(AccountManagementUtils.OK)) {
                     textView.setText(AccountManagementUtils.OK_CONNECTION, TextView.BufferType.NORMAL);
-                    /*Start new game*/
-                    Intent intent = new Intent(activity,GameActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra("MODE",1);
-                    intent.putExtra(MUTE,activity.getIntent().getBooleanExtra(MUTE,false));
-                    GameUtils.setSocket(connectSocket);
-                    activity.startActivity(intent);
-                    activity.finish();
+
+                    /*Wait for match*/
+                    try {
+                        connectSocket.setSoTimeout(0);
+                    }
+                    catch (SocketException ex){
+                        textView.setText(AccountManagementUtils.SOCKET_TIMEOUT_MESSAGE, TextView.BufferType.NORMAL);
+                    }
+                    GameAsyncTask gameNetTask = new GameAsyncTask(connectSocket,activity);
+                    gameNetTask.setOperation(1);
+                    gameNetTask.setShowDialog(true);
+
+                    gameNetTask.execute("");
+
                 }
                 else if(result.equals(AccountManagementUtils.SOCKET_TIMEOUT)){
                     textView.setText(AccountManagementUtils.SOCKET_TIMEOUT_MESSAGE, TextView.BufferType.NORMAL);

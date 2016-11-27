@@ -120,12 +120,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         else{
             isMultiPlayer = true;
             isSinglePlayer = false;
-            gameNetTask = new GameAsyncTask(GameUtils.getSocket());
-            gameNetTask.setOperation(0);
-
-            String result = "";
-            gameNetTask.execute("");
-
+            gameNetTask = new GameAsyncTask(GameUtils.getSocket(),associatedActivity);
+            gameNetTask.setShowDialog(false);
         }
 
         /*Set difficulty*/
