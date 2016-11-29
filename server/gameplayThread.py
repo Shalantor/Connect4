@@ -18,7 +18,7 @@
 import Queue,time,socket
 from gameUtils import *
 MAX_FINDS = 5
-MAX_WAIT = 5
+MAX_WAIT = 60
 
 def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
     matchList=[]
@@ -75,9 +75,11 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
         for match in matchList[:]:
             turn = match.get('turn')
             readSocket = match.get('players')[turn].get('socket')
-            readSocket.settimeout(0.0001)
+            readSocket.settimeout(0.001)
             try:
                 move = int(readSocket.recv(512))
+
+                print 'GAME THREAD : GOT MOVE %d' % move
 
                 #Make move and check for win
                 result =  makeMove(grid,move,match.get('players')[turn].get('chip'))
@@ -87,7 +89,7 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                     readSocket.send('1 1 \n')
                 #Valid move
                 else:
-                    win = hasWon(grid,match.get('players')[turn].get('chip'))
+                    """win = hasWon(grid,match.get('players')[turn].get('chip'))
                     if win:
                         state1 = '1'
                         state2 = '2'
@@ -98,7 +100,7 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                         state1 = state2 = '3'
                     else:
                         state1 = state2 = '0'
-                        readSocket.send('1 0 ' + state1 + ' \n')
+                        #readSocket.send('1 0 ' + state1 + ' \n')"""
                     match['time'] = time.time()
                     match['turn'] = (match['turn'] + 1 ) % 2
                     turn = match['turn']
