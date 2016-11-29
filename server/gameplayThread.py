@@ -6,16 +6,14 @@
 #Once the game play thread gets a token it sends both players a message to signal
 #them that the game started.Again individual messages will be separated with a
 #space between them
-#                   COMMUNICATION PROTOCOL
-# GAME START :                           0 turn TODO:Send name of other user
-# SEND PLAYER MOVE AND NOTIFY :          1 move/validity state(0 = neutral,1=win,2=lose,3=tie)
-#(The player whose turn it is gets a notification to see if his move was valid or not, the other player gets the move)
-#Where 0 is valid, 1 is invalid
+#                   COMMUNICATION PROTOCOL FOR SERVER MESSAGES
+# GAME START :                           0 turn opponent_name
+# SEND PLAYER MOVE AND NOTIFY :          1 move state(0 = neutral,1=win,2=lose,3=tie)
 # NOTIFY FOR TIMEOUT (LOSER)             2
 # NOTIFY FOR TIMEOUT (WINNER)            3
 
-#MESSAGE FOR SERVER
-# GET PLAYER MOVE                        move
+#MESSAGE FOR CLIENT
+# SEND PLAYER MOVE                        move
 
 import Queue,time,socket
 from gameUtils import *
@@ -100,12 +98,12 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                         state1 = state2 = '3'
                     else:
                         state1 = state2 = '0'
-                        readSocket.send('1 0 state1 \n')
+                        readSocket.send('1 0 ' + state1 + ' \n')
                     match['time'] = time.time()
                     match['turn'] = (match['turn'] + 1 ) % 2
                     turn = match['turn']
                     sendSocket = match.get('players')[turn].get('socket')
-                    dataToSend = '1 ' + str(move) + ' state2 \n'
+                    dataToSend = '1 ' + str(move) + ' ' + state2 + ' \n'
                     sendSocket.send(dataToSend)
 
             except socket.timeout:
