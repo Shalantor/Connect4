@@ -79,13 +79,14 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
             try:
                 move = int(readSocket.recv(512))
 
-                print 'GAME THREAD : GOT MOVE %d' % move
+                print 'GAME THREAD : GOT MOVE %d ' % move
 
                 #Make move and check for win
                 result =  makeMove(grid,move,match.get('players')[turn].get('chip'))
 
                 #Invalid move
-                if not result :
+                #if not result :
+                if False:
                     readSocket.send('1 1 \n')
                 #Valid move
                 else:
@@ -105,6 +106,7 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                     match['turn'] = (match['turn'] + 1 ) % 2
                     turn = match['turn']
                     sendSocket = match.get('players')[turn].get('socket')
+                    print 'Send data to player %s ' % match.get('players')[turn].get('name')
                     dataToSend = '1 ' + str(move) + ' ' + state2 + ' \n'
                     sendSocket.send(dataToSend)
 
