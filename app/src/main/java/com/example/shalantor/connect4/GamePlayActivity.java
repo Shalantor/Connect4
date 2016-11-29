@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -106,7 +107,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     private long gameEndTime;
 
     /*Async task for network operations if in multiplayer mode*/
-    private GameAsyncTask gameNetTask;
+    private GameAsyncTask sendTask;
+    private GameAsyncTask receiveTask;
 
     /*Name of opponent*/
     String[] opponentsName;
@@ -125,11 +127,18 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         else{
             isMultiPlayer = true;
             isSinglePlayer = false;
-            gameNetTask = new GameAsyncTask(GameUtils.getSocket(),associatedActivity,false);
+            sendTask = new GameAsyncTask(GameUtils.getSocket(),associatedActivity,false);
+            sendTask.setOperation(0);
+            receiveTask = new GameAsyncTask(GameUtils.getSocket(),associatedActivity,false);
+            receiveTask.setOperation(1);
             String[] gameInfo = GameUtils.splitInfo(intent.getStringExtra(GAME_INFO));
             isPlayersTurn = gameInfo[1].equals("1");
             opponentsName = new String[gameInfo.length - 2];
             System.arraycopy(gameInfo,2,opponentsName,0,gameInfo.length - 2);
+
+            if (!isPlayersTurn){
+                receiveTask.execute("");
+            }
         }
 
         /*Set difficulty*/
@@ -219,6 +228,13 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 if (isSinglePlayer) {
                     int move = GameUtils.getMove(howManyChips, gameGrid, enemyChipColorInt, playerChipColorInt, maxDepth);
                     makeMove(move);
+                }
+                else{
+                    Log.d("STATUS_RECEIVE","Checking for receive status");
+                    if (receiveTask.getStatus() == AsyncTask.Status.FINISHED ){
+                        int move = receiveTask.getMove();
+                        makeMove(move);
+                    }
                 }
             }
             updateGUIObjects();
@@ -686,6 +702,13 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         }
         else{
             fallingChipColor = enemyChipColorInt;
+        }
+
+        /*If it is multiplayer send move to server*/
+        if (isMultiPlayer && isPlayersTurn) {
+            Log.d("SEND_MOVE","Sending move " + columnNumber);
+            sendTask.execute("" + columnNumber);
+            receiveTask.execute("");
         }
 
         isPlayersTurn = !isPlayersTurn;

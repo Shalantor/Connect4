@@ -10,13 +10,11 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.SocketException;
 
 public class GameAsyncTask extends AsyncTask<String, Void, String> {
 
@@ -28,6 +26,7 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
     private static final String MUTE = "MUTE";
     private static final String GAME_INFO = "GAME_INFO";
     private PlayButtonFragment.goBackToStartFragment mCallback;
+    private Integer move;
 
     public GameAsyncTask(Socket socket,Activity activity,boolean showDialog){
         this.socket = socket;
@@ -42,6 +41,10 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
 
     public void setCallback(PlayButtonFragment.goBackToStartFragment mCallback){
         this.mCallback = mCallback;
+    }
+
+    public int getMove(){
+        return move;
     }
 
     @Override
@@ -139,6 +142,10 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
             GameUtils.setSocket(socket);
             activity.startActivity(intent);
             activity.finish();
+        }
+        else if (operation == 1){
+            String[] answer = result.split(" ");
+            move = Integer.parseInt(answer[1]);
         }
     }
 
