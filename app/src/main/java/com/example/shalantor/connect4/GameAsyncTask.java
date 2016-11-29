@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -104,7 +105,13 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
                 outputStream.flush();
             }
             else {
-                response = inputStream.readLine();
+                while (true){
+                    response = inputStream.readLine();
+                    if (!response.equals("0") && !response.equals("1")){
+                        break;
+                    }
+                }
+
             }
 
         } catch (IOException ex) {
@@ -121,6 +128,7 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
 
         if (showDialog) {
             pDialog.dismiss();
+            Log.d("RESULT",result);
 
             /*Start new game*/
             Intent intent = new Intent(activity, GameActivity.class);

@@ -62,7 +62,7 @@ public class ConnectToServerTask extends AsyncTask<String, Void, String>{
             socket = new Socket(address,port);
 
             /*Now read from socket to validate connection*/
-            socket.setSoTimeout(5);
+            socket.setSoTimeout(5000);
             BufferedReader inputStream = new BufferedReader( new InputStreamReader(socket.getInputStream()));
 
             try {
