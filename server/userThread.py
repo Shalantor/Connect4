@@ -25,6 +25,7 @@ PORT = 1337
 #This function-thread listens on a port for connections
 def listener(queueToDatabase,queueToMatchMaking):
     setupSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM,0)
+    setupSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     setupSocket.bind(('0.0.0.0',PORT))
     setupSocket.settimeout(20)
     while True:
@@ -105,9 +106,9 @@ def userThread(replySocket,address,dbQueue,matchQueue):
             playerToken['type'] = userType
             playerToken['socket'] = replySocket
             #now send to matchmaking thread
+            replySocket.send('0\n')
             matchQueue.put(playerToken)
             print 'Send data to match making thread'
-            replySocket.send('0\n')
             break
 
         #now send data
