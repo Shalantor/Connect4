@@ -51,9 +51,16 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                                     [0,0,0,0,0,0,0]]
                 #Time stamp because each player has limited time for a move
                 newMatch['time'] = time.time()
+                #Set player turns
+                if turn == '0':
+                    turn1 = '1'
+                    turn2 = '0'
+                else:
+                    turn1 = '0'
+                    turn2 = '1'
                 #Send info to players
-                firstSocket.send('0 ' + str(turn) + ' ' + secondPlayer.get('name') + ' \n')
-                secondSocket.send('0 ' + str(turn) + ' ' + firstPlayer.get('name') + ' \n')
+                firstSocket.send('0 ' + turn1 + ' ' + secondPlayer.get('name') + ' \n')
+                secondSocket.send('0 ' + turn2 + ' ' + firstPlayer.get('name') + ' \n')
                 matchList.append(newMatch)
                 print '\n---- GAMEPLAY THREAD ----\n'
             except Queue.Empty:
