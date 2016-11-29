@@ -110,6 +110,7 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
             else {
                 while (true){
                     response = inputStream.readLine();
+                    Log.d("READLINE","Response is: " + response);
                     if (!response.equals("0") && !response.equals("1")){
                         break;
                     }

@@ -9,6 +9,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.ExecutionException;
@@ -194,6 +196,14 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
             accFragment = (AccountFragment) getSupportFragmentManager().findFragmentByTag(ACCOUNT_FRAGMENT);
             if (accFragment != null) {
                 finish();
+                if (connectSocket != null){
+                    try{
+                        connectSocket.close();
+                    }
+                    catch (IOException ex){
+                        Log.d("EXCEPTION CLOSE","Close exception");
+                    }
+                }
                 Intent intent = new Intent(this, MainActivity.class);
                 this.startActivity(intent);
                 return true;

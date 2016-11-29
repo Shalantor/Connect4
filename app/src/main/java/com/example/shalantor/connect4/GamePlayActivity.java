@@ -265,7 +265,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         isChipFalling = false;
         isGameOver = false;
         /*Will change after choosing menu, is just set true to stop AI from making a move*/
-        isPlayersTurn = true;
+        if (isSinglePlayer ){
+            isPlayersTurn = true;
+        }
         needVolumeChange = false;
 
         /*Create array for field, 0 means empty , 1 means red chip, 2 means yellow chip*/
@@ -579,7 +581,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     enemyChipColorInt = 1;
                     isColorChoiceVisible = false;
                 }
-                if (!isColorChoiceVisible){
+                if (!isColorChoiceVisible && isSinglePlayer){
                     isPlayersTurn = Math.random() > 0.5;
                 }
             }
