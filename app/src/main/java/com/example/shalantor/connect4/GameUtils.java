@@ -601,9 +601,9 @@ public class GameUtils {
 
     }
 
-    public static String[] splitName(String name){
+    public static String[] splitInfo(String info){
 
-        return name.split(" ");
+        return info.split(" ");
     }
 
 }

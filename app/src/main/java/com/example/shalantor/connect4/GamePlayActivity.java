@@ -100,6 +100,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     private static final String ONLINE_LOS = "ONLINE_LOSSES";
     private static final String DIFFICULTY = "DIFFICULTY";
     private static final String MUTE = "MUTE";
+    private static final String GAME_INFO = "GAME_INFO";
 
     /*Time variable to reset game*/
     private long gameEndTime;
@@ -124,8 +125,10 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             isMultiPlayer = true;
             isSinglePlayer = false;
             gameNetTask = new GameAsyncTask(GameUtils.getSocket(),associatedActivity,false);
-            /*TODO:remove hard coded value*/
-            opponentsName = GameUtils.splitName("George Karaolanis");
+            String[] gameInfo = GameUtils.splitInfo(intent.getStringExtra(GAME_INFO));
+            isPlayersTurn = gameInfo[1].equals("1");
+            opponentsName = new String[gameInfo.length - 2];
+            System.arraycopy(gameInfo,2,opponentsName,0,gameInfo.length - 2);
         }
 
         /*Set difficulty*/
