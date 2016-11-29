@@ -120,6 +120,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         if(intent.getIntExtra("MODE",-1) == 0){
             isSinglePlayer = true;
             isMultiPlayer = false;
+            isPlayersTurn = true;
         }
         else{
             isMultiPlayer = true;
@@ -156,8 +157,6 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         isColorChoiceVisible = true;
         isChipFalling = false;
         isGameOver = false;
-        /*Will change after choosing menu, is just set true to stop AI from making a move*/
-        isPlayersTurn = true;
         needVolumeChange = false;
 
         /*Get screen dimensions*/
@@ -217,8 +216,10 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 changeVolume();
             }
             if(!isPlayersTurn && !isChipFalling && !isGameOver){   /*wait for chip to fall and then get move of opponent*/
-                int move = GameUtils.getMove(howManyChips,gameGrid,enemyChipColorInt,playerChipColorInt,maxDepth);
-                makeMove(move);
+                if (isSinglePlayer) {
+                    int move = GameUtils.getMove(howManyChips, gameGrid, enemyChipColorInt, playerChipColorInt, maxDepth);
+                    makeMove(move);
+                }
             }
             updateGUIObjects();
             drawScreen();
@@ -562,8 +563,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     enemyChipColorInt = 1;
                     isColorChoiceVisible = false;
                 }
-                if(!isColorChoiceVisible)
+                if (!isColorChoiceVisible){
                     isPlayersTurn = Math.random() > 0.5;
+                }
             }
             else{
                 /*BACK BUTTON*/
