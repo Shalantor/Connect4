@@ -50,7 +50,7 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                 #Time stamp because each player has limited time for a move
                 newMatch['time'] = time.time()
                 #Set player turns
-                if turn == '0':
+                if turn == 0:
                     turn1 = '1'
                     turn2 = '0'
                 else:
@@ -75,14 +75,14 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
         for match in matchList[:]:
             turn = match.get('turn')
             readSocket = match.get('players')[turn].get('socket')
-            readSocket.settimeout(0.001)
+            readSocket.settimeout(0.1)
             try:
                 move = int(readSocket.recv(512))
 
                 print 'GAME THREAD : GOT MOVE %d ' % move
 
                 #Make move and check for win
-                result =  makeMove(grid,move,match.get('players')[turn].get('chip'))
+                result =  makeMove(newMatch['grid'],move,match.get('players')[turn].get('chip'))
 
                 #Invalid move
                 #if not result :
@@ -107,10 +107,12 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                     turn = match['turn']
                     sendSocket = match.get('players')[turn].get('socket')
                     print 'Send data to player %s ' % match.get('players')[turn].get('name')
-                    dataToSend = '1 ' + str(move) + ' ' + state2 + ' \n'
+                    dataToSend = '1 ' + str(move) + ' \n'
                     sendSocket.send(dataToSend)
 
             except socket.timeout:
+                #TODO:REMOVE BELOW LINE
+                #match['turn'] = (turn + 1) % 2
                 startTime = match['time']
                 if time.time() - startTime > MAX_WAIT:
 
