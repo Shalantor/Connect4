@@ -109,6 +109,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*Async task for network operations if in multiplayer mode*/
     private GameAsyncTask sendTask;
     private GameAsyncTask receiveTask;
+    private Socket gameSocket;
 
     /*Name of opponent*/
     String[] opponentsName;
@@ -135,6 +136,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             isPlayersTurn = gameInfo[1].equals("1");
             opponentsName = new String[gameInfo.length - 2];
             System.arraycopy(gameInfo,2,opponentsName,0,gameInfo.length - 2);
+            gameSocket = GameUtils.getSocket();
 
             if (!isPlayersTurn){
                 receiveTask.execute("");
@@ -234,6 +236,12 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     if (receiveTask.getStatus() == AsyncTask.Status.FINISHED ){
                         int move = receiveTask.getMove();
                         makeMove(move);
+                        receiveTask = new GameAsyncTask(gameSocket,associatedActivity,false);
+                        receiveTask.setOperation(1);
+                    }
+                    if(sendTask.getStatus() == AsyncTask.Status.FINISHED){
+                        sendTask = new GameAsyncTask(gameSocket,associatedActivity,false);
+                        sendTask.setOperation(0);
                     }
                 }
             }
