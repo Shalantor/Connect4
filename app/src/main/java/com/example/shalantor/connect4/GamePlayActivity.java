@@ -106,6 +106,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*Time variable to reset game*/
     private long gameEndTime;
 
+    /*Last move of player*/
+    int lastMove;
+
     /*Async task for network operations if in multiplayer mode*/
     private GameAsyncTask sendTask;
     private GameAsyncTask receiveTask;
@@ -232,14 +235,53 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     makeMove(move);
                 }
                 else{
-                    Log.d("STATUS_RECEIVE","Checking for receive status");
+                    /*Player waits for enemy move*/
                     if (receiveTask.getStatus() == AsyncTask.Status.FINISHED ){
                         int move = receiveTask.getMove();
+                        int state = receiveTask.getState();
                         makeMove(move);
                         receiveTask = new GameAsyncTask(gameSocket,associatedActivity,false);
                         receiveTask.setOperation(1);
+                        if (state == 3){
+                            isGameOver = true;
+                            endScreenMessage = "TIE";
+                        }
+                        else if (state == 2){
+                            isGameOver = true;
+                            endScreenMessage = "YOU LOSE";
+                        }
+                        isPlayersTurn = !isPlayersTurn;
                     }
+                    /*Reset asynctask that was used for sending move*/
                     if(sendTask.getStatus() == AsyncTask.Status.FINISHED){
+                        sendTask = new GameAsyncTask(gameSocket,associatedActivity,false);
+                        sendTask.setOperation(0);
+                    }
+                }
+            }
+            else if(isMultiPlayer && isPlayersTurn){
+                /*Its still players turn until server confirms move*/
+                if (receiveTask.getStatus() == AsyncTask.Status.FINISHED){
+                    int validity = receiveTask.getMove();
+                    if (validity == 0){
+                        isPlayersTurn = !isPlayersTurn;
+                        int state = receiveTask.getState();
+                        if (state == 1){
+                            isGameOver = true;
+                            endScreenMessage = "YOU WIN";
+                        }
+                        else if (state == 3){
+                            isGameOver = true;
+                            endScreenMessage = "TIE";
+                        }
+                        receiveTask = new GameAsyncTask(gameSocket,associatedActivity,false);
+                        receiveTask.setOperation(1);
+                        receiveTask.execute("");
+                    }
+                    else{
+                        /*Undo previous move*/
+                        howManyChips[lastMove] -= 1;
+                        gameGrid[howManyChips[lastMove]][lastMove] = 0;
                         sendTask = new GameAsyncTask(gameSocket,associatedActivity,false);
                         sendTask.setOperation(0);
                     }
@@ -248,7 +290,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             updateGUIObjects();
             drawScreen();
             controlFPS();
-            if(gameEndTime > 0) {
+            if(gameEndTime > 0 && isSinglePlayer) {
                 if (System.currentTimeMillis() - gameEndTime > 3000) {
                     resetGame();
                 }
@@ -700,6 +742,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
     /*Insert chip in specified position*/
     public void makeMove(int columnNumber){
+        lastMove = columnNumber;
         isChipFalling = true;
         finalChipHeight = screenHeight - howManyChips[columnNumber]*cellHeight;
         fallingChipPosition = columnNumber;
@@ -721,7 +764,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             receiveTask.execute("");
         }
 
-        isPlayersTurn = !isPlayersTurn;
+        if (isSinglePlayer) {
+            isPlayersTurn = !isPlayersTurn;
+        }
 
     }
 

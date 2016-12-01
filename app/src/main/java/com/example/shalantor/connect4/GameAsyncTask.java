@@ -27,6 +27,7 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
     private static final String GAME_INFO = "GAME_INFO";
     private PlayButtonFragment.goBackToStartFragment mCallback;
     private Integer move;
+    private Integer state;
 
     public GameAsyncTask(Socket socket,Activity activity,boolean showDialog){
         this.socket = socket;
@@ -45,6 +46,10 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
 
     public int getMove(){
         return move;
+    }
+
+    public int getState(){
+        return state;
     }
 
     @Override
@@ -146,7 +151,10 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
         }
         else if (operation == 1){
             String[] answer = result.split(" ");
-            move = Integer.parseInt(answer[1]);
+            if (answer[0].equals("1")) {
+                move = Integer.parseInt(answer[1]);
+                state = Integer.parseInt(answer[2]);
+            }
         }
     }
 
