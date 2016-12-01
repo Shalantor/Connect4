@@ -8,7 +8,7 @@
 #space between them
 #                   COMMUNICATION PROTOCOL FOR SERVER MESSAGES
 # GAME START :                           0 turn opponent_name
-# SEND PLAYER MOVE AND NOTIFY :          1 move state(0 = neutral,1=win,2=lose,3=tie)
+# SEND PLAYER MOVE AND NOTIFY :          1 move/validity state(0 = neutral,1=win,2=lose,3=tie)
 # NOTIFY FOR TIMEOUT (LOSER)             2
 # NOTIFY FOR TIMEOUT (WINNER)            3
 
@@ -82,32 +82,31 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                 print 'GAME THREAD : GOT MOVE %d ' % move
 
                 #Make move and check for win
-                result =  makeMove(newMatch['grid'],move,match.get('players')[turn].get('chip'))
+                result =  makeMove(match.get('grid'),move,match.get('players')[turn].get('chip'))
 
                 #Invalid move
-                #if not result :
-                if False:
-                    readSocket.send('1 1 \n')
+                if not result:
+                    readSocket.send('1 1 0 \n')
                 #Valid move
                 else:
-                    """win = hasWon(grid,match.get('players')[turn].get('chip'))
+                    win = hasWon(newMatch['grid'],match.get('players')[turn].get('chip'))
                     if win:
                         state1 = '1'
                         state2 = '2'
                         winner = match.get('players')[turn]
                         loser = match.get('players')[(turn + 1) % 2]
                         updateStats(winner,loser,queueToDatabase)
-                    elif isTie(grid):
+                    elif isTie(match.get('grid')):
                         state1 = state2 = '3'
                     else:
                         state1 = state2 = '0'
-                        #readSocket.send('1 0 ' + state1 + ' \n')"""
+                    readSocket.send('1 0 ' + state1 + ' \n')
                     match['time'] = time.time()
                     match['turn'] = (match['turn'] + 1 ) % 2
                     turn = match['turn']
                     sendSocket = match.get('players')[turn].get('socket')
                     print 'Send data to player %s ' % match.get('players')[turn].get('name')
-                    dataToSend = '1 ' + str(move) + ' \n'
+                    dataToSend = '1 ' + str(move) + ' ' + state2 + ' \n'
                     sendSocket.send(dataToSend)
 
             except socket.timeout:
