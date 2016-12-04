@@ -55,8 +55,17 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
 
 
         setContentView(R.layout.activity_login);
-        accFragment = new AccountFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.container, accFragment,ACCOUNT_FRAGMENT).commit();
+        Intent intent = getIntent();
+        boolean showPlay = intent.getBooleanExtra("PLAY",false);
+
+        if(!showPlay) {
+            accFragment = new AccountFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.container, accFragment, ACCOUNT_FRAGMENT).commit();
+        }
+        else{
+            playButtonFragment = new PlayButtonFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.container, playButtonFragment, PLAY_BUTTON_FRAGMENT).commit();
+        }
 
     }
 
@@ -135,6 +144,9 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         super.onStart();
         if (accFragment != null) {
             accFragment.adjustButtons();
+        }
+        else if (playButtonFragment != null){
+            playButtonFragment.adjustButtons();
         }
     }
 

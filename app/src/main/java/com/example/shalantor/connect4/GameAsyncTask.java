@@ -29,6 +29,7 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
     private Integer move;
     private Integer state;
     private boolean isConnected = true;
+    private Integer timeoutStatus = 1;
 
     public GameAsyncTask(Socket socket,Activity activity,boolean showDialog){
         this.socket = socket;
@@ -51,6 +52,10 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
 
     public int getState(){
         return state;
+    }
+
+    public int getTimeoutStatus(){
+        return timeoutStatus;
     }
 
     public boolean getConnectionStatus(){
@@ -171,6 +176,12 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
             if (answer[0].equals("1")) {
                 move = Integer.parseInt(answer[1]);
                 state = Integer.parseInt(answer[2]);
+            }
+            else if (answer[0].equals("2")){
+                timeoutStatus = 2;
+            }
+            else if (answer[0].equals("3")){
+                timeoutStatus = 3;
             }
         }
     }

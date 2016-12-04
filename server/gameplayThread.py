@@ -15,7 +15,7 @@
 import Queue,time,socket
 from gameUtils import *
 MAX_FINDS = 5
-MAX_WAIT = 50
+MAX_WAIT = 5
 
 def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
     matchList=[]
@@ -111,11 +111,11 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                 if time.time() - startTime > MAX_WAIT:
 
                     #player lost because no move
-                    readSocket.send('2 \n')
+                    readSocket.send('2 0 0 \n')
                     loser = match.get('players')[turn]
                     turn = (turn + 1) % 2
                     winSocket = match.get('players')[turn].get('socket')
-                    winSocket.send('3 \n')
+                    winSocket.send('3 0 0 \n')
 
                     #update player stats
                     winner = match.get('players')[turn]

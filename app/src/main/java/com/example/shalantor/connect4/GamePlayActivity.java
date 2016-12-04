@@ -245,6 +245,18 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                             gameEndTime = System.currentTimeMillis();
                             receiveTask = new GameAsyncTask(gameSocket,associatedActivity,false);
                         }
+                        else if (receiveTask.getTimeoutStatus() == 2){
+                            isGameOver = true;
+                            endScreenMessage = "YOU LOSE";
+                            gameEndTime = System.currentTimeMillis();
+                            receiveTask = new GameAsyncTask(gameSocket,associatedActivity,false);
+                        }
+                        else if (receiveTask.getTimeoutStatus() == 3){
+                            isGameOver = true;
+                            endScreenMessage = "YOU WIN";
+                            gameEndTime = System.currentTimeMillis();
+                            receiveTask = new GameAsyncTask(gameSocket,associatedActivity,false);
+                        }
                         else {
                             int move = receiveTask.getMove();
                             int state = receiveTask.getState();
@@ -276,6 +288,18 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     if (!receiveTask.getConnectionStatus()){
                         isGameOver = true;
                         endScreenMessage = "DISCONNECTED";
+                        gameEndTime = System.currentTimeMillis();
+                        receiveTask = new GameAsyncTask(gameSocket,associatedActivity,false);
+                    }
+                    else if (receiveTask.getTimeoutStatus() == 2){
+                        isGameOver = true;
+                        endScreenMessage = "YOU LOSE";
+                        gameEndTime = System.currentTimeMillis();
+                        receiveTask = new GameAsyncTask(gameSocket,associatedActivity,false);
+                    }
+                    else if (receiveTask.getTimeoutStatus() == 3){
+                        isGameOver = true;
+                        endScreenMessage = "YOU WIN";
                         gameEndTime = System.currentTimeMillis();
                         receiveTask = new GameAsyncTask(gameSocket,associatedActivity,false);
                     }
@@ -322,6 +346,15 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.putExtra("MODE",1);
                         intent.putExtra(MUTE,isMuted);
+                        associatedActivity.startActivity(intent);
+                        associatedActivity.finish();
+                    }
+                    else{
+                        Intent intent = new Intent(associatedActivity,LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.putExtra("MODE",1);
+                        intent.putExtra(MUTE,isMuted);
+                        intent.putExtra("PLAY",true);
                         associatedActivity.startActivity(intent);
                         associatedActivity.finish();
                     }
