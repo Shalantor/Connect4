@@ -12,13 +12,10 @@
 # NOTIFY FOR TIMEOUT (LOSER)             2
 # NOTIFY FOR TIMEOUT (WINNER)            3
 
-#MESSAGE FOR CLIENT
-# SEND PLAYER MOVE                        move
-
 import Queue,time,socket
 from gameUtils import *
 MAX_FINDS = 5
-MAX_WAIT = 60
+MAX_WAIT = 50
 
 def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
     matchList=[]
@@ -110,8 +107,6 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                     sendSocket.send(dataToSend)
 
             except socket.timeout:
-                #TODO:REMOVE BELOW LINE
-                #match['turn'] = (turn + 1) % 2
                 startTime = match['time']
                 if time.time() - startTime > MAX_WAIT:
 

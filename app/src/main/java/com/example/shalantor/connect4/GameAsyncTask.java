@@ -28,6 +28,7 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
     private PlayButtonFragment.goBackToStartFragment mCallback;
     private Integer move;
     private Integer state;
+    private boolean isConnected = true;
 
     public GameAsyncTask(Socket socket,Activity activity,boolean showDialog){
         this.socket = socket;
@@ -50,6 +51,10 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
 
     public int getState(){
         return state;
+    }
+
+    public boolean getConnectionStatus(){
+        return isConnected;
     }
 
     @Override
@@ -114,8 +119,16 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
             }
             else {
                 while (true){
-                    response = inputStream.readLine();
-                    Log.d("READLINE","Response is: " + response);
+                    try {
+                        response = inputStream.readLine();
+                    }catch(IOException ex){
+                        isConnected = false;
+                        return response;
+                    }
+                    if (response == null){
+                        isConnected= false;
+                        return null;
+                    }
                     if (!response.equals("0") && !response.equals("1")){
                         break;
                     }
@@ -150,6 +163,10 @@ public class GameAsyncTask extends AsyncTask<String, Void, String> {
             activity.finish();
         }
         else if (operation == 1){
+            if (result == null){
+                isConnected = false;
+                return;
+            }
             String[] answer = result.split(" ");
             if (answer[0].equals("1")) {
                 move = Integer.parseInt(answer[1]);

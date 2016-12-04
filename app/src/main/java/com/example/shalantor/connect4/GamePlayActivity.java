@@ -237,20 +237,31 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 else{
                     /*Player waits for enemy move*/
                     if (receiveTask.getStatus() == AsyncTask.Status.FINISHED ){
-                        int move = receiveTask.getMove();
-                        int state = receiveTask.getState();
-                        makeMove(move);
-                        receiveTask = new GameAsyncTask(gameSocket,associatedActivity,false);
-                        receiveTask.setOperation(1);
-                        if (state == 3){
+
+                        /*Check if connection is ok*/
+                        if (!receiveTask.getConnectionStatus()){
                             isGameOver = true;
-                            endScreenMessage = "TIE";
+                            endScreenMessage = "DISCONNECTED";
+                            gameEndTime = System.currentTimeMillis();
+                            receiveTask = new GameAsyncTask(gameSocket,associatedActivity,false);
                         }
-                        else if (state == 2){
-                            isGameOver = true;
-                            endScreenMessage = "YOU LOSE";
+                        else {
+                            int move = receiveTask.getMove();
+                            int state = receiveTask.getState();
+                            makeMove(move);
+                            receiveTask = new GameAsyncTask(gameSocket, associatedActivity, false);
+                            receiveTask.setOperation(1);
+                            if (state == 3) {
+                                isGameOver = true;
+                                endScreenMessage = "TIE";
+                                gameEndTime = System.currentTimeMillis();
+                            } else if (state == 2) {
+                                isGameOver = true;
+                                endScreenMessage = "YOU LOSE";
+                                gameEndTime = System.currentTimeMillis();
+                            }
+                            isPlayersTurn = !isPlayersTurn;
                         }
-                        isPlayersTurn = !isPlayersTurn;
                     }
                     /*Reset asynctask that was used for sending move*/
                     if(sendTask.getStatus() == AsyncTask.Status.FINISHED){
@@ -262,37 +273,58 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             else if(isMultiPlayer && isPlayersTurn){
                 /*Its still players turn until server confirms move*/
                 if (receiveTask.getStatus() == AsyncTask.Status.FINISHED){
-                    int validity = receiveTask.getMove();
-                    if (validity == 0){
-                        isPlayersTurn = !isPlayersTurn;
-                        int state = receiveTask.getState();
-                        if (state == 1){
-                            isGameOver = true;
-                            endScreenMessage = "YOU WIN";
-                        }
-                        else if (state == 3){
-                            isGameOver = true;
-                            endScreenMessage = "TIE";
-                        }
+                    if (!receiveTask.getConnectionStatus()){
+                        isGameOver = true;
+                        endScreenMessage = "DISCONNECTED";
+                        gameEndTime = System.currentTimeMillis();
                         receiveTask = new GameAsyncTask(gameSocket,associatedActivity,false);
-                        receiveTask.setOperation(1);
-                        receiveTask.execute("");
                     }
-                    else{
-                        /*Undo previous move*/
-                        howManyChips[lastMove] -= 1;
-                        gameGrid[howManyChips[lastMove]][lastMove] = 0;
-                        sendTask = new GameAsyncTask(gameSocket,associatedActivity,false);
-                        sendTask.setOperation(0);
+                    else {
+                        int validity = receiveTask.getMove();
+                        if (validity == 0) {
+                            isPlayersTurn = !isPlayersTurn;
+                            int state = receiveTask.getState();
+                            if (state == 1) {
+                                isGameOver = true;
+                                endScreenMessage = "YOU WIN";
+                                gameEndTime = System.currentTimeMillis();
+                            } else if (state == 3) {
+                                isGameOver = true;
+                                endScreenMessage = "TIE";
+                                gameEndTime = System.currentTimeMillis();
+                            }
+                            receiveTask = new GameAsyncTask(gameSocket, associatedActivity, false);
+                            receiveTask.setOperation(1);
+                            receiveTask.execute("");
+                        } else {
+                            /*Undo previous move*/
+                            howManyChips[lastMove] -= 1;
+                            gameGrid[howManyChips[lastMove]][lastMove] = 0;
+                            sendTask = new GameAsyncTask(gameSocket, associatedActivity, false);
+                            sendTask.setOperation(0);
+                        }
                     }
                 }
             }
             updateGUIObjects();
             drawScreen();
             controlFPS();
-            if(gameEndTime > 0 && isSinglePlayer) {
-                if (System.currentTimeMillis() - gameEndTime > 3000) {
-                    resetGame();
+            Log.d("TIME","Game end time is " + gameEndTime);
+            if(gameEndTime > 0 ) {
+                if (isSinglePlayer) {
+                    if (System.currentTimeMillis() - gameEndTime > 3000) {
+                        resetGame();
+                    }
+                }
+                else if (isMultiPlayer && System.currentTimeMillis() - gameEndTime > 3000){
+                    if (endScreenMessage.equals("DISCONNECTED")){
+                        Intent intent = new Intent(associatedActivity,LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.putExtra("MODE",1);
+                        intent.putExtra(MUTE,isMuted);
+                        associatedActivity.startActivity(intent);
+                        associatedActivity.finish();
+                    }
                 }
             }
         }
