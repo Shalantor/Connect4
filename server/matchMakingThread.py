@@ -13,7 +13,7 @@
 # 1) Add to match making lists
 # 2) Terminate itself
 MAX_LOOPS = 10
-MAX_WAIT = 1
+MAX_WAIT = 10
 import Queue,time,random
 
 #inputQueue is for getting players from account threads

@@ -61,6 +61,7 @@ def userThread(replySocket,dbQueue,matchQueue,userType = None,userId = None,name
         print "MESSAGE IS " + message
         args = message.split()
 
+        #After game message
         if (len(args) == 1 and args[0] != '5'):
             continue
 

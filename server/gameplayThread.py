@@ -17,7 +17,7 @@ from gameUtils import *
 from threading import *
 from userThread import *
 MAX_FINDS = 5
-MAX_WAIT = 5
+MAX_WAIT = 60
 
 def gameThread(queueToMatchMaking,queueToDatabase,exitQueue,queueForUserThread):
     matchList=[]
