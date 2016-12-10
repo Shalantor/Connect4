@@ -56,7 +56,8 @@ print 'exit main'"""
 #Setup threads and queues
 queueToDatabase = Queue.Queue()
 queueToMatchMaking = Queue.Queue()
-listenerThread = Thread(target=listener,args=(queueToDatabase,queueToMatchMaking))
+queueToStop = Queue.Queue()
+listenerThread = Thread(target=listener,args=(queueToDatabase,queueToMatchMaking,queueToStop))
 listenerThread.start()
 dataThread = Thread(target=dbThread,args=(queueToDatabase,))
 dataThread.start()
@@ -65,7 +66,7 @@ outputQueue = Queue.Queue()
 matchMakingThread = Thread(target=mmThread,args=(queueToMatchMaking,exitQueue,outputQueue))
 matchMakingThread.start()
 exitQueue2 = Queue.Queue()
-gThread = Thread(target=gameThread,args=(outputQueue,queueToDatabase,exitQueue2))
+gThread = Thread(target=gameThread,args=(outputQueue,queueToDatabase,exitQueue2,queueToMatchMaking))
 gThread.start()
 
 example = raw_input('Press enter when you want to stop simulation')
@@ -77,6 +78,7 @@ time.sleep(1)
 #matchMakingThread
 exitQueue.put(True)
 exitQueue2.put(True)
+queueToStop.put(True)
 
 
 """#This code tests the utilities for the gameplay thread

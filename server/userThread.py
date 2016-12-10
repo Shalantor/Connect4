@@ -21,9 +21,8 @@ import socket,Queue
 from threading import *
 PORT = 1337
 
-#TODO:also send back result to user for operations
 #This function-thread listens on a port for connections
-def listener(queueToDatabase,queueToMatchMaking):
+def listener(queueToDatabase,queueToMatchMaking,queueToStop):
     setupSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM,0)
     setupSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     setupSocket.bind(('0.0.0.0',PORT))
@@ -34,23 +33,24 @@ def listener(queueToDatabase,queueToMatchMaking):
             print 'LISTENING'
             replySocket,address = setupSocket.accept()
             #now create a new userThread
-            uThread = Thread(target=userThread,args=(replySocket,address,queueToDatabase,queueToMatchMaking))
+            uThread = Thread(target=userThread,args=(replySocket,queueToDatabase,queueToMatchMaking))
             uThread.start()
             replySocket.send('0\n')
             print 'Created new user thread'
         except socket.timeout:
-            break
+            try:
+                exit = queueToStop.get()
+                break
+            except:
+                continue
     print('Listener Thread ends now')
     setupSocket.close()
 
 #dbQueue is for communicating with database thread
 #matchQueue is for communicating with matchmaking thread
-def userThread(replySocket,address,dbQueue,matchQueue):
+def userThread(replySocket,dbQueue,matchQueue,userType = None,userId = None,name = None,email = None):
     answerQueue = Queue.Queue()
-    userType = None
-    userId = None
-    name = None
-    email = None
+    replySocket.settimeout(None)
     while True:
         message = replySocket.recv(512)
         #Connection shut down on other side
@@ -60,6 +60,9 @@ def userThread(replySocket,address,dbQueue,matchQueue):
 
         print "MESSAGE IS " + message
         args = message.split()
+
+        if (len(args) == 1 and args[0] != '5'):
+            continue
 
         #Now check operation type
         if args[0] == '0':

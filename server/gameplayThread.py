@@ -14,10 +14,12 @@
 
 import Queue,time,socket
 from gameUtils import *
+from threading import *
+from userThread import *
 MAX_FINDS = 5
 MAX_WAIT = 5
 
-def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
+def gameThread(queueToMatchMaking,queueToDatabase,exitQueue,queueForUserThread):
     matchList=[]
     #game loop
     while True:
@@ -105,6 +107,12 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                     print 'Send data to player %s ' % match.get('players')[turn].get('name')
                     dataToSend = '1 ' + str(move) + ' ' + state2 + ' \n'
                     sendSocket.send(dataToSend)
+                    #Remove from matchlist if game is over
+                    if win or state1 == '3':
+                        #now start new threads for players
+                        startNewUserThreads(queueToDatabase,queueForUserThread,match)
+                        matchlist.remove(match)
+
 
             except socket.timeout:
                 startTime = match['time']
@@ -120,4 +128,25 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue):
                     #update player stats
                     winner = match.get('players')[turn]
                     updateStats(winner,loser,queueToDatabase)
+
+                    #Start new user threads
+                    startNewUserThreads(queueToDatabase,queueForUserThread,match)
                     matchList.remove(match)
+
+def startNewUserThreads(queueToDatabase,queueToMatchMaking,match):
+
+    for i in range(0,2):
+        playerType = None
+        Id = None
+        userName = None
+        userEmail = None
+        player = match.get('players')[i]
+        firstSocket = player.get('socket')
+        playerType = player.get('type')
+        if playerType == '0':
+            userName = player.get('name')
+            userEmail = player.get('email')
+        else:
+            Id = player.get('id')
+        uThread = Thread(target=userThread,args=(firstSocket,queueToDatabase,queueToMatchMaking,playerType,Id,userName,userEmail))
+        uThread.start()
