@@ -141,7 +141,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             System.arraycopy(gameInfo,2,opponentsName,0,gameInfo.length - 2);
             gameSocket = GameUtils.getSocket();
 
-            receiveTask.execute("");
+            if (!isPlayersTurn) {
+                receiveTask.execute("");
+            }
         }
 
         /*Set difficulty*/
