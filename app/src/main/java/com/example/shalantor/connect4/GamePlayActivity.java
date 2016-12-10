@@ -14,6 +14,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -117,6 +118,11 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*Name of opponent*/
     String[] opponentsName;
 
+    private Handler handler = new Handler();
+    private Runnable runnable;
+    private int time = 60;
+
+
     public GamePlayActivity(Context context){
         super(context);
         holder = getHolder();
@@ -127,6 +133,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             isSinglePlayer = true;
             isMultiPlayer = false;
             isPlayersTurn = true;
+
         }
         else{
             isMultiPlayer = true;
@@ -142,6 +149,18 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             gameSocket = GameUtils.getSocket();
 
             receiveTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
+
+            handler.postDelayed(runnable, 1000);
+
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    time -= 1;
+                    handler.postDelayed(this, 1000);
+                }
+            };
+
+            handler.postDelayed(runnable, 1000);
 
         }
 
@@ -514,6 +533,9 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
             if(isSinglePlayer){
                 canvas.drawText("-",8*screenWidth/10 + screenWidth/20,screenHeight/2 + 2*screenHeight/15,paint);
+            }
+            else{
+                canvas.drawText("" + time,8*screenWidth/10 + screenWidth/20,screenHeight/2 + 2*screenHeight/15,paint);
             }
 
             /*Draw back button and and sound button*/
