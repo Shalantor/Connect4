@@ -355,6 +355,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                         intent.putExtra("MODE",1);
                         intent.putExtra(MUTE,isMuted);
                         intent.putExtra("PLAY",true);
+                        GameUtils.setSocket(gameSocket);
                         associatedActivity.startActivity(intent);
                         associatedActivity.finish();
                     }

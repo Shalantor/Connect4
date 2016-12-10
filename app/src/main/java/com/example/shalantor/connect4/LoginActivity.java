@@ -65,6 +65,8 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         else{
             playButtonFragment = new PlayButtonFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.container, playButtonFragment, PLAY_BUTTON_FRAGMENT).commit();
+            getSupportFragmentManager().executePendingTransactions();
+            playButtonFragment.setSocket(GameUtils.getSocket());
         }
 
     }
