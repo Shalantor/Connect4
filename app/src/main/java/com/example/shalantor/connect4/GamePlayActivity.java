@@ -141,9 +141,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             System.arraycopy(gameInfo,2,opponentsName,0,gameInfo.length - 2);
             gameSocket = GameUtils.getSocket();
 
-            if (!isPlayersTurn) {
-                receiveTask.execute("");
-            }
+            receiveTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
+
         }
 
         /*Set difficulty*/
@@ -260,6 +259,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                             makeMove(move);
                             receiveTask = new GameAsyncTask(gameSocket, associatedActivity, false);
                             receiveTask.setOperation(1);
+                            receiveTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
                             if (state == 3) {
                                 isGameOver = true;
                                 endScreenMessage = "TIE";
@@ -313,7 +313,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                             }
                             receiveTask = new GameAsyncTask(gameSocket, associatedActivity, false);
                             receiveTask.setOperation(1);
-                            receiveTask.execute("");
+                            receiveTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
                         } else {
                             /*Undo previous move*/
                             howManyChips[lastMove] -= 1;
@@ -820,8 +820,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         /*If it is multiplayer send move to server*/
         if (isMultiPlayer && isPlayersTurn) {
             Log.d("SEND_MOVE","Sending move " + columnNumber);
-            sendTask.execute("" + columnNumber);
-            receiveTask.execute("");
+            sendTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"" + columnNumber);
         }
 
         if (isSinglePlayer) {
