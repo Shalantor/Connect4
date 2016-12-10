@@ -243,19 +243,16 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                             isGameOver = true;
                             endScreenMessage = "DISCONNECTED";
                             gameEndTime = System.currentTimeMillis();
-                            receiveTask = new GameAsyncTask(gameSocket,associatedActivity,false);
                         }
                         else if (receiveTask.getTimeoutStatus() == 2){
                             isGameOver = true;
                             endScreenMessage = "YOU LOSE";
                             gameEndTime = System.currentTimeMillis();
-                            receiveTask = new GameAsyncTask(gameSocket,associatedActivity,false);
                         }
                         else if (receiveTask.getTimeoutStatus() == 3){
                             isGameOver = true;
                             endScreenMessage = "YOU WIN";
                             gameEndTime = System.currentTimeMillis();
-                            receiveTask = new GameAsyncTask(gameSocket,associatedActivity,false);
                         }
                         else {
                             int move = receiveTask.getMove();
@@ -289,19 +286,16 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                         isGameOver = true;
                         endScreenMessage = "DISCONNECTED";
                         gameEndTime = System.currentTimeMillis();
-                        receiveTask = new GameAsyncTask(gameSocket,associatedActivity,false);
                     }
                     else if (receiveTask.getTimeoutStatus() == 2){
                         isGameOver = true;
                         endScreenMessage = "YOU LOSE";
                         gameEndTime = System.currentTimeMillis();
-                        receiveTask = new GameAsyncTask(gameSocket,associatedActivity,false);
                     }
                     else if (receiveTask.getTimeoutStatus() == 3){
                         isGameOver = true;
                         endScreenMessage = "YOU WIN";
                         gameEndTime = System.currentTimeMillis();
-                        receiveTask = new GameAsyncTask(gameSocket,associatedActivity,false);
                     }
                     else {
                         int validity = receiveTask.getMove();
