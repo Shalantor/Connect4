@@ -120,7 +120,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
     private Handler handler = new Handler();
     private Runnable runnable;
-    private int time = 60;
+    private int time = GameUtils.MAX_TURN_TIME;
 
 
     public GamePlayActivity(Context context){
@@ -289,6 +289,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                                 gameEndTime = System.currentTimeMillis();
                             }
                             isPlayersTurn = !isPlayersTurn;
+                            time = GameUtils.MAX_TURN_TIME;
                         }
                     }
                     /*Reset asynctask that was used for sending move*/
@@ -320,6 +321,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                         int validity = receiveTask.getMove();
                         if (validity == 0) {
                             isPlayersTurn = !isPlayersTurn;
+                            time = GameUtils.MAX_TURN_TIME;
                             int state = receiveTask.getState();
                             if (state == 1) {
                                 isGameOver = true;

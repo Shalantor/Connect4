@@ -8,6 +8,7 @@ public class GameUtils {
 
     /*Variable to pass the socket from the account activity to the game activity*/
     private static Socket socket;
+    public static int MAX_TURN_TIME = 60;
 
     /*Getter and setter for socket*/
     public static synchronized Socket getSocket(){
