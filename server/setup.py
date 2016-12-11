@@ -1,3 +1,5 @@
+#This file sets up the database of the server
+
 import sqlite3
 
 def setupDatabase():

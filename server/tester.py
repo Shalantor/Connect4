@@ -1,5 +1,4 @@
 #This file sets up and runs the server.
-#
 
 import Queue,time
 from databaseThread import *

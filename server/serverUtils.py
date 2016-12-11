@@ -1,6 +1,5 @@
 #This file contains various functions to be used by the server for saving
 #data, processing passwords and calculating a players elo
-#TODO:open authentication 2 Android
 import string,random,smtplib
 import uuid,hashlib,sqlite3,re
 from email.mime.text import MIMEText
@@ -60,6 +59,7 @@ def insertUserFacebook(database,facebookID,name,email):
     data = (facebookID,)
     cursor.execute('SELECT facebookid FROM UsersFacebook WHERE facebookid =?',data)
     if cursor.fetchone() != None:
+        connection.close()
         return False
 
     #Organize data
@@ -75,6 +75,8 @@ def userLogin(database,name,email,password):
 
     connection = sqlite3.connect(database)
     cursor = connection.cursor()
+
+    #Search him in database
     if email == None:
         nameTuple = (name,)
         cursor.execute('SELECT salt,password FROM Users WHERE username =?',nameTuple)
@@ -82,8 +84,10 @@ def userLogin(database,name,email,password):
         nameTuple = (email,)
         cursor.execute('SELECT salt,password FROM Users WHERE email =?',nameTuple)
 
+    #Check if same password
     for a,b in cursor:
         if hashlib.sha512(password + a).hexdigest() == b:
+            connection.close()
             return True
 
     connection.close()
@@ -107,7 +111,6 @@ def userLoginFacebook(database,ID):
     connection.close()
     return False
 
-#TODO:fix elo calculation for a user with only a few games
 #Update wins,losses,elo of user logged in with client
 def updateUser(database,name,winDiff,loseDiff):
     connection = sqlite3.connect(database)
@@ -218,58 +221,65 @@ def forgotPassword(database,email,name):
     connection.close()
     return True
 
-#TODO:after verification maybe place 0 again in reset code field
 #To confirm code for changing password
 def confirmPasswordChangeCode(database,email,name,code):
     connection = sqlite3.connect(database)
     cursor = connection.cursor()
 
-    if name == None:
+    if name == None:#Find user by name
         data = (email,)
         cursor.execute('SELECT resetCode FROM Users WHERE email=?',data)
         result = cursor.fetchone()
-        if result == None:
-            print 'Result was none 1'
+        if result == None:#No code found
+            connection.close()
             return False
         else:
             resetCode = result[0]
-    elif email == None or (name != None and email!=None):
+    elif email == None or (name != None and email!=None):#Find user by email
         data = (name,)
         cursor.execute('SELECT resetCode FROM Users WHERE username=?',data)
         result = cursor.fetchone()
-        if result == None:
+        if result == None:#No code found
+            connection.close()
             return False
         else:
             resetCode = result[0]
     connection.close()
     return resetCode == code
 
+
 #To get normal user data
 def getUserData(database,name,email):
     connection = sqlite3.connect(database)
     cursor = connection.cursor()
+
+    #Search by name
     if name == None:
         data = (email,)
         cursor.execute('SELECT username,email,elo FROM Users WHERE email=?',data)
     elif email == None or (name != None and email!=None):
+        #Search by email
         data=(name,)
         cursor.execute('SELECT username,email,elo FROM Users WHERE username=?',data)
+
     result = cursor.fetchone()
     userToken = {'name':result[0],'email':result[1],'rank':result[2]}
     connection.close()
     return userToken
+
 
 #To get facebook user data
 def getFbUserData(database,facebookid):
     connection = sqlite3.connect(database)
     cursor = connection.cursor()
     data = (facebookid,)
+
     cursor.execute('SELECT facebookid,name,email,elo FROM UsersFacebook WHERE facebookid=?',data)
     result = cursor.fetchone()
     userToken = {'id':result[0],'name':result[1],'email':result[2],'rank':result[3]}
     connection.close()
-    return userToken
 
+    return userToken
 
 #TODO:REMOVE EVERYTHING BELOW AFTER TESTING
 def showAllEntries():

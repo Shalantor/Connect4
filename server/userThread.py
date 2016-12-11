@@ -23,9 +23,14 @@ PORT = 1337
 
 #This function-thread listens on a port for connections
 def listener(queueToDatabase,queueToMatchMaking,queueToStop):
+
+    #Configure server Socket
     setupSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM,0)
     setupSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+    #Listen on all interfaces
     setupSocket.bind(('0.0.0.0',PORT))
+    
     setupSocket.settimeout(5)
     while True:
         setupSocket.listen(1)
