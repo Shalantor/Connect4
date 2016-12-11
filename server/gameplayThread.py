@@ -76,9 +76,25 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue,queueForUserThread):
             readSocket = match.get('players')[turn].get('socket')
             readSocket.settimeout(0.1)
             try:
-                move = int(readSocket.recv(512))
+                move = readSocket.recv(512)
+                if len(move) == 0:
+                    #player lost because no move
+                    readSocket.send('2 0 0 \n')
+                    loser = match.get('players')[turn]
+                    turn = (turn + 1) % 2
+                    winSocket = match.get('players')[turn].get('socket')
+                    winSocket.send('3 0 0 \n')
 
-                print 'GAME THREAD : GOT MOVE %d ' % move
+                    #update player stats
+                    winner = match.get('players')[turn]
+                    updateStats(winner,loser,queueToDatabase)
+
+                    #Start new user threads
+                    startNewUserThreads(queueToDatabase,queueForUserThread,match)
+                    matchList.remove(match)
+                else:
+                    move = int(move)
+                    print 'GAME THREAD : GOT MOVE %d ' % move
 
                 #Make move and check for win
                 result =  makeMove(match.get('grid'),move,match.get('players')[turn].get('chip'))
