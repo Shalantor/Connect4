@@ -43,6 +43,7 @@ public class GameActivity extends Activity {
     public boolean onKeyDown(int keycode, KeyEvent event){
         if(keycode == KeyEvent.KEYCODE_BACK){
             gamePlayView.pause();
+            gamePlayView.closeSocket();
             finish();
             Intent intent = new Intent(this,MainActivity.class);
             this.startActivity(intent);

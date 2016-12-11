@@ -37,21 +37,6 @@ public class ConnectToServerTask extends AsyncTask<String, Void, String>{
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-
-        pDialog = new ProgressDialog(activity);
-        pDialog.setMessage("Connecting to server");
-
-
-        String message= "Connecting to server";
-
-        SpannableString ss2 =  new SpannableString(message);
-        ss2.setSpan(new RelativeSizeSpan(2f), 0, ss2.length(), 0);
-        ss2.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ss2.length(), 0);
-
-        pDialog.setMessage(ss2);
-
-        pDialog.setCancelable(false);
-        pDialog.show();
     }
 
     @Override
@@ -89,7 +74,6 @@ public class ConnectToServerTask extends AsyncTask<String, Void, String>{
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        pDialog.dismiss();
 
     }
 }

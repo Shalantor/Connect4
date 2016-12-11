@@ -21,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.ExecutionException;
 
@@ -671,6 +672,12 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                         && initialY >= 2*screenHeight/3 - screenHeight/5
                         && initialY <= 2*screenHeight/3){
                     pause();
+                    try {
+                        gameSocket.close();
+                    }
+                    catch(IOException ex){
+
+                    }
                     Intent intent = new Intent(associatedActivity,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra(MUTE,isMuted);
@@ -851,6 +858,18 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             isPlayersTurn = !isPlayersTurn;
         }
 
+    }
+
+    /*Close socket if in multiplayer*/
+    public void closeSocket(){
+        if (isMultiPlayer){
+            try{
+                gameSocket.close();
+            }
+            catch(IOException ex){
+                Log.d("IOEXCEPTION","Error closing socket");
+            }
+        }
     }
 
 }

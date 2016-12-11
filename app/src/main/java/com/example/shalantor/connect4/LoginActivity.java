@@ -1,9 +1,14 @@
 package com.example.shalantor.connect4;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -166,6 +171,22 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         editor.putString(SERVER_ADDRESS,address);
         editor.apply();
 
+        /*Show Dialog*/
+        ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Connecting to server");
+
+
+        String message= "Connecting to server";
+
+        SpannableString ss2 =  new SpannableString(message);
+        ss2.setSpan(new RelativeSizeSpan(2f), 0, ss2.length(), 0);
+        ss2.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ss2.length(), 0);
+
+        pDialog.setMessage(ss2);
+
+        pDialog.setCancelable(false);
+        pDialog.show();
+
         /*Try connecting to server*/
         ConnectToServerTask connect = new ConnectToServerTask(address,PORT,this);
         String result="";
@@ -178,6 +199,9 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         catch(InterruptedException ex){
             Log.d("INTERRUPT","Interrupted exception occured");
         }
+
+        /*Dismiss dialog*/
+        pDialog.dismiss();
 
         /*Get socket reference*/
         connectSocket = connect.getSocket();
