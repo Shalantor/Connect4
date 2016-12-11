@@ -26,7 +26,7 @@ def listener(queueToDatabase,queueToMatchMaking,queueToStop):
     setupSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM,0)
     setupSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     setupSocket.bind(('0.0.0.0',PORT))
-    setupSocket.settimeout(20)
+    setupSocket.settimeout(5)
     while True:
         setupSocket.listen(1)
         try:
