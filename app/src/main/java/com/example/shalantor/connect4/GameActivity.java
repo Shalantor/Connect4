@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
+/*Activity that sets up and starts the game*/
+
 public class GameActivity extends Activity {
 
     GamePlayActivity gamePlayView;

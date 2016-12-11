@@ -1,6 +1,6 @@
 package com.example.shalantor.connect4;
 
-/*A class that represents the chips falling fro mthe top of the screen to the bottom*/
+/*A class that represents the chips falling from the top of the screen to the bottom*/
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -15,6 +15,7 @@ public class CustomRect {
         this.rect = rect;
     }
 
+    /*Getter methods*/
     public Bitmap getBitmap(){
         return bitmap;
     }

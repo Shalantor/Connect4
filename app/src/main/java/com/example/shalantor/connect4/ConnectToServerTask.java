@@ -1,15 +1,11 @@
 package com.example.shalantor.connect4;
 
+/*This asynchronous task is used for connecting to the server*/
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.graphics.Color;
 import android.os.AsyncTask;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,7 +14,6 @@ import java.net.SocketTimeoutException;
 
 public class ConnectToServerTask extends AsyncTask<String, Void, String>{
 
-    ProgressDialog pDialog;
     private Socket socket;
     private String address;
     private int port;
@@ -30,6 +25,7 @@ public class ConnectToServerTask extends AsyncTask<String, Void, String>{
         this.activity = activity;
     }
 
+    /*Get socket reference*/
     public Socket getSocket(){
         return socket;
     }
@@ -50,6 +46,7 @@ public class ConnectToServerTask extends AsyncTask<String, Void, String>{
             socket.setSoTimeout(5000);
             BufferedReader inputStream = new BufferedReader( new InputStreamReader(socket.getInputStream()));
 
+            /*Return result corresponding to server answer*/
             try {
                 response = inputStream.readLine();
                 Log.wtf("RESPONSE","Response is " + response);
