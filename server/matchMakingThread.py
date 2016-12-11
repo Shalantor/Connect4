@@ -20,10 +20,13 @@ import Queue,time,random
 #outputQueue is for sending match tokens to the thread that handles the matches
 #exitQueue is used for exiting the thread
 def mmThread(inputQueue,exitQueue,outputQueue):
+
+    #Lists for all difficulties
     noviceList = []
     apprenticeList = []
     adeptList = []
     expertList = []
+    
     playerList = [noviceList,apprenticeList,adeptList,expertList]
     needRematch = []
     while True:

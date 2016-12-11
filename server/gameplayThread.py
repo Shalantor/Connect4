@@ -107,8 +107,9 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue,queueForUserThread):
                     updateStats(winner,loser,queueToDatabase)
 
                     #Start new user threads
-                    startNewUserThreads(queueToDatabase,queueForUserThread,match)
+                    startNewUserThreads(queueToDatabase,queueForUserThread,match.get('players')[turn])
                     matchList.remove(match)
+                    continue
                 else:
                     #Got a valid move from player
                     move = int(move)
@@ -156,11 +157,12 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue,queueForUserThread):
                     #because they are the same, so I chose state1
                     if win or state1 == '3':
                         #now start new threads for players
-                        startNewUserThreads(queueToDatabase,queueForUserThread,match)
-                        matchlist.remove(match)
+                        startNewUserThreads(queueToDatabase,queueForUserThread,match.get('players')[0])
+                        startNewUserThreads(queueToDatabase,queueForUserThread,match.get('players')[1])
+                        matchList.remove(match)
 
             except socket.timeout:
-                #On time out, check if playe has been idle for too long
+                #On time out, check if player has been idle for too long
                 startTime = match['time']
                 if time.time() - startTime > MAX_WAIT:
 
@@ -177,13 +179,15 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue,queueForUserThread):
                     updateStats(winner,loser,queueToDatabase)
 
                     #Start new user threads
-                    startNewUserThreads(queueToDatabase,queueForUserThread,match)
+                    startNewUserThreads(queueToDatabase,queueForUserThread,match.get('players')[0])
+                    startNewUserThreads(queueToDatabase,queueForUserThread,match.get('players')[1])
                     matchList.remove(match)
 
 
 #This function starts 2 new user threads , so that the players
 #can continue with a new match, without having to login again
-def startNewUserThreads(queueToDatabase,queueToMatchMaking,match):
+#TODO:Give extra argument for letting know which one to make a user thread and which one not
+def startNewUserThreads(queueToDatabase,queueToMatchMaking,player):
 
     for i in range(0,2):
 
@@ -193,8 +197,7 @@ def startNewUserThreads(queueToDatabase,queueToMatchMaking,match):
         userName = None
         userEmail = None
 
-        #Get player, his socket and his type
-        player = match.get('players')[i]
+        #Get player socket and his type
         firstSocket = player.get('socket')
         playerType = player.get('type')
 
