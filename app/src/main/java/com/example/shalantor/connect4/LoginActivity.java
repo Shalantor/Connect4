@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     public static final String PLAY_BUTTON_FRAGMENT = "PLAY_BUTTON_FRAGMENT";
 
     /*Server port and fragments*/
-    public static final int PORT = 1337;
+    public static final int PORT = 11337;
     private AccountFragment accFragment = null;
     private LoginFragment logFragment = null;
     private RegisterFragment regFragment = null;
