@@ -108,12 +108,6 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         newPassFragment.adjustButtons();
         newPassFragment.setSocket(connectSocket);
 
-        /*TODO:Remove this below if app runs correctly*/
-        /*accFragment = null;
-        regFragment = null;
-        resetFragment = null;
-        logFragment = null;*/
-
     }
 
     /*Implement interface for new password fragment*/
