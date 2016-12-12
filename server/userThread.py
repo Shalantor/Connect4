@@ -30,9 +30,10 @@ def listener(queueToDatabase,queueToMatchMaking,queueToStop):
 
     #Listen on all interfaces
     setupSocket.bind(('0.0.0.0',PORT))
+    setupSocket.setblocking(True)
 
-    setupSocket.settimeout(20)
     while True:
+        setupSocket.settimeout(None)
         setupSocket.listen(1)
         try:
             print 'LISTENING'

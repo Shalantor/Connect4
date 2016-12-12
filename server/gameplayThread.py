@@ -107,7 +107,6 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue,queueForUserThread):
                     updateStats(winner,loser,queueToDatabase)
 
                     #Start new user threads
-                    startNewUserThreads(queueToDatabase,queueForUserThread,match.get('players')[turn])
                     matchList.remove(match)
                     continue
                 else:
@@ -157,8 +156,6 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue,queueForUserThread):
                     #because they are the same, so I chose state1
                     if win or state1 == '3':
                         #now start new threads for players
-                        startNewUserThreads(queueToDatabase,queueForUserThread,match.get('players')[0])
-                        startNewUserThreads(queueToDatabase,queueForUserThread,match.get('players')[1])
                         matchList.remove(match)
 
             except socket.timeout:
@@ -179,33 +176,4 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue,queueForUserThread):
                     updateStats(winner,loser,queueToDatabase)
 
                     #Start new user threads
-                    startNewUserThreads(queueToDatabase,queueForUserThread,match.get('players')[0])
-                    startNewUserThreads(queueToDatabase,queueForUserThread,match.get('players')[1])
                     matchList.remove(match)
-
-
-#This function starts 1 new user thread , so that the players
-#can continue with a new match, without having to login again
-def startNewUserThreads(queueToDatabase,queueToMatchMaking,player):
-
-    #Set default value to variables for user thread
-    playerType = None
-    Id = None
-    userName = None
-    userEmail = None
-
-    #Get player socket and his type
-    firstSocket = player.get('socket')
-    playerType = player.get('type')
-
-    #Set his info accordingly
-    if playerType == '0':
-        userName = player.get('name')
-        userEmail = player.get('email')
-    else:
-        Id = player.get('id')
-
-    #Start new thread
-    print 'Start new threads'
-    uThread = Thread(target=userThread,args=(firstSocket,queueToDatabase,queueToMatchMaking,playerType,Id,userName,userEmail))
-    uThread.start()
