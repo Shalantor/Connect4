@@ -19,7 +19,7 @@
 # 5         5
 import socket,Queue
 from threading import *
-PORT = 1337
+PORT = 11337
 
 #This function-thread listens on a port for connections
 def listener(queueToDatabase,queueToMatchMaking,queueToStop):
@@ -30,8 +30,8 @@ def listener(queueToDatabase,queueToMatchMaking,queueToStop):
 
     #Listen on all interfaces
     setupSocket.bind(('0.0.0.0',PORT))
-    
-    setupSocket.settimeout(5)
+
+    setupSocket.settimeout(20)
     while True:
         setupSocket.listen(1)
         try:

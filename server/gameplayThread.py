@@ -184,9 +184,8 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue,queueForUserThread):
                     matchList.remove(match)
 
 
-#This function starts 2 new user threads , so that the players
+#This function starts 1 new user thread , so that the players
 #can continue with a new match, without having to login again
-#TODO:Give extra argument for letting know which one to make a user thread and which one not
 def startNewUserThreads(queueToDatabase,queueToMatchMaking,player):
 
     for i in range(0,2):
