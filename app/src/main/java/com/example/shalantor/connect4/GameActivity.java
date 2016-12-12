@@ -10,12 +10,14 @@ import android.view.MotionEvent;
 
 public class GameActivity extends Activity {
 
+    /*View that will be displayed once game starts*/
     GamePlayActivity gamePlayView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /*Set view*/
         gamePlayView = new GamePlayActivity(this);
 
         setContentView(gamePlayView);
@@ -24,6 +26,8 @@ public class GameActivity extends Activity {
     @Override
     protected void onStop(){
         super.onStop();
+
+        /*Pause animations of view*/
         gamePlayView.pause();
         finish();
     }
@@ -31,12 +35,16 @@ public class GameActivity extends Activity {
     @Override
     protected void onResume(){
         super.onResume();
+
+        /*Resume game animations*/
         gamePlayView.resume();
     }
 
     @Override
     protected void onPause(){
         super.onPause();
+
+        /*Pause animations of view*/
         gamePlayView.pause();
     }
 
@@ -44,9 +52,15 @@ public class GameActivity extends Activity {
     @Override
     public boolean onKeyDown(int keycode, KeyEvent event){
         if(keycode == KeyEvent.KEYCODE_BACK){
+
+            /*Pause animations and close socket if in multiplayer*/
             gamePlayView.pause();
             gamePlayView.closeSocket();
+
+            /*Finish this activity*/
             finish();
+
+            /*Start menu activity*/
             Intent intent = new Intent(this,MainActivity.class);
             this.startActivity(intent);
             return true;
@@ -54,7 +68,7 @@ public class GameActivity extends Activity {
         return false;
     }
 
-    /*In case of touchevent foward it to the MenuActivity or the PlayActivity*/
+    /*In case of touch event forward it to the PlayActivity*/
     @Override
     public boolean onTouchEvent(MotionEvent event){
         return gamePlayView.validateTouchEvent(event);

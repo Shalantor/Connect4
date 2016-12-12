@@ -527,6 +527,7 @@ public class GameUtils {
             }
         }
 
+        /*Check if reached max depth*/
         if(depth == 0){
             return bestMove;
         }
@@ -602,6 +603,7 @@ public class GameUtils {
 
     }
 
+    /*Split a string separated by spaces*/
     public static String[] splitInfo(String info){
 
         return info.split(" ");

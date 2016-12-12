@@ -20,15 +20,20 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
 import java.io.IOException;
 import java.net.Socket;
-import java.util.concurrent.ExecutionException;
+
+/*This class handles a match, both singleplayer and multiplayer matches*/
 
 public class GamePlayActivity extends SurfaceView implements Runnable{
 
+    /*Thread that will run on GUI and control animations*/
     private Thread thread = null;
+
+    /*Used for the surface*/
     private SurfaceHolder holder;
+
+    /*Boolean variables for game state*/
     volatile boolean playingConnect4;
     volatile boolean isSinglePlayer;
     volatile boolean isMultiPlayer ;
@@ -38,6 +43,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     volatile boolean isChipFalling;
     volatile boolean isGameOver;
 
+    /*Tools to paint and render graphics*/
     private Paint paint;
     private Canvas canvas;
 
@@ -95,7 +101,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     volatile boolean isMuted;
     volatile boolean needVolumeChange;
 
-    /*static variables*/
+    /*static variables for shared preferences and intent extras*/
     private static final String RANK = "PLAYER_RANK";
     private static final String OFFLINE_WIN = "OFFLINE_WINS";
     private static final String ONLINE_WIN = "ONLINE_WINS";
@@ -119,6 +125,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*Name of opponent*/
     String[] opponentsName;
 
+    /*Handler for updating remaining turn time*/
     private Handler handler = new Handler();
     private Runnable runnable;
     private int time = GameUtils.MAX_TURN_TIME;
@@ -126,33 +133,56 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
     public GamePlayActivity(Context context){
         super(context);
+
+        /*Initialize graphic tools*/
         holder = getHolder();
         paint = new Paint();
+
+        /*Get reference to activity*/
         associatedActivity = (Activity) context;
+
+        /*Get intent reference to get data about game*/
         Intent intent = associatedActivity.getIntent();
+
+        /*Case of singeplayer game*/
         if(intent.getIntExtra("MODE",-1) == 0){
+
+            /*Set variables*/
             isSinglePlayer = true;
             isMultiPlayer = false;
+
+            /*For start set player to have turn, so that the AI
+            *wont start playing, it will change later before game starts*/
             isPlayersTurn = true;
 
         }
         else{
+            /*Case of multiplayer*/
             isMultiPlayer = true;
             isSinglePlayer = false;
+
+            /*Tasks to connect to server*/
             sendTask = new GameAsyncTask(GameUtils.getSocket(),associatedActivity,false);
             sendTask.setOperation(0);
             receiveTask = new GameAsyncTask(GameUtils.getSocket(),associatedActivity,false);
             receiveTask.setOperation(1);
+
+            /*Split message from server*/
             String[] gameInfo = GameUtils.splitInfo(intent.getStringExtra(GAME_INFO));
+
             isPlayersTurn = gameInfo[1].equals("1");
+
+            /*Get opponents name*/
             opponentsName = new String[gameInfo.length - 2];
             System.arraycopy(gameInfo,2,opponentsName,0,gameInfo.length - 2);
+
+            /*Get reference to socket from final static variable*/
             gameSocket = GameUtils.getSocket();
 
+            /*Listen on the task responsible for receiving messages*/
             receiveTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
 
-            handler.postDelayed(runnable, 1000);
-
+            /*handler to update turn time that runs in intervals of one second*/
             runnable = new Runnable() {
                 @Override
                 public void run() {
@@ -161,6 +191,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 }
             };
 
+            /*Start handler*/
             handler.postDelayed(runnable, 1000);
 
         }
@@ -168,6 +199,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         /*Set difficulty*/
         int difficulty = intent.getIntExtra(DIFFICULTY,0);
 
+        /*Set maximum depth of minimax algorithm for singleplayer*/
         if(difficulty == 0){
             maxDepth = 1;
         }
@@ -181,6 +213,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         /*set sound volume*/
         isMuted = intent.getBooleanExtra(MUTE,false);
 
+        /*Initialize some variables*/
         fallingChip = null;
         gameEndTime = -1;
 
@@ -219,7 +252,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
     }
 
-    /*Mute and unmute player*/
+    /*Mute player or set volume to max*/
     public void changeVolume(){
         if(isMuted){
             player.setVolume(0,0);
@@ -233,9 +266,10 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     @Override
     public void run(){
 
-        /*Create player object*/
+        /*Create media player object*/
         player = MediaPlayer.create(associatedActivity,R.raw.menusong);
         player.setLooping(true);
+
         if(isMuted){
             player.setVolume(0,0);
         }
@@ -244,128 +278,177 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         }
         player.start();
 
+        /*Primary game loop*/
         while(playingConnect4){
+
+            /*Do we need to change the volume of music?*/
             if(needVolumeChange){
                 changeVolume();
             }
+
+            /*It isn't the players turn, but the opponent has to wait for chip to fall*/
             if(!isPlayersTurn && !isChipFalling && !isGameOver){   /*wait for chip to fall and then get move of opponent*/
+
+                /*Its single player, so the AI calculates its next move*/
                 if (isSinglePlayer) {
                     int move = GameUtils.getMove(howManyChips, gameGrid, enemyChipColorInt, playerChipColorInt, maxDepth);
                     makeMove(move);
                 }
+
                 else{
                     /*Player waits for enemy move*/
                     if (receiveTask.getStatus() == AsyncTask.Status.FINISHED ){
 
                         /*Check if connection is ok*/
                         if (!receiveTask.getConnectionStatus()){
+                            /*Got disconnected from server*/
                             isGameOver = true;
                             endScreenMessage = "DISCONNECTED";
                             gameEndTime = System.currentTimeMillis();
                         }
                         else if (receiveTask.getTimeoutStatus() == 2){
+                            /*Didn't make a move in time*/
                             isGameOver = true;
                             endScreenMessage = "YOU LOSE";
                             gameEndTime = System.currentTimeMillis();
                         }
                         else if (receiveTask.getTimeoutStatus() == 3){
+                            /*Enemy didn't make a move in time*/
                             isGameOver = true;
                             endScreenMessage = "YOU WIN";
                             gameEndTime = System.currentTimeMillis();
                         }
                         else {
+                            /*Got a valid move from the opponent*/
                             int move = receiveTask.getMove();
                             int state = receiveTask.getState();
                             makeMove(move);
+
+                            /*Start new receive task to listen to server messages*/
                             receiveTask = new GameAsyncTask(gameSocket, associatedActivity, false);
                             receiveTask.setOperation(1);
                             receiveTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
+
+                            /*Check state of game*/
                             if (state == 3) {
+                                /*It's a tie*/
                                 isGameOver = true;
                                 endScreenMessage = "TIE";
                                 gameEndTime = System.currentTimeMillis();
                             } else if (state == 2) {
+                                /*It's a loss*/
                                 isGameOver = true;
                                 endScreenMessage = "YOU LOSE";
                                 gameEndTime = System.currentTimeMillis();
                             }
+
+                            /*Change turn and reset time*/
                             isPlayersTurn = !isPlayersTurn;
                             time = GameUtils.MAX_TURN_TIME;
+
                         }
                     }
+
                     /*Reset asynctask that was used for sending move*/
                     if(sendTask.getStatus() == AsyncTask.Status.FINISHED){
                         sendTask = new GameAsyncTask(gameSocket,associatedActivity,false);
                         sendTask.setOperation(0);
                     }
+
                 }
             }
             else if(isMultiPlayer && isPlayersTurn){
                 /*Its still players turn until server confirms move*/
                 if (receiveTask.getStatus() == AsyncTask.Status.FINISHED){
+
                     if (!receiveTask.getConnectionStatus()){
+                        /*Got disconnected*/
                         isGameOver = true;
                         endScreenMessage = "DISCONNECTED";
                         gameEndTime = System.currentTimeMillis();
                     }
                     else if (receiveTask.getTimeoutStatus() == 2){
+                        /*Lost because no move*/
                         isGameOver = true;
                         endScreenMessage = "YOU LOSE";
                         gameEndTime = System.currentTimeMillis();
                     }
                     else if (receiveTask.getTimeoutStatus() == 3){
+                        /*Won because no enemy move*/
                         isGameOver = true;
                         endScreenMessage = "YOU WIN";
                         gameEndTime = System.currentTimeMillis();
                     }
                     else {
+                        /*Else check validity of move that was sent*/
                         int validity = receiveTask.getMove();
+
                         if (validity == 0) {
+                            /*Move was ok*/
                             isPlayersTurn = !isPlayersTurn;
                             time = GameUtils.MAX_TURN_TIME;
+
                             int state = receiveTask.getState();
                             if (state == 1) {
+                                /*It's a win*/
                                 isGameOver = true;
                                 endScreenMessage = "YOU WIN";
                                 gameEndTime = System.currentTimeMillis();
                             } else if (state == 3) {
+                                /*It's a loss*/
                                 isGameOver = true;
                                 endScreenMessage = "TIE";
                                 gameEndTime = System.currentTimeMillis();
                             }
+
+                            /*Reset async task to listen to server messages*/
                             receiveTask = new GameAsyncTask(gameSocket, associatedActivity, false);
                             receiveTask.setOperation(1);
                             receiveTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
+
                         } else {
-                            /*Undo previous move*/
+                            /*Undo previous move, because it was not valid*/
                             howManyChips[lastMove] -= 1;
                             gameGrid[howManyChips[lastMove]][lastMove] = 0;
+
+                            /*Reset async task for sending*/
                             sendTask = new GameAsyncTask(gameSocket, associatedActivity, false);
                             sendTask.setOperation(0);
                         }
                     }
                 }
             }
+
+            /*Update screen and check frames per second*/
             updateGUIObjects();
             drawScreen();
             controlFPS();
+
+            /*If the game is over, wait a few seconds and then start a new activity*/
             Log.d("TIME","Game end time is " + gameEndTime);
             if(gameEndTime > 0 ) {
                 if (isSinglePlayer) {
+                    /*If singleplayer just reset game*/
                     if (System.currentTimeMillis() - gameEndTime > 3000) {
                         resetGame();
                     }
                 }
                 else if (isMultiPlayer && System.currentTimeMillis() - gameEndTime > 3000){
+                    /*Multiplayer case*/
                     if (endScreenMessage.equals("DISCONNECTED")){
+
+                        /*Disconnected from server , so go to start menu*/
                         Intent intent = new Intent(associatedActivity,LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.putExtra("MODE",1);
                         intent.putExtra(MUTE,isMuted);
                         associatedActivity.startActivity(intent);
                         associatedActivity.finish();
+
                     }
                     else{
+
+                        /*Game ended normally so go back to play menu*/
                         Intent intent = new Intent(associatedActivity,LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.putExtra("MODE",1);
@@ -374,12 +457,13 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                         GameUtils.setSocket(gameSocket);
                         associatedActivity.startActivity(intent);
                         associatedActivity.finish();
+
                     }
                 }
             }
         }
 
-        /*Stop and release player*/
+        /*Stop and release/destroy player*/
         player.pause();
         player.release();
         player = null;
@@ -396,10 +480,12 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         isColorChoiceVisible = true;
         isChipFalling = false;
         isGameOver = false;
+
         /*Will change after choosing menu, is just set true to stop AI from making a move*/
         if (isSinglePlayer ){
             isPlayersTurn = true;
         }
+
         needVolumeChange = false;
 
         /*Create array for field, 0 means empty , 1 means red chip, 2 means yellow chip*/
@@ -416,8 +502,11 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             fallingChip.top += cellHeight/8;
             fallingChip.bottom += cellHeight/8;
             if(fallingChip.bottom >= finalChipHeight){
-                fallingChip = null;                         //remove
 
+                /*Chip has reached its destination*/
+                fallingChip = null;                         //remove chip
+
+                /*Update board*/
                 if(!isPlayersTurn)
                     gameGrid[5 - howManyChips[fallingChipPosition]][fallingChipPosition] = playerChipColorInt;
                 else
@@ -425,6 +514,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
                 howManyChips[fallingChipPosition] += 1;
                 isChipFalling = false;
+
+                /*Check for win to update stats*/
                 if(GameUtils.hasWon(fallingChipPosition,fallingChipColor,howManyChips,gameGrid)){
 
                     /*Now save to stats*/
@@ -433,6 +524,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
                     if(!isPlayersTurn){                     /*the chip which is falling, falls after the turn change*/
                         endScreenMessage = "YOU WIN";
+                        /*Save stats*/
                         if(isSinglePlayer){
                             int wins = preferences.getInt(OFFLINE_WIN,0);
                             wins++;
@@ -446,6 +538,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     }
                     else{
                         endScreenMessage = "YOU LOSE";
+                        /*Save stats*/
                         if(isSinglePlayer){
                             int losses = preferences.getInt(OFFLINE_LOS,0);
                             losses++;
@@ -475,6 +568,8 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*Method to draw the game fields and the menu on screen*/
     public void drawScreen(){
         if(holder.getSurface().isValid()){
+
+            /*Draw background*/
             canvas = holder.lockCanvas();
             canvas.drawColor(Color.BLACK);                  /*Background*/
             paint = new Paint();
@@ -495,6 +590,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             for( int i = 0; i < 6;i++){
                 for(int j =0; j < 7;j++){
                     destRect = new Rect(j*cellWidth,i*cellHeight,(j+1)*cellWidth,(i+1)*cellHeight);
+                    /*Check color of chip in cell if there is one*/
                     if(gameGrid[i][j] == 0){
                         imageToDraw = emptyCell;
                     }
@@ -518,6 +614,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             paint.setColor(Color.BLACK);
             canvas.drawText("OPPONENT:",8*screenWidth/10 + screenWidth/20,screenHeight/15,paint);
 
+            /*Draw opponent name, which is AI in singleplayer and the enemy name in multiplayer*/
             if(isSinglePlayer){
                 paint.setTextSize(screenHeight/10);
                 canvas.drawText("AI",8*screenWidth/10 + screenWidth/20,screenHeight/4,paint);
@@ -532,6 +629,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 }
             }
 
+            /*Draw text for time, in multiplayer it displays time , in singleplayer there is no time limit*/
             canvas.drawText("TIME:",8*screenWidth/10 + screenWidth/20,screenHeight/2,paint);
 
             if(isSinglePlayer){
@@ -548,7 +646,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             destRect = new Rect(7*screenWidth/10,screenHeight - buttonDimension,
                                 7*screenWidth/10+ buttonDimension,screenHeight );
 
-            /*Draw sound button based on volume*/
+            /*Draw sound button based on volume (if muted or not)*/
             if(isMuted){
                 imageToDraw = soundOff;
             }
@@ -581,7 +679,6 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 canvas.drawText("Choose a color:",screenWidth/3,screenHeight/4,paint);
 
                 /*Draw chips*/
-
                 Rect redChipDestRect = new Rect(screenWidth/10,screenHeight/3,3*screenWidth/10,2*screenHeight/3);
                 Rect yellowChipDestRect = new Rect(4*screenWidth/10,screenHeight/3,6*screenWidth/10,2*screenHeight/3);
 
@@ -589,7 +686,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 canvas.drawBitmap(yellowChip,null,yellowChipDestRect,paint);
             }
 
-            /*Draw winning message*/
+            /*Draw winning message if game is over*/
             if(isGameOver){
                 paint.setColor(Color.argb(200,0,0,0));
                 canvas.drawRect(0,0,7*screenWidth/10,screenHeight,paint);
@@ -613,8 +710,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 noTextWidth = paint.measureText("NO");
             }
 
-
-
+            /*Unlock surface*/
             holder.unlockCanvasAndPost(canvas);
         }
     }
@@ -626,6 +722,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
         long timeThisFrame = System.currentTimeMillis() - lastFrameTime;
         long timeToSleep = 10 - timeThisFrame;
 
+        /*Make thread sleep a bit so that it won't run too fast*/
         if(timeToSleep > 0){
             try{
                 thread.sleep(timeToSleep);
@@ -638,7 +735,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
     }
 
-    /*To pause animation*/
+    /*To pause animations and thread*/
     public void pause(){
         playingConnect4 = false;
         boolean run = true;
@@ -662,60 +759,73 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
     /*Validate touchevent*/
     public boolean validateTouchEvent(MotionEvent event){
 
+        /*Coordinates of user touch*/
         float initialY = event.getY();
         float initialX = event.getX();
 
+        /*Check in which area the user did click*/
         if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
+
+            /*Case where the exit menu is visible*/
             if(isExitMenuVisible){
-                /*YES BUTTON*/
+                /*YES BUTTON, players want to exit game*/
                 if(initialX >= screenWidth/3 - yesTextWidth && initialX <= screenWidth/3 + yesTextWidth
                         && initialY >= 2*screenHeight/3 - screenHeight/5
                         && initialY <= 2*screenHeight/3){
                     pause();
-                    try {
-                        gameSocket.close();
-                    }
-                    catch(IOException ex){
 
+                    /*Close socket if in multiplayer*/
+                    if(isMultiPlayer) {
+                        try {
+                            gameSocket.close();
+                        } catch (IOException ex) {
+                            Log.d("SOCKET_CLOSE", "Error closing socket");
+                        }
                     }
+
+                    /*Start the menu activity*/
                     Intent intent = new Intent(associatedActivity,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra(MUTE,isMuted);
                     associatedActivity.startActivity(intent);
                     associatedActivity.finish();
                 }
-                /*NO BUTTON*/
+                /*NO BUTTON, player wants to go back to game*/
                 if(initialX >= 2*screenWidth/3 - noTextWidth && initialX <= 2*screenWidth/3 + noTextWidth
                         && initialY >= 2*screenHeight/3 - screenHeight/5
                         && initialY <= 2*screenHeight/3){
                     isExitMenuVisible = false;
                 }
+                /*Return true because touch event was validated*/
                 return true;
             }
+            /*Case where the color choice menu is visible*/
             else if(isColorChoiceVisible){
-                /*BACK BUTTON*/
+                /*BACK BUTTON,Player wants to exit game, so show exit menu*/
                 if(initialX >= 9*screenWidth/10 && initialX <= screenWidth
                         && initialY >= screenHeight - screenWidth/10 && initialY <= screenHeight){
                     isExitMenuVisible = true;
                 }
-                /*SOUND BUTTON*/
+                /*SOUND BUTTON, players wants to mute or up volume of sound*/
                 else if(initialX >= 7*screenWidth/10 && initialX <= 8*screenWidth/10
                         && initialY >= screenHeight - screenWidth/10 && initialY <= screenHeight) {
                     isMuted = !isMuted;
                     needVolumeChange = true;
                 }
-                /*RED CHIP ICON*/
+                /*RED CHIP ICON, player chose red chip*/
                 else if(initialX >= screenWidth/10 && initialX <= 3*screenWidth/10
                         && initialY >= screenHeight/3 && initialY <= 2*screenHeight/3){
+                    /*Set variables accordingly*/
                     playerChipColorInt = 1;
                     playerChipColor = redChip;
                     enemyChipColorInt = 2;
                     enemyChipColor = yellowChip;
                     isColorChoiceVisible = false;
                 }
-                /*YELLOW CHIP ICON*/
+                /*YELLOW CHIP ICON, player chose yellow chip*/
                 else if(initialX >= 4*screenWidth/10 && initialX <= 6*screenWidth/10
                         && initialY >= screenHeight/3 && initialY <= 2*screenHeight/3){
+                    /*Set variables accordingly*/
                     playerChipColorInt = 2;
                     playerChipColor = yellowChip;
                     enemyChipColor = redChip;
@@ -723,23 +833,28 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                     isColorChoiceVisible = false;
                 }
                 if (!isColorChoiceVisible && isSinglePlayer){
+                    /*If in singleplayer calculate whose turn it is, after the player chose a color*/
                     isPlayersTurn = Math.random() > 0.5;
                 }
             }
             else{
-                /*BACK BUTTON*/
+                /*Only the game gris is visible*/
+                /*BACK BUTTON,show exit menu*/
                 if(initialX >= 9*screenWidth/10 && initialX <= screenWidth
                         && initialY >= screenHeight - screenWidth/10 && initialY <= screenHeight){
                     isExitMenuVisible = true;
                 }
-                /*SOUND BUTTON*/
+                /*SOUND BUTTON, change volume of sound*/
                 else if(initialX >= 7*screenWidth/10 && initialX <= 8*screenWidth/10
                         && initialY >= screenHeight - screenWidth/10 && initialY <= screenHeight){
                     needVolumeChange = true;
                     isMuted = !isMuted;
                 }
                 else if(isPlayersTurn && !isChipFalling && !isGameOver){     /*Is it the players turn?*/
-                    /*Check which column is active*/
+                    /*Check which column was touched*/
+                    /*In all cases check if the particular column was already active and make move
+                    * If there is sufficient space, else set no active column. If there was no active column
+                    * set his one as the active one*/
                     if(initialX <= screenWidth/10){
                         if(activeColumnNumber == 0 && GameUtils.hasSpace(0,howManyChips)) {
                             makeMove(0);
@@ -824,15 +939,19 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                             activeColumnNumber = 6;
                         }
                     }
+                    /*Touch event was validated*/
                     return true;
                 }
             }
         }
+        /*Touch event was not validated*/
         return false;
     }
 
     /*Insert chip in specified position*/
     public void makeMove(int columnNumber){
+
+        /*Get chip and grid info*/
         lastMove = columnNumber;
         isChipFalling = true;
         finalChipHeight = screenHeight - howManyChips[columnNumber]*cellHeight;
