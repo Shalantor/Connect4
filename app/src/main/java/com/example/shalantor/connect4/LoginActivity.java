@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     private PlayButtonFragment playButtonFragment = null;
 
     /*Socket and server address*/
-    private Socket connectSocket;
+    private Socket connectSocket = null;
     public String address;
 
     @Override
@@ -59,25 +59,10 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         /*Set layout to show*/
         setContentView(R.layout.activity_login);
 
-        /*Get intent info about which fragment to display*/
-        Intent intent = getIntent();
-        boolean showPlay = intent.getBooleanExtra("PLAY",false);
 
-        if(!showPlay) {
-            /*Show start login menu*/
-            accFragment = new AccountFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.container, accFragment, ACCOUNT_FRAGMENT).commit();
-        }
-        else{
-            /*Show play button menu, this is the case when user just finished a game
-            * and wants to play another one without logging in again*/
-            playButtonFragment = new PlayButtonFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.container, playButtonFragment, PLAY_BUTTON_FRAGMENT).commit();
-            getSupportFragmentManager().executePendingTransactions();
-
-            /*Set socket reference*/
-            playButtonFragment.setSocket(GameUtils.getSocket());
-        }
+        /*Show start login menu*/
+        accFragment = new AccountFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.container, accFragment, ACCOUNT_FRAGMENT).commit();
 
     }
 
@@ -181,6 +166,8 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
 
     /*Method to check if server is listening*/
     private boolean isAddressCorrect(){
+
+        Log.d("CHECK_CONNECTION","isaddresscorrect was called");
 
         /*First get text of edittext*/
         EditText addressText = (EditText) findViewById(R.id.ip_address);

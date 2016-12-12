@@ -435,30 +435,21 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                 }
                 else if (isMultiPlayer && System.currentTimeMillis() - gameEndTime > 3000){
                     /*Multiplayer case*/
-                    if (endScreenMessage.equals("DISCONNECTED")){
 
-                        /*Disconnected from server , so go to start menu*/
-                        Intent intent = new Intent(associatedActivity,LoginActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.putExtra("MODE",1);
-                        intent.putExtra(MUTE,isMuted);
-                        associatedActivity.startActivity(intent);
-                        associatedActivity.finish();
-
+                    /*go to start menu*/
+                    Intent intent = new Intent(associatedActivity,MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra(MUTE,isMuted);
+                    try {
+                        gameSocket.close();
                     }
-                    else{
-
-                        /*Game ended normally so go back to play menu*/
-                        Intent intent = new Intent(associatedActivity,LoginActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.putExtra("MODE",1);
-                        intent.putExtra(MUTE,isMuted);
-                        intent.putExtra("PLAY",true);
-                        GameUtils.setSocket(gameSocket);
-                        associatedActivity.startActivity(intent);
-                        associatedActivity.finish();
-
+                    catch(IOException ex){
+                        Log.d("CLOSE_SOCKET","Error closing socket");
                     }
+                    gameSocket = null;
+                    associatedActivity.startActivity(intent);
+                    associatedActivity.finish();
+
                 }
             }
         }
