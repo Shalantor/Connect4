@@ -188,25 +188,24 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue,queueForUserThread):
 #can continue with a new match, without having to login again
 def startNewUserThreads(queueToDatabase,queueToMatchMaking,player):
 
-    for i in range(0,2):
+    #Set default value to variables for user thread
+    playerType = None
+    Id = None
+    userName = None
+    userEmail = None
 
-        #Set default value to variables for user thread
-        playerType = None
-        Id = None
-        userName = None
-        userEmail = None
+    #Get player socket and his type
+    firstSocket = player.get('socket')
+    playerType = player.get('type')
 
-        #Get player socket and his type
-        firstSocket = player.get('socket')
-        playerType = player.get('type')
+    #Set his info accordingly
+    if playerType == '0':
+        userName = player.get('name')
+        userEmail = player.get('email')
+    else:
+        Id = player.get('id')
 
-        #Set his info accordingly
-        if playerType == '0':
-            userName = player.get('name')
-            userEmail = player.get('email')
-        else:
-            Id = player.get('id')
-
-        #Start new thread
-        uThread = Thread(target=userThread,args=(firstSocket,queueToDatabase,queueToMatchMaking,playerType,Id,userName,userEmail))
-        uThread.start()
+    #Start new thread
+    print 'Start new threads'
+    uThread = Thread(target=userThread,args=(firstSocket,queueToDatabase,queueToMatchMaking,playerType,Id,userName,userEmail))
+    uThread.start()

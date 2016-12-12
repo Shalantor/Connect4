@@ -115,6 +115,7 @@ def userThread(replySocket,dbQueue,matchQueue,userType = None,userId = None,name
             playerToken['type'] = userType
             playerToken['socket'] = replySocket
             #now send to matchmaking thread
+            print 'Send data to %s' % name
             replySocket.send('0\n')
             matchQueue.put(playerToken)
             print 'Send data to match making thread'
