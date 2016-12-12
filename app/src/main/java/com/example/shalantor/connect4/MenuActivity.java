@@ -1,5 +1,6 @@
 package com.example.shalantor.connect4;
 
+/*Shows the animations of the in game menu before starting a match*/
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,7 +19,6 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +26,7 @@ import java.util.Random;
 
 public class MenuActivity extends SurfaceView implements Runnable{
 
+    /*Constants for shared preferences and intents*/
     private static final String RANK = "PLAYER_RANK";
     private static final String OFFLINE_WIN = "OFFLINE_WINS";
     private static final String ONLINE_WIN = "ONLINE_WINS";
@@ -34,25 +35,30 @@ public class MenuActivity extends SurfaceView implements Runnable{
     private static final String DIFFICULTY = "DIFFICULTY";
     private static final String MUTE = "MUTE";
 
-    private volatile boolean showingMenu;                //to stop animations on menu if not necessary
-    private Canvas canvas;
-    private List<CustomRect> listOfFallingChips;      //list of the chips that will fall fro mtop to bottom
+    /*to stop animations on menu if not necessary*/
+    private volatile boolean showingMenu;
+
+    /*list of the chips that will fall from top to bottom*/
+    private List<CustomRect> listOfFallingChips;
 
     /*Dimensions needed for menu screen*/
     private int screenWidth;
     private int screenHeight;
     private int chipDimension;
 
-    private long lastFrameTime;                 //for fps
+    /*For frames pre second calculation*/
+    private long lastFrameTime;
 
     /*Bitmaps with the images*/
     private Bitmap redChip;
     private Bitmap yellowChip;
     private Bitmap backButton;
 
+    /*Graphics utilities and thread that will run*/
     private Thread thread = null;
     private SurfaceHolder holder;
     private Paint paint;
+    private Canvas canvas;
     private Paint stkPaint;
 
     /*Boolean values to know which page is showing right now*/
@@ -63,7 +69,6 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
     /*Variables for start menu buttons*/
     private int startButtonHeight;
-    private int startButtonWidth;
 
     private Activity associatedActiviry;
 
@@ -90,6 +95,8 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
     public MenuActivity(Context context){
         super(context);
+
+        /*Initialize variables*/
         showingMenu = true;
         listOfFallingChips = new ArrayList<>();
         isStartMenuVisible = true;
@@ -114,7 +121,6 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
         /*Get dimension for start menu*/
         startButtonHeight = screenHeight / 5;
-        startButtonWidth = screenWidth / 3;
 
         /*Load images*/
         redChip = BitmapFactory.decodeResource(getResources(),R.mipmap.redchip);
@@ -147,6 +153,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
             player.setVolume(0,0);
         }
 
+        /*Start play back*/
         player.start();
 
         while(showingMenu){
@@ -166,6 +173,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
 
     /*Method to update position of elements in menu screen*/
+    /*While showing menu screen chips fall from the top to the bottom*/
     public void updateElements(){
 
         /*Remove chips which have fallen through whole screen*/
@@ -176,7 +184,8 @@ public class MenuActivity extends SurfaceView implements Runnable{
             }
         }
 
-        if(listOfFallingChips.size() < 4 && areChipsApartEnough()) {     /*Don't add more than 4 chips at a time*/
+        /*Don't add more than 4 chips at a time*/
+        if(listOfFallingChips.size() < 4 && areChipsApartEnough()) {
 
             /*Now add a chip at random coordinates*/
             Random generator = new Random();
@@ -278,7 +287,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
         thread.start();
     }
 
-    /*Method to check if chips are apart enough from each other*/
+    /*Method to check if chips are apart enough from each other vertically */
     private boolean areChipsApartEnough(){
         for(CustomRect customRect : listOfFallingChips){
             if(customRect.getRect().top <= screenHeight / 4){
@@ -291,17 +300,19 @@ public class MenuActivity extends SurfaceView implements Runnable{
     /*Draws the buttons for the main start menu*/
     public void drawMenuButtons(){
 
+        /*Initialize paint object*/
         paint = new Paint();
-        paint.setColor(Color.argb(255,252,162,7));
+        paint.setColor(Color.argb(255,252,162,7));/*Orange color*/
         paint.setTextSize(startButtonHeight);
         paint.setTextAlign(Paint.Align.CENTER);
 
+        /*Paint for orange color on top of letters*/
         stkPaint = new Paint();
         stkPaint.setStyle(Paint.Style.STROKE);
         stkPaint.setStrokeWidth(4);
         stkPaint.setTextSize(startButtonHeight);
         stkPaint.setTextAlign(Paint.Align.CENTER);
-        stkPaint.setColor(Color.BLACK);   /*Orange color*/
+        stkPaint.setColor(Color.BLACK);
 
 
         Paint rectPaint = new Paint();                          /*Paint for the rectangle that will be around the text*/
@@ -347,8 +358,11 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
     /*check what player touched on screen*/
     public boolean validateTouchEvent(MotionEvent event){
+
         float initialY;
         float initialX;
+
+        /*Coordinates of touch*/
         initialY = event.getY();
         initialX = event.getX();
 
@@ -366,7 +380,9 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
         if(isStartMenuVisible){                         /*Player touched the start menu*/
             if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
-                /*Now check each button individually*/
+                /*Now check each button individually and set boolean variables
+                * So that on the next iteration the according screen appears,
+                * based on what user did touch*/
 
                 /*EXIT BUTTON*/
                 if(initialY <= 4*startButtonHeight + (4.5f)*screenHeight / 25
@@ -396,6 +412,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
                     isAboutPageVisible = false;
                     isSelectPlayModeVisible = false;
                 }
+                /*PLAY GAME BUTTON*/
                 else if(initialY <= startButtonHeight + 2*screenHeight / 25
                         && initialY >= 2* screenHeight / 25
                         && initialX >= screenWidth/2 - textRectWidth/2
@@ -409,6 +426,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
             }
             return true;
         }
+        /*Screen that shows the about page is visible*/
         else if(isAboutPageVisible){
             if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
                 /*Check if back button was pressed*/
@@ -439,6 +457,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
             else if(initialY >= 2*screenHeight/15 && initialY <= 3*screenHeight/15){
                 /*Check which one*/
                 boolean commitChange = false;
+
                 if(initialX >= screenWidth/4 - easyTextWidth/2 && initialX <= screenWidth/4 + easyTextWidth/2){
                     difficulty = 0;
                     commitChange = true;
@@ -451,6 +470,8 @@ public class MenuActivity extends SurfaceView implements Runnable{
                     difficulty = 2;
                     commitChange = true;
                 }
+
+                /*Now save difficulty in shared preferences*/
                 if(commitChange) {
                     SharedPreferences preferences = associatedActiviry.getSharedPreferences(associatedActiviry.getPackageName(),Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = preferences.edit();
@@ -462,7 +483,8 @@ public class MenuActivity extends SurfaceView implements Runnable{
             return true;
         }
         else if(isSelectPlayModeVisible){
-                        /*Check if back button was pressed*/
+
+            /*Check if back button was pressed*/
             if(initialY >= 5*screenHeight/6 -screenHeight/20
                     && initialY <= screenHeight - screenHeight/20
                     && initialX >= screenWidth/20
@@ -472,10 +494,12 @@ public class MenuActivity extends SurfaceView implements Runnable{
                 isOptionsPageVisible = false;
                 isSelectPlayModeVisible = false;
             }
-            /*Single player button*/
+            /*SINGLEPLAYER BUTTON*/
             else if(initialX >= screenWidth/2 - textRectWidth/2 && initialX <= screenWidth/2 +textRectWidth/2
                     && initialY >= screenHeight/3 + 2*screenHeight/25 - startButtonHeight
                     && initialY <= screenHeight/3 + 2*screenHeight/25){
+
+                /*Start activity for singleplayer game*/
                 Intent intent = new Intent(associatedActiviry,GameActivity.class);
                 pause();
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -484,10 +508,13 @@ public class MenuActivity extends SurfaceView implements Runnable{
                 intent.putExtra(MUTE,isPlayerMuted);
                 associatedActiviry.startActivity(intent);
                 associatedActiviry.finish();
+
             }
+            /*MULTIPLAYER BUTTON*/
             else if(initialX >= screenWidth/2 - textRectWidth/2 && initialX <= screenWidth/2 +textRectWidth/2
                     && initialY >= 2*screenHeight/3  - startButtonHeight
                     && initialY <= 2*screenHeight/3){
+                /*Start activity for multiplayer game*/
                 Intent intent = new Intent(associatedActiviry,LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 pause();
@@ -506,12 +533,14 @@ public class MenuActivity extends SurfaceView implements Runnable{
     /*Method to draw the about page*/
     public void drawAboutPageDescription(){
 
+        /*Initialize paint*/
         Paint aboutPaint = new Paint();
         aboutPaint.setColor(Color.argb(128,0,0,0));
 
         /*black screen with alpha value, so that text is more visible*/
         canvas.drawRect(screenWidth /10,0,9*screenWidth/10,screenHeight,aboutPaint);
 
+        /*Set variables of paint and draw on screen*/
         aboutPaint.setColor(Color.WHITE);
         aboutPaint.setTextAlign(Paint.Align.CENTER);
         aboutPaint.setTextSize(screenHeight / 15);
@@ -530,6 +559,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
         String medium = "MEDIUM";
         String hard = "HARD";
 
+        /*Check which difficulty is active*/
         if(difficulty == 0){
             easy += tickCharacter;
         }
@@ -546,10 +576,12 @@ public class MenuActivity extends SurfaceView implements Runnable{
         /*black screen with alpha value, so that text is more visible*/
         canvas.drawRect(screenWidth/10,0,9*screenWidth/10,screenHeight,aboutPaint);
 
+        /*Set paint variables*/
         aboutPaint.setColor(Color.WHITE);
         aboutPaint.setTextAlign(Paint.Align.CENTER);
         aboutPaint.setTextSize(screenHeight / 15);
 
+        /*Draw difficulty options on screen*/
         canvas.drawText("DIFFICULTY",screenWidth/2,screenHeight / 15 + screenHeight / 30,aboutPaint);
         canvas.drawText(easy,screenWidth/4,3*screenHeight/15,aboutPaint);
         canvas.drawText(medium,screenWidth/2,3*screenHeight/15,aboutPaint);
@@ -583,7 +615,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
 
         /*Set up paint objects*/
         paint = new Paint();
-        paint.setColor(Color.argb(255,252,162,7));
+        paint.setColor(Color.argb(255,252,162,7));/*Orange color*/
         paint.setTextSize(startButtonHeight);
         paint.setTextAlign(Paint.Align.CENTER);
 
@@ -592,7 +624,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
         stkPaint.setStrokeWidth(4);
         stkPaint.setTextSize(startButtonHeight);
         stkPaint.setTextAlign(Paint.Align.CENTER);
-        stkPaint.setColor(Color.BLACK);   /*Orange color*/
+        stkPaint.setColor(Color.BLACK);
 
 
         Paint rectPaint = new Paint();                          /*Paint for the rectangle that will be around the text*/
@@ -616,6 +648,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
     /*To draw the back button*/
     public void drawBackButton(){
 
+        /*Destination rectangle*/
         Rect destRect = new Rect(screenWidth/20,5*screenHeight/6 -screenHeight/20,
                 screenWidth/20 + screenWidth/6,screenHeight - screenHeight/20);
         Paint aboutPaint = new Paint();
@@ -635,6 +668,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
             imageToDraw = BitmapFactory.decodeResource(getResources(),R.mipmap.sound_on);
         }
 
+        /*Destination rectangle*/
         Rect destRect = new Rect(screenWidth - (screenWidth / 6 ),
                 5*screenHeight/6 -screenHeight/20,19*screenWidth/20,screenHeight -screenHeight/20 );
 
@@ -645,7 +679,7 @@ public class MenuActivity extends SurfaceView implements Runnable{
     }
 
 
-    /*Mute and unmute player*/
+    /*Mute and change volume of media player*/
     public void changeVolume(){
         if(isPlayerMuted){
             player.setVolume(0,0);

@@ -1,20 +1,14 @@
 package com.example.shalantor.connect4;
 
+/*Shows the fragment where user can register a new account*/
+
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
-import android.graphics.Point;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,34 +16,36 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegisterFragment extends Fragment{
 
+    /*Regular expression to check the email validity*/
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
+    /*Minimum password length*/
     public static final int PASSWORD_MIN_LENGTH = 8;
+
+    /*Constants for shared preferences*/
     public static final String USER_TYPE = "USER_TYPE";
     public static final String USERNAME = "USERNAME";
     public static final String EMAIL = "EMAIL";
+
     public Activity activity;
     private Socket connectSocket;
     private View view;
+
+    /*Interface to communicate with register fragment*/
     private RegisterFragment.registerFragmentCallback mCallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        /* Inflate the layout for this fragment*/
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         activity = getActivity();
 
@@ -65,13 +61,13 @@ public class RegisterFragment extends Fragment{
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
+        /* This makes sure that the container activity has implemented
+          the callback interface. If not, it throws an exception*/
         try {
             mCallback = (RegisterFragment.registerFragmentCallback) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement SetSocket interface");
+                    + " must implement register interface");
         }
     }
 

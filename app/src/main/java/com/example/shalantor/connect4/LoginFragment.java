@@ -33,11 +33,15 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutionException;
 
+/*Fragment to log in with a game specific account*/
 public class LoginFragment extends Fragment{
 
+    /*Constants for intent and shared preferences*/
     public static final String USER_TYPE = "USER_TYPE";
     public static final String USERNAME = "USERNAME";
     public static final String EMAIL = "EMAIL";
+
+    /*references to parent activity and view, socket and interface to communicate with parent*/
     public Activity activity;
     public Socket connectSocket;
     private LoginFragment.loginCallback mCallback;
@@ -46,7 +50,7 @@ public class LoginFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        /* Inflate the layout for this fragment*/
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         activity = getActivity();
         view = inflater.inflate(R.layout.login_fragment, container, false);
@@ -62,8 +66,8 @@ public class LoginFragment extends Fragment{
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
+        /* This makes sure that the container activity has implemented
+         * the callback interface. If not, it throws an exception*/
         try {
             mCallback = (LoginFragment.loginCallback) context;
         } catch (ClassCastException e) {

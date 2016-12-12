@@ -1,33 +1,20 @@
 package com.example.shalantor.connect4;
 
+/*Shows fragmetn where user resets his password*/
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
-import android.graphics.Point;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,15 +23,19 @@ public class ResetPasswordFragment extends Fragment{
 
     private Activity activity;
     private Socket connectSocket;
+
+    /*Regular expression to check email validity*/
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
+
     public ResetPasswordFragment.resetFragmentCallback mCallback;
     private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        /* Inflate the layout for this fragment*/
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         activity = getActivity();
         view = inflater.inflate(R.layout.reset_password_fragment, container, false);
@@ -60,8 +51,8 @@ public class ResetPasswordFragment extends Fragment{
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
+        /* This makes sure that the container activity has implemented
+          the callback interface. If not, it throws an exception*/
         try {
             mCallback = (ResetPasswordFragment.resetFragmentCallback) context;
         } catch (ClassCastException e) {
@@ -181,10 +172,12 @@ public class ResetPasswordFragment extends Fragment{
                     Log.d("INTERRUPT","Interrupted exception occured");
                 }
 
+                /*Check result*/
                 if(result.equals(AccountManagementUtils.OK)) {
                     /*Now replace fragment*/
                     mCallback.setNewPasswordFragment();
                 }
+                /*If something want wrong inform user*/
                 else if (result.equals(AccountManagementUtils.ERROR)){
                     textView.setText(AccountManagementUtils.CODE_NOT_VALID_MESSAGE, TextView.BufferType.NORMAL);
                 }

@@ -14,12 +14,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import java.io.IOException;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.concurrent.ExecutionException;
-import com.facebook.CallbackManager;
 
 public class LoginActivity extends AppCompatActivity implements AccountFragment.setSocket,
                                                                 ResetPasswordFragment.resetFragmentCallback,
@@ -42,6 +39,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     public static final String NEW_PASSWORD_FRAGMENT = "NEW_PASSWORD_FRAGMENT";
     public static final String PLAY_BUTTON_FRAGMENT = "PLAY_BUTTON_FRAGMENT";
 
+    /*Server port and fragments*/
     public static final int PORT = 1337;
     private AccountFragment accFragment = null;
     private LoginFragment logFragment = null;
@@ -50,27 +48,34 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     private NewPasswordFragment newPassFragment = null;
     private PlayButtonFragment playButtonFragment = null;
 
+    /*Socket and server address*/
     private Socket connectSocket;
     public String address;
-    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        /*Set layout to show*/
         setContentView(R.layout.activity_login);
+
+        /*Get intent info about which fragment to display*/
         Intent intent = getIntent();
         boolean showPlay = intent.getBooleanExtra("PLAY",false);
 
         if(!showPlay) {
+            /*Show start login menu*/
             accFragment = new AccountFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.container, accFragment, ACCOUNT_FRAGMENT).commit();
         }
         else{
+            /*Show play button menu, this is the case when user just finished a game
+            * and wants to play another one without logging in again*/
             playButtonFragment = new PlayButtonFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.container, playButtonFragment, PLAY_BUTTON_FRAGMENT).commit();
             getSupportFragmentManager().executePendingTransactions();
+
+            /*Set socket reference*/
             playButtonFragment.setSocket(GameUtils.getSocket());
         }
 
@@ -81,6 +86,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     public Socket getSocketReference(){
         return connectSocket;
     }
+
 
     @Override
     public void setSocketReference(){
@@ -93,24 +99,33 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     /*Implement interface for reset password fragment*/
     @Override
     public void setNewPasswordFragment(){
+        /*Display fragment*/
         newPassFragment = new NewPasswordFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container,newPassFragment,NEW_PASSWORD_FRAGMENT).commit();
         getSupportFragmentManager().executePendingTransactions();
+
+        /*Set this fragment's buttons and socket and nullify other fragments*/
         newPassFragment.adjustButtons();
         newPassFragment.setSocket(connectSocket);
-        accFragment = null;
+
+        /*TODO:Remove this below if app runs correctly*/
+        /*accFragment = null;
         regFragment = null;
         resetFragment = null;
-        logFragment = null;
+        logFragment = null;*/
 
     }
 
     /*Implement interface for new password fragment*/
     @Override
     public void replaceNewPasswordFragment(){
+
+        /*Display this fragment*/
         logFragment = new LoginFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container,logFragment,LOGIN_FRAGMENT).commit();
         getSupportFragmentManager().executePendingTransactions();
+
+        /*Set button sizes and socket reference*/
         logFragment.adjustButtons();
         logFragment.setConnectSocket(connectSocket);
 
@@ -119,9 +134,13 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     /*Implements interface for login fragment*/
     @Override
     public void replaceLoginWithPlayFragment(){
+
+        /*Display fragment*/
         playButtonFragment = new PlayButtonFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container,playButtonFragment,PLAY_BUTTON_FRAGMENT).commit();
         getSupportFragmentManager().executePendingTransactions();
+
+        /*Set button sizes and socket reference*/
         playButtonFragment.setSocket(connectSocket);
         playButtonFragment.adjustButtons();
     }
@@ -129,9 +148,12 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     /*Implements interface for register fragment*/
     @Override
     public void replaceRegisterFragment(){
+        /*Display fragment*/
         logFragment = new LoginFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container,logFragment,LOGIN_FRAGMENT).commit();
         getSupportFragmentManager().executePendingTransactions();
+
+        /*Set button sizes and socket reference*/
         logFragment.setConnectSocket(connectSocket);
         logFragment.adjustButtons();
     }
@@ -139,9 +161,13 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     /*Implements interface for play button fragment*/
     @Override
     public void goBackToAccountFragment(){
+
+        /*Display fragment*/
         accFragment = new AccountFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container,accFragment,ACCOUNT_FRAGMENT).commit();
         getSupportFragmentManager().executePendingTransactions();
+
+        /*Set button sizes*/
         accFragment.adjustButtons();
         connectSocket = null;
     }
@@ -149,6 +175,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     @Override
     protected void onStart(){
         super.onStart();
+        /*Adjust buttons of fragment of right fragment*/
         if (accFragment != null) {
             accFragment.adjustButtons();
         }
@@ -231,6 +258,7 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     @Override
     public boolean onKeyDown(int keycode, KeyEvent event){
         if(keycode == KeyEvent.KEYCODE_BACK){
+            /*If start fragment is visible, go back to menu activity*/
             accFragment = (AccountFragment) getSupportFragmentManager().findFragmentByTag(ACCOUNT_FRAGMENT);
             if (accFragment != null) {
                 finish();
@@ -246,6 +274,9 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
                 this.startActivity(intent);
                 return true;
             }
+            /*Else just go back to previous fragment after checking which fragmetn is visible*/
+            /*Display them and set their buttons size and text size and also set their
+            * references to sockets*/
             else if (getSupportFragmentManager().findFragmentByTag(RESET_PASSWORD_FRAGMENT) != null){
                 logFragment = new LoginFragment();
                 accFragment = null;
@@ -282,16 +313,19 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
         return false;
     }
 
-    /*On click functions for all buttons*/
+    /*On click functions for all visible buttons*/
 
     /*Go to login fragment button*/
     public void goToLogin(View view){
 
         boolean result = true;
+
+        /*If not connected, connect to server*/
         if (connectSocket == null){
             result = isAddressCorrect();
         }
 
+        /*If result is ok , go to login fragment*/
         if(result){
             logFragment = new LoginFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.container,logFragment,LOGIN_FRAGMENT).commit();
@@ -308,10 +342,13 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     public void goToRegister(View view){
 
         boolean result = true;
+
+        /*If not connected, connect to server*/
         if(connectSocket == null){
             result = isAddressCorrect();
         }
 
+        /*If result is ok , go to register fragment*/
         if(result){
             /*Replace fragments*/
             regFragment = new RegisterFragment();
@@ -329,16 +366,21 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     public void continueFacebook(View view){
 
         boolean result = true;
+
+        /*If not connected, connect to server*/
         if(connectSocket == null){
             result = isAddressCorrect();
         }
 
+        /*If result is ok go to play button fragment*/
         if(result){
-                    /*Read send data from preferences*/
+
+            /*Read send data from preferences*/
             SharedPreferences preferences = getSharedPreferences(getPackageName(),MODE_PRIVATE);
             String username = preferences.getString(FB_USERNAME,null);
             String facebookID = preferences.getString(FACEBOOK_ID,null);
 
+            /*Send server user credentials*/
             NetworkOperationsTask continueFB = new NetworkOperationsTask(connectSocket,this);
             String OpResult = "";
             try {
@@ -367,10 +409,13 @@ public class LoginActivity extends AppCompatActivity implements AccountFragment.
     public void goToResetFragment(View view){
 
         boolean result = true;
+
+        /*If not connected, connect to server*/
         if(connectSocket == null){
             result = isAddressCorrect();
         }
 
+        /*If result is ok go to reset password fragment*/
         if (result){
             resetFragment = new ResetPasswordFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.container,resetFragment,RESET_PASSWORD_FRAGMENT).commit();

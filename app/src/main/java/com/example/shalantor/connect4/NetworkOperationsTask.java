@@ -1,5 +1,6 @@
 package com.example.shalantor.connect4;
 
+/*Asynchronous task used for all network operations for player authentication */
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -8,7 +9,6 @@ import android.os.AsyncTask;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,6 +31,7 @@ public class NetworkOperationsTask extends AsyncTask<String, Void, String> {
     protected void onPreExecute() {
         super.onPreExecute();
 
+        /*Show a dialog so that user knows what is going on*/
         pDialog = new ProgressDialog(activity);
         pDialog.setMessage("Connecting to server");
 
@@ -62,16 +63,17 @@ public class NetworkOperationsTask extends AsyncTask<String, Void, String> {
             PrintWriter outputStream = new PrintWriter(socket.getOutputStream());
 
             String messageToSend = "";
-                /*Construct message to send*/
+
+            /*Construct message to send*/
             for (int i = 0; i < params.length; i++) {
                 messageToSend += params[i] + " ";
             }
 
-                /*Now send message*/
+            /*Now send message*/
             outputStream.print(messageToSend);
             outputStream.flush();
 
-                /*Now read answer from socket*/
+            /*Now read answer from socket*/
 
             try {
                 response = inputStream.readLine();

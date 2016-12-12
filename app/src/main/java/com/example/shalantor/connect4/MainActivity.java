@@ -5,9 +5,13 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
+/*This activity is showed whenever the app starts*/
 public class MainActivity extends Activity {
 
+    /*View to show*/
     private MenuActivity menuActivity;
+
+    /*Variable to check if menu is visible*/
     private boolean isMenuVisible;
 
     @Override
@@ -15,10 +19,12 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         isMenuVisible = true;
 
+        /*Show view*/
         menuActivity = new MenuActivity(this);
         setContentView(menuActivity);
     }
 
+    /*In lifecycle methods just pause or resume showing the animations of the manuactivity*/
     @Override
     protected void onStop(){
         super.onStop();
@@ -38,7 +44,7 @@ public class MainActivity extends Activity {
         menuActivity.pause();
     }
 
-    /*On key down terminate application*/
+    /*On key down back button terminate application*/
     @Override
     public boolean onKeyDown(int keycode, KeyEvent event){
         if(keycode == KeyEvent.KEYCODE_BACK){
@@ -49,7 +55,7 @@ public class MainActivity extends Activity {
         return false;
     }
 
-    /*In case of touchevent foward it to the MenuActivity or the PlayActivity*/
+    /*In case of touchevent foward it to the MenuActivity*/
     @Override
     public boolean onTouchEvent(MotionEvent event){
         if(isMenuVisible){
