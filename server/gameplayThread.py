@@ -108,6 +108,10 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue,queueForUserThread):
 
                     #Start new user threads
                     matchList.remove(match)
+                    winSocket.shutdown(socket.SHUT_RDWR)
+                    readSocket.shutdown(socket.SHUT_RDWR)
+                    winSocket.close()
+                    readSocket.close()
                     continue
                 else:
                     #Got a valid move from player
@@ -157,6 +161,10 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue,queueForUserThread):
                     if win or state1 == '3':
                         #now start new threads for players
                         matchList.remove(match)
+                        sendSocket.shutdown(socket.SHUT_RDWR)
+                        readSocket.shutdown(socket.SHUT_RDWR)
+                        sendSocket.close()
+                        readSocket.close()
 
             except socket.timeout:
                 #On time out, check if player has been idle for too long
@@ -177,3 +185,7 @@ def gameThread(queueToMatchMaking,queueToDatabase,exitQueue,queueForUserThread):
 
                     #Start new user threads
                     matchList.remove(match)
+                    winSocket.shutdown(socket.SHUT_RDWR)
+                    readSocket.shutdown(socket.SHUT_RDWR)
+                    winSocket.close()
+                    readSocket.close()
