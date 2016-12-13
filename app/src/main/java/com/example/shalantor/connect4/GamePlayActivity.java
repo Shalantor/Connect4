@@ -297,7 +297,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
 
                 else{
                     /*Player waits for enemy move*/
-                    if (receiveTask.getStatus() == AsyncTask.Status.FINISHED ){
+                    if (receiveTask.getStatus() == AsyncTask.Status.FINISHED && !isGameOver){
 
                         /*Check if connection is ok*/
                         if (!receiveTask.getConnectionStatus()){
@@ -359,7 +359,7 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
             }
             else if(isMultiPlayer && isPlayersTurn){
                 /*Its still players turn until server confirms move*/
-                if (receiveTask.getStatus() == AsyncTask.Status.FINISHED){
+                if (receiveTask.getStatus() == AsyncTask.Status.FINISHED && !isGameOver){
 
                     if (!receiveTask.getConnectionStatus()){
                         /*Got disconnected*/
@@ -389,12 +389,12 @@ public class GamePlayActivity extends SurfaceView implements Runnable{
                             time = GameUtils.MAX_TURN_TIME;
 
                             int state = receiveTask.getState();
-                            if (state == 1) {
+                            if (state == 1 && !isGameOver) {
                                 /*It's a win*/
                                 isGameOver = true;
                                 endScreenMessage = "YOU WIN";
                                 gameEndTime = System.currentTimeMillis();
-                            } else if (state == 3) {
+                            } else if (state == 3 && !isGameOver)  {
                                 /*It's a loss*/
                                 isGameOver = true;
                                 endScreenMessage = "TIE";
