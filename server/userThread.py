@@ -22,10 +22,9 @@ from threading import *
 PORT = 11337
 
 #This function-thread listens on a port for connections
-def listener(queueToDatabase,queueToMatchMaking):
+def listener(queueToDatabase,queueToMatchMaking,setupSocket):
 
     #Configure server Socket
-    setupSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM,0)
     setupSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
     #Listen on all interfaces
@@ -43,7 +42,7 @@ def listener(queueToDatabase,queueToMatchMaking):
         uThread.start()
         replySocket.send('0\n')
         print 'Created new user thread'
-        
+
     print('Listener Thread ends now')
     setupSocket.close()
 

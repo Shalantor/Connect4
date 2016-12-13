@@ -14,12 +14,15 @@ def main():
     #Setup database
     setupDatabase()
 
+    #Socket to listen
+    setupSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM,0)
+
     #Setup threads,queues and start threads
     queueToDatabase = Queue.Queue()
     queueToMatchMaking = Queue.Queue()
 
     #Listens on server port
-    listenerThread = Thread(target=listener,args=(queueToDatabase,queueToMatchMaking))
+    listenerThread = Thread(target=listener,args=(queueToDatabase,queueToMatchMaking,setupSocket))
     listenerThread.daemon = True
     listenerThread.start()
 
@@ -58,5 +61,9 @@ def main():
     exitQueue.put(True)
     exitQueue2.put(True)
 
-mainThread = Thread(target=(main))
-mainThread.start()
+    #Close socket
+    setupSocket.shutdown(socket.SHUT_RDWR)
+    setupSocket.close()
+
+if __name__ == '__main__':
+    main()
