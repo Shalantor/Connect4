@@ -12,3 +12,10 @@ The server handles user authentication , matchmaking and the game flow in online
 # Tools used for development
  - [Android studio latest version (2.1 during development)](https://developer.android.com/studio/index.html)
  - [Genymotion emulator for Android] (https://www.genymotion.com/)
+
+# Screenshots
+![menu](https://cloud.githubusercontent.com/assets/14819781/21401291/7076b434-c7bc-11e6-95eb-9fdadacc2303.png)
+
+![login](https://cloud.githubusercontent.com/assets/14819781/21401326/992eac24-c7bc-11e6-9392-25c4f1c685ae.png)
+
+![gameplay](https://cloud.githubusercontent.com/assets/14819781/21401336/a6944b1c-c7bc-11e6-8541-81c650e4adf7.png)
