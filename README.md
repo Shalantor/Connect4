@@ -8,6 +8,7 @@ The goal of this project was to design and implement a clone of the connect4 gam
 The game offers the user the chance to compete against the Artificial intelligence in offline matches or against other players in online matches. It consists of two parts , the client and the server.
 The client is used for offline and online matches. It shows a start menu when launching the app, where the user can adjust game settings, like the game difficulty in offline matches. After choosing a game mode, the actual game field is shown to the user.
 The server handles user authentication , matchmaking and the game flow in online multiplayer matches.
+Note that the server runs locally, by executing the tester.py file.
 
 # Tools used for development
  - [Android studio latest version (2.1 during development)](https://developer.android.com/studio/index.html)
