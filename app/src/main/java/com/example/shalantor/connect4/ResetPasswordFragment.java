@@ -71,9 +71,6 @@ public class ResetPasswordFragment extends Fragment{
         Button submitCode = (Button) activity.findViewById(R.id.submit_code);
         final TextView textView = (TextView) activity.findViewById(R.id.error_messages_reset);
 
-        /*Adjust size of components*/
-        AccountManagementUtils.adjustComponentsSize((ViewGroup) view,activity);
-
         /*on click listener for send code button*/
         sendCode.setOnClickListener(new View.OnClickListener() {
             @Override

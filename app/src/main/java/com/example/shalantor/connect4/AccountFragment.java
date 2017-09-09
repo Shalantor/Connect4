@@ -120,9 +120,7 @@ public class AccountFragment extends Fragment{
         EditText address = (EditText) activity.findViewById(R.id.ip_address);
         Button continueButton = (Button) activity.findViewById(R.id.continue_button);
 
-        /*Adjust components size*/
-        AccountManagementUtils.adjustComponentsSize((ViewGroup) view,activity);
-
+        /*Clear auto focus from EditText*/
         address.setSelected(false);
         address.clearFocus();
 

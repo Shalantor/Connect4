@@ -83,12 +83,9 @@ public class LoginFragment extends Fragment{
     }
 
 
-    /*Method to adjust button size and text*/
+    /*Method to adjust button text*/
     public void adjustButtons(){
         final Activity activity = getActivity();
-
-        /*Adjust size of components*/
-        AccountManagementUtils.adjustComponentsSize((ViewGroup) view,activity);
 
         /*Get references to GUI objects*/
         final EditText usernamePrompt = (EditText) activity.findViewById(R.id.username);

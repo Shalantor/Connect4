@@ -64,9 +64,6 @@ public class NewPasswordFragment extends Fragment{
         Button submitButton = (Button) activity.findViewById(R.id.reset_submit_button);
         final TextView textView = (TextView) activity.findViewById(R.id.reset_error_messages);
 
-        /*Size of components adjustment*/
-        AccountManagementUtils.adjustComponentsSize((ViewGroup) view,activity);
-
         /*Set listener for button*/
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override

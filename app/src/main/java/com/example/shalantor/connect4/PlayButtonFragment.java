@@ -65,9 +65,6 @@ public class PlayButtonFragment extends Fragment{
         Button playButton = (Button) activity.findViewById(R.id.play_button);
         final TextView textView = (TextView) activity.findViewById(R.id.play_error_messages);
 
-        /*Adjust size of components*/
-        AccountManagementUtils.adjustComponentsSize((ViewGroup) view,activity);
-
         /*Add listener to button*/
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override

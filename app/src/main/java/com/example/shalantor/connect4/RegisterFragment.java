@@ -82,9 +82,6 @@ public class RegisterFragment extends Fragment{
         final TextView textView = (TextView) activity.findViewById(R.id.error_messages_register);
         final CheckBox remember = (CheckBox) activity.findViewById(R.id.remember_me_register);
 
-        /*Set text sizes*/
-        AccountManagementUtils.adjustComponentsSize((ViewGroup) view,activity);
-
         /*Add listener to register button*/
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
