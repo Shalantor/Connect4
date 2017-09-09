@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/hint_ip"
             android:inputType="text"
+            android:textSize="@dimen/text_size"
             android:maxLines="1"/>
 
     </android.support.design.widget.TextInputLayout>
@@ -32,27 +33,30 @@
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/button_height"
         android:text="@string/login"
         android:id="@+id/login_button"
-        android:onClick="goToLogin"/>
+        android:onClick="goToLogin"
+        android:textSize="@dimen/text_size"/>
 
     <Button
+        android:textSize="@dimen/text_size"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/button_height"
         android:text="@string/register_normal"
         android:id="@+id/register_button"
         android:onClick="goToRegister"/>
 
     <com.facebook.login.widget.LoginButton
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/button_height"
         android:text="@string/login_fb"
         android:id="@+id/login_fb_button"/>
 
     <Button
+        android:textSize="@dimen/text_size"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/button_height"
         android:id="@+id/continue_button"
         android:text="@string/continue_fb"
         android:background="@color/colorPrimary"
@@ -64,7 +68,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="30sp"
+        android:textSize="@dimen/text_size"
         android:id="@+id/error_messages" />
 
 

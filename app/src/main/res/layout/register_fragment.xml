@@ -17,6 +17,7 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:textSize="@dimen/text_size"
             android:id="@+id/register_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,6 +32,7 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:textSize="@dimen/text_size"
             android:id="@+id/register_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,6 +47,7 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:textSize="@dimen/text_size"
             android:id="@+id/register_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,6 +62,7 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:textSize="@dimen/text_size"
             android:id="@+id/register_password_verify"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,19 +75,21 @@
     <CheckBox android:id="@+id/remember_me_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/remember_me" />
+        android:text="@string/remember_me"
+        android:textSize="@dimen/text_size"/>
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/button_height"
         android:text="@string/register"
-        android:id="@+id/register_button_final"/>
+        android:id="@+id/register_button_final"
+        android:textSize="@dimen/text_size"/>
 
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:id="@+id/error_messages_register"/>
+        android:textSize="@dimen/text_size"
+        android:id="@+id/error_messages_register" />
 
 </LinearLayout>
